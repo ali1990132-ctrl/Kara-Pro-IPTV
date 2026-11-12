@@ -27,7 +27,9 @@ import com.karastore.iptv.ui.adapters.FeaturedAdapter
 import com.karastore.iptv.ui.adapters.PosterAdapter
 import com.karastore.iptv.ui.detail.DetailActivity
 import com.karastore.iptv.ui.search.SearchActivity
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment() {
 

@@ -60,10 +60,10 @@ class XtreamApi(
         return info
     }
 
-    private suspend fun cats(action: String): List<Category> {
+    private suspend fun cats(action: String): List<Category> = withContext(Dispatchers.IO) {
         val type = object : TypeToken<List<XtreamCategory>>() {}.type
         val list: List<XtreamCategory> = fetch(api(action), type) ?: emptyList()
-        return list.mapNotNull { c ->
+        list.mapNotNull { c ->
             val id = c.categoryId ?: return@mapNotNull null
             Category(id, c.categoryName ?: "—")
         }
@@ -73,11 +73,11 @@ class XtreamApi(
     suspend fun vodCategories(): List<Category> = cats("get_vod_categories")
     suspend fun seriesCategories(): List<Category> = cats("get_series_categories")
 
-    suspend fun liveStreams(categoryId: String?): List<ContentItem> {
+    suspend fun liveStreams(categoryId: String?): List<ContentItem> = withContext(Dispatchers.IO) {
         val extra = if (categoryId != null) "&category_id=$categoryId" else ""
         val type = object : TypeToken<List<XtreamLiveStream>>() {}.type
         val list: List<XtreamLiveStream> = fetch(api("get_live_streams", extra), type) ?: emptyList()
-        return list.map {
+        list.map {
             ContentItem(
                 id = it.streamId?.toString() ?: "",
                 name = it.name ?: "",
@@ -89,11 +89,11 @@ class XtreamApi(
         }
     }
 
-    suspend fun vodStreams(categoryId: String?): List<ContentItem> {
+    suspend fun vodStreams(categoryId: String?): List<ContentItem> = withContext(Dispatchers.IO) {
         val extra = if (categoryId != null) "&category_id=$categoryId" else ""
         val type = object : TypeToken<List<XtreamVodStream>>() {}.type
         val list: List<XtreamVodStream> = fetch(api("get_vod_streams", extra), type) ?: emptyList()
-        return list.map {
+        list.map {
             val ext = it.containerExtension ?: "mp4"
             ContentItem(
                 id = it.streamId?.toString() ?: "",
@@ -109,11 +109,11 @@ class XtreamApi(
         }
     }
 
-    suspend fun seriesList(categoryId: String?): List<ContentItem> {
+    suspend fun seriesList(categoryId: String?): List<ContentItem> = withContext(Dispatchers.IO) {
         val extra = if (categoryId != null) "&category_id=$categoryId" else ""
         val type = object : TypeToken<List<XtreamSeries>>() {}.type
         val list: List<XtreamSeries> = fetch(api("get_series", extra), type) ?: emptyList()
-        return list.map {
+        list.map {
             ContentItem(
                 id = it.seriesId?.toString() ?: "",
                 name = it.name ?: "",
@@ -127,7 +127,7 @@ class XtreamApi(
     }
 
     /** حلقات مسلسل معيّن (مرتبة) */
-    suspend fun seriesEpisodes(seriesId: String): List<ContentItem> {
+    suspend fun seriesEpisodes(seriesId: String): List<ContentItem> = withContext(Dispatchers.IO) {
         val info: XtreamSeriesInfo? = fetch(api("get_series_info", "&series_id=$seriesId"), XtreamSeriesInfo::class.java)
         val seriesCover = info?.info?.coverBig?.ifBlank { null } ?: info?.info?.cover?.ifBlank { null }
         val result = mutableListOf<ContentItem>()
@@ -147,7 +147,7 @@ class XtreamApi(
                 )
             }
         }
-        return result
+        result
     }
 
     companion object {
