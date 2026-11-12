@@ -127,7 +127,7 @@ class LoginActivity : AppCompatActivity() {
 
     /** يشغّل صفحة الإدخال المحلية ويعرض باركودها ليمسحه الموبايل */
     private fun showQr() {
-        val ip = com.karastore.iptv.util.PairingServer.localIp()
+        val ip = com.karastore.iptv.util.PairingServer.localIp(this)
         if (ip == null) { toast(getString(R.string.qr_need_wifi)); return }
 
         // أوقف أي سيرفر سابق ثم شغّل واحداً جديداً
@@ -170,18 +170,25 @@ class LoginActivity : AppCompatActivity() {
             setImageBitmap(bmp)
             layoutParams = android.widget.LinearLayout.LayoutParams(px(240), px(240))
         }
-        val desc = android.widget.TextView(this).apply {
-            text = getString(R.string.qr_desc)
-            textSize = 13f; setTextColor(0xFF5A6472.toInt())
+        val steps = android.widget.TextView(this).apply {
+            text = getString(R.string.qr_steps)
+            textSize = 13f; setTextColor(0xFF33415A.toInt())
+            setPadding(0, px(14), 0, px(10))
+        }
+        val hint = android.widget.TextView(this).apply {
+            text = getString(R.string.qr_open_hint)
+            textSize = 12f; setTextColor(0xFF5A6472.toInt())
             gravity = android.view.Gravity.CENTER
-            setPadding(0, px(14), 0, px(6))
         }
         val link = android.widget.TextView(this).apply {
             text = url
-            textSize = 13f; setTextColor(0xFF1E9BFF.toInt())
+            textSize = 16f; setTextColor(0xFF1E9BFF.toInt())
             gravity = android.view.Gravity.CENTER
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+            setPadding(0, px(2), 0, 0)
         }
-        container.addView(title); container.addView(img); container.addView(desc); container.addView(link)
+        container.addView(title); container.addView(img)
+        container.addView(steps); container.addView(hint); container.addView(link)
 
         pairingDialog = androidx.appcompat.app.AlertDialog.Builder(this)
             .setView(container)

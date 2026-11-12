@@ -15,6 +15,8 @@
     <string name="btn_qr_share">الإدخال من الهاتف</string>
     <string name="qr_title">امسح الكود بكاميرا الموبايل</string>
     <string name="qr_desc">افتح كاميرا الموبايل وامسح الكود — تنفتح صفحة تعبّي بيها بيانات الاشتراك فتوصل للشاشة مباشرة</string>
+    <string name="qr_steps">١) الموبايل والشاشة على نفس شبكة الـWi-Fi\n٢) امسح الكود بكاميرا الموبايل\n٣) اضغط على الرابط اللي يطلع حتى تفتح الصفحة\n٤) عبّي البيانات واضغط إرسال</string>
+    <string name="qr_open_hint">إذا ما انفتحت الصفحة، افتح متصفح الموبايل واكتب هذا الرابط:</string>
     <string name="qr_need_wifi">وصّل الجهاز بشبكة Wi-Fi (نفس شبكة الموبايل) حتى تظهر صفحة الإدخال</string>
     <string name="qr_close">إغلاق</string>
     <string name="remember_me">تذكّرني</string>

@@ -14,6 +14,8 @@
     <string name="btn_qr_share">Enter from phone</string>
     <string name="qr_title">Scan with your phone camera</string>
     <string name="qr_desc">Open your phone camera and scan the code — a page opens to enter the subscription, which is sent to this screen</string>
+    <string name="qr_steps">1) Phone and screen on the same Wi-Fi\n2) Scan the code with the phone camera\n3) Tap the link that appears to open the page\n4) Fill the details and press Send</string>
+    <string name="qr_open_hint">If the page does not open, type this address in the phone browser:</string>
     <string name="qr_need_wifi">Connect this device to Wi-Fi (same network as the phone) to show the entry page</string>
     <string name="qr_close">Close</string>
     <string name="remember_me">Remember me</string>

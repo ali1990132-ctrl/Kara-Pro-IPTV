@@ -1,5 +1,7 @@
 package com.karastore.iptv.util
 
+import android.content.Context
+import android.net.wifi.WifiManager
 import com.karastore.iptv.data.LoginMode
 import com.karastore.iptv.data.Session
 import fi.iki.elonen.NanoHTTPD
@@ -47,8 +49,19 @@ class PairingServer(
     companion object {
         const val PORT = 8808
 
-        /** عنوان الجهاز على شبكة الـWi-Fi المحلية */
-        fun localIp(): String? {
+        /** عنوان الجهاز على الشبكة المحلية — يفضّل عنوان الـWi-Fi */
+        fun localIp(ctx: Context? = null): String? {
+            // 1) جرّب عنوان الـWi-Fi مباشرة (الأكثر موثوقية)
+            try {
+                val wm = ctx?.applicationContext?.getSystemService(Context.WIFI_SERVICE) as? WifiManager
+                @Suppress("DEPRECATION")
+                val ipInt = wm?.connectionInfo?.ipAddress ?: 0
+                if (ipInt != 0) {
+                    val ip = "${ipInt and 0xff}.${ipInt shr 8 and 0xff}.${ipInt shr 16 and 0xff}.${ipInt shr 24 and 0xff}"
+                    if (ip != "0.0.0.0") return ip
+                }
+            } catch (_: Exception) {}
+            // 2) وإلا امسح واجهات الشبكة
             try {
                 val nifs = NetworkInterface.getNetworkInterfaces() ?: return null
                 for (nif in nifs) {
