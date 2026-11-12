@@ -18,8 +18,11 @@ class XtreamApi(
     private val base = normalize(server)
     private val gson = Gson()
     private val client = OkHttpClient.Builder()
-        .connectTimeout(20, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(60, TimeUnit.SECONDS)
+        .callTimeout(90, TimeUnit.SECONDS)
+        .retryOnConnectionFailure(true)
+        .followRedirects(true)
         .build()
 
     private fun api(action: String? = null, extra: String = ""): String {
@@ -29,21 +32,28 @@ class XtreamApi(
 
     private suspend fun get(url: String): String = withContext(Dispatchers.IO) {
         val req = Request.Builder().url(url)
-            .header("User-Agent", "KaraPro/1.0")
+            .header("User-Agent", "VLC/3.0.20 LibVLC/3.0.20")
+            .header("Accept", "*/*")
             .build()
         client.newCall(req).execute().use { resp ->
-            if (!resp.isSuccessful) throw RuntimeException("HTTP ${resp.code}")
-            resp.body?.string() ?: throw RuntimeException("empty body")
+            if (!resp.isSuccessful)
+                throw RuntimeException("السيرفر رفض الطلب (كود ${resp.code})")
+            resp.body?.string() ?: throw RuntimeException("رد فارغ من السيرفر")
         }
     }
 
     /** تسجيل الدخول والتحقق من الاشتراك */
     suspend fun login(): XtreamUserInfo {
         val json = get(api())
-        val res = gson.fromJson(json, XtreamLoginResponse::class.java)
-        val info = res?.userInfo ?: throw RuntimeException("no user_info")
+        val res = try {
+            gson.fromJson(json, XtreamLoginResponse::class.java)
+        } catch (e: Exception) {
+            throw RuntimeException("رد غير متوقّع من السيرفر — تأكد من عنوان السيرفر")
+        }
+        val info = res?.userInfo
+            ?: throw RuntimeException("بيانات الدخول غير صحيحة — تأكد من المستخدم وكلمة المرور")
         if (info.auth == 0 || info.status.equals("Disabled", true))
-            throw RuntimeException("auth failed")
+            throw RuntimeException("الاشتراك غير مفعّل أو منتهي")
         return info
     }
 

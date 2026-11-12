@@ -73,7 +73,15 @@ class LoginActivity : AppCompatActivity() {
                 finish()
             } catch (e: Exception) {
                 setLoading(false)
-                toast(getString(R.string.err_login))
+                val msg = when (e) {
+                    is java.net.SocketTimeoutException,
+                    is java.io.InterruptedIOException ->
+                        "انتهت مهلة الاتصال — السيرفر بطيء أو القائمة كبيرة، جرّب مرة ثانية"
+                    is java.net.UnknownHostException ->
+                        "ما كدرنا نوصل للسيرفر — تأكد من الرابط والإنترنت"
+                    else -> e.message ?: getString(R.string.err_login)
+                }
+                Toast.makeText(this@LoginActivity, msg, Toast.LENGTH_LONG).show()
             }
         }
     }

@@ -7,14 +7,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import java.io.BufferedReader
 import java.util.concurrent.TimeUnit
 
 /** تحميل وتحليل قائمة M3U/M3U8 */
 class M3uRepository(private val url: String) {
 
     private val client = OkHttpClient.Builder()
-        .connectTimeout(20, TimeUnit.SECONDS)
-        .readTimeout(60, TimeUnit.SECONDS)
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(120, TimeUnit.SECONDS)
+        .callTimeout(180, TimeUnit.SECONDS)
+        .retryOnConnectionFailure(true)
+        .followRedirects(true)
+        .followSslRedirects(true)
         .build()
 
     // group-title -> قنوات
@@ -23,44 +28,60 @@ class M3uRepository(private val url: String) {
 
     suspend fun load() = withContext(Dispatchers.IO) {
         val req = Request.Builder().url(url)
-            .header("User-Agent", "KaraPro/1.0")
+            .header("User-Agent", "VLC/3.0.20 LibVLC/3.0.20")
+            .header("Accept", "*/*")
             .build()
-        val text = client.newCall(req).execute().use { resp ->
-            if (!resp.isSuccessful) throw RuntimeException("HTTP ${resp.code}")
-            resp.body?.string() ?: throw RuntimeException("empty body")
+
+        client.newCall(req).execute().use { resp ->
+            if (!resp.isSuccessful) {
+                throw RuntimeException("السيرفر رفض الطلب (كود ${resp.code}) — تأكد من الرابط أو جرّب تبويب Xtream Codes")
+            }
+            val body = resp.body ?: throw RuntimeException("رد فارغ من السيرفر")
+            val reader = body.charStream().buffered()
+            parse(reader)
         }
-        parse(text)
+
+        if (grouped.isEmpty()) {
+            throw RuntimeException("ما لگينا أي قناة بالرابط — غالباً الرابط غلط أو منتهي الاشتراك أو مو بصيغة M3U")
+        }
         loaded = true
     }
 
-    private fun parse(text: String) {
+    /** تحليل تدفّقي يتحمّل القوائم الكبيرة بدون استهلاك الذاكرة */
+    private fun parse(reader: BufferedReader) {
         grouped = LinkedHashMap()
-        val lines = text.lines()
-        var i = 0
         var idx = 0
-        while (i < lines.size) {
-            val line = lines[i].trim()
-            if (line.startsWith("#EXTINF", ignoreCase = true)) {
-                val name = line.substringAfterLast(",").trim()
-                val logo = attr(line, "tvg-logo")
-                val group = attr(line, "group-title")?.ifBlank { null } ?: "عام"
-                // ابحث عن سطر الرابط التالي
-                var j = i + 1
-                while (j < lines.size && (lines[j].trim().isEmpty() || lines[j].trim().startsWith("#"))) j++
-                if (j < lines.size) {
-                    val streamUrl = lines[j].trim()
-                    val item = ContentItem(
-                        id = (idx++).toString(),
-                        name = name.ifBlank { "قناة ${idx}" },
-                        logo = logo,
-                        type = ContentType.LIVE,
-                        directUrl = streamUrl
-                    )
-                    grouped.getOrPut(group) { mutableListOf() }.add(item)
-                    i = j
+        var pendingName: String? = null
+        var pendingLogo: String? = null
+        var pendingGroup = "عام"
+
+        reader.forEachLine { raw ->
+            val line = raw.trim()
+            if (line.isEmpty()) return@forEachLine
+            when {
+                line.startsWith("#EXTINF", ignoreCase = true) -> {
+                    pendingName = line.substringAfterLast(",").trim()
+                    pendingLogo = attr(line, "tvg-logo")
+                    pendingGroup = attr(line, "group-title")?.ifBlank { null } ?: "عام"
+                }
+                line.startsWith("#") -> { /* تجاهل أسطر التعريف الأخرى */ }
+                else -> {
+                    // سطر رابط
+                    if (pendingName != null) {
+                        val item = ContentItem(
+                            id = (idx++).toString(),
+                            name = pendingName!!.ifBlank { "قناة $idx" },
+                            logo = pendingLogo,
+                            type = ContentType.LIVE,
+                            directUrl = line
+                        )
+                        grouped.getOrPut(pendingGroup) { mutableListOf() }.add(item)
+                        pendingName = null
+                        pendingLogo = null
+                        pendingGroup = "عام"
+                    }
                 }
             }
-            i++
         }
     }
 
@@ -70,7 +91,7 @@ class M3uRepository(private val url: String) {
     }
 
     fun categories(): List<Category> =
-        grouped.keys.mapIndexed { i, name -> Category(name, name) }
+        grouped.keys.map { name -> Category(name, name) }
 
     fun channels(categoryId: String?): List<ContentItem> {
         if (categoryId == null) return grouped.values.flatten()
