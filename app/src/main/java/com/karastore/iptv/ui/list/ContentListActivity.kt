@@ -65,6 +65,7 @@ class ContentListActivity : AppCompatActivity() {
             }
         )
         b.rvContent.layoutManager = GridLayoutManager(this, 3)
+        b.rvContent.setHasFixedSize(true)
         b.rvContent.adapter = contentAdapter
 
         b.etSearch.addTextChangedListener(object : TextWatcher {

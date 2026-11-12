@@ -60,6 +60,7 @@ class ContentFragment : Fragment() {
             onDownload = { item -> ItemActions.download(requireActivity(), item) }
         )
         b.rvContent.layoutManager = GridLayoutManager(context, 3)
+        b.rvContent.setHasFixedSize(true)
         b.rvContent.adapter = contentAdapter
 
         b.btnFilter.setOnClickListener { openFilter() }
@@ -104,7 +105,9 @@ class ContentFragment : Fragment() {
         currentLabel = label
         val excluded = HiddenCategoriesStore.get(requireContext(), type) +
             LockedCategoriesStore.get(requireContext(), type)
-        val items = ContentCache.filter(type, categoryId, excluded)
+        val full = ContentCache.filter(type, categoryId, excluded)
+        // تحديد العدد في عرض "الكل" لتخفيف الحِمل
+        val items = if (categoryId == null && full.size > 1500) full.take(1500) else full
         _b?.let {
             it.tvCatLabel.text = label
             it.etSearch.text?.clear()

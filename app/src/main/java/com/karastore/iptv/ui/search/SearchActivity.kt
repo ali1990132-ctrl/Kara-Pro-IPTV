@@ -39,6 +39,7 @@ class SearchActivity : AppCompatActivity() {
             onDownload = { item -> ItemActions.download(this, item) }
         )
         b.rvResults.layoutManager = GridLayoutManager(this, 3)
+        b.rvResults.setHasFixedSize(true)
         b.rvResults.adapter = adapter
 
         b.etSearch.addTextChangedListener(object : TextWatcher {
