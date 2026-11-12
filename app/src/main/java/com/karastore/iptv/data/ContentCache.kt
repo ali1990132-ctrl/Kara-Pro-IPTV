@@ -44,6 +44,12 @@ object ContentCache {
     suspend fun loadCategory(type: ContentType, categoryId: String?): List<ContentItem> {
         val k = key(type, categoryId)
         catItems[k]?.let { return it }
+        // إن كان الكتالوج الكامل محمّلاً (بعد تحديث كامل) نشتق منه بدون شبكة
+        items[type]?.let { full ->
+            val list = if (categoryId == null) full else full.filter { it.categoryId == categoryId }
+            catItems[k] = list
+            return list
+        }
         val list = Repo.content(type, categoryId)
         catItems[k] = list
         return list
