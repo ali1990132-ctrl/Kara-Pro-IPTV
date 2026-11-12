@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg_dark">#0B0E14</color>
+    <color name="bg_card">#161B26</color>
+    <color name="bg_card_elevated">#1E2534</color>
+    <color name="accent">#F5B301</color>
+    <color name="accent_dark">#C68F00</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#9AA4B2</color>
+    <color name="divider">#242B3A</color>
+    <color name="live_tile">#2D6CDF</color>
+    <color name="movies_tile">#E0455E</color>
+    <color name="series_tile">#8B5CF6</color>
+    <color name="settings_tile">#30B37E</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+</resources>

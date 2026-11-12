@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">كارة برو</string>
+
+    <!-- Login -->
+    <string name="login_title">تسجيل الدخول</string>
+    <string name="tab_xtream">Xtream Codes</string>
+    <string name="tab_m3u">رابط M3U</string>
+    <string name="hint_server">عنوان السيرفر (http://host:port)</string>
+    <string name="hint_username">اسم المستخدم</string>
+    <string name="hint_password">كلمة المرور</string>
+    <string name="hint_m3u">رابط قائمة M3U / M3U8</string>
+    <string name="hint_name">اسم الاشتراك (اختياري)</string>
+    <string name="btn_login">دخول</string>
+    <string name="remember_me">تذكّرني</string>
+    <string name="logging_in">جارِ الاتصال بالسيرفر…</string>
+    <string name="err_fields">عبّي كل الحقول المطلوبة</string>
+    <string name="err_login">فشل تسجيل الدخول — تأكد من البيانات والسيرفر</string>
+    <string name="err_network">خطأ بالشبكة، حاول مرة ثانية</string>
+
+    <!-- Home -->
+    <string name="home_live">البث المباشر</string>
+    <string name="home_movies">الأفلام</string>
+    <string name="home_series">المسلسلات</string>
+    <string name="home_settings">الإعدادات</string>
+    <string name="welcome">أهلاً</string>
+    <string name="expires">تاريخ الانتهاء</string>
+    <string name="status_active">فعّال</string>
+    <string name="status_expired">منتهي</string>
+    <string name="logout">تسجيل الخروج</string>
+
+    <!-- Lists -->
+    <string name="search_hint">بحث…</string>
+    <string name="empty_list">لا توجد عناصر</string>
+    <string name="loading">جارِ التحميل…</string>
+    <string name="all">الكل</string>
+
+    <!-- Player -->
+    <string name="player_error">تعذّر تشغيل البث</string>
+    <string name="retry">إعادة المحاولة</string>
+</resources>

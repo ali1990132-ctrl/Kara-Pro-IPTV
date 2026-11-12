@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/bg_dark">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="40dp">
+
+        <ImageView
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/ic_launcher_foreground"
+            android:background="@drawable/bg_card"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/app_name"
+            android:textColor="@color/text_primary"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="@string/login_title"
+            android:textColor="@color/text_secondary"
+            android:textSize="15sp" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            app:tabBackground="@color/bg_card"
+            app:tabIndicatorColor="@color/accent"
+            app:tabSelectedTextColor="@color/accent"
+            app:tabTextColor="@color/text_secondary"
+            app:tabMode="fixed">
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_xtream" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_m3u" />
+        </com.google.android.material.tabs.TabLayout>
+
+        <!-- حقول Xtream -->
+        <LinearLayout
+            android:id="@+id/llXtream"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/etServer"
+                style="@style/InputField"
+                android:hint="@string/hint_server"
+                android:inputType="textUri" />
+
+            <EditText
+                android:id="@+id/etUser"
+                style="@style/InputField"
+                android:hint="@string/hint_username"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/etPass"
+                style="@style/InputField"
+                android:hint="@string/hint_password"
+                android:inputType="textPassword" />
+        </LinearLayout>
+
+        <!-- حقل M3U -->
+        <LinearLayout
+            android:id="@+id/llM3u"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/etM3u"
+                style="@style/InputField"
+                android:hint="@string/hint_m3u"
+                android:inputType="textUri" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/etName"
+            style="@style/InputField"
+            android:hint="@string/hint_name"
+            android:inputType="text" />
+
+        <CheckBox
+            android:id="@+id/cbRemember"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:buttonTint="@color/accent"
+            android:checked="true"
+            android:text="@string/remember_me"
+            android:textColor="@color/text_secondary" />
+
+        <TextView
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_button"
+            android:gravity="center"
+            android:text="@string/btn_login"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:indeterminateTint="@color/accent"
+            android:visibility="gone" />
+    </LinearLayout>
+</ScrollView>

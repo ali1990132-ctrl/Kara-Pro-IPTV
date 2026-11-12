@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_dark">
+
+    <!-- شريط علوي: معلومات الاشتراك -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/bg_card"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="16dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvWelcome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvExpiry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/btnLogout"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="10dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_logout"
+            android:contentDescription="@string/logout" />
+    </LinearLayout>
+
+    <!-- شبكة الأيقونات بترتيب الماكس -->
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:padding="12dp"
+        android:layout_marginTop="12dp">
+
+        <LinearLayout
+            android:id="@+id/tileLive"
+            style="@style/HomeTile"
+            android:background="@drawable/tile_live">
+            <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_live" />
+            <TextView style="@style/HomeTileLabel" android:text="@string/home_live" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tileMovies"
+            style="@style/HomeTile"
+            android:background="@drawable/tile_movies">
+            <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_movies" />
+            <TextView style="@style/HomeTileLabel" android:text="@string/home_movies" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tileSeries"
+            style="@style/HomeTile"
+            android:background="@drawable/tile_series">
+            <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_series" />
+            <TextView style="@style/HomeTileLabel" android:text="@string/home_series" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tileSettings"
+            style="@style/HomeTile"
+            android:background="@drawable/tile_settings">
+            <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_settings" />
+            <TextView style="@style/HomeTileLabel" android:text="@string/home_settings" />
+        </LinearLayout>
+    </GridLayout>
+</LinearLayout>
