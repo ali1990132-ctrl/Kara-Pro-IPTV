@@ -3,6 +3,7 @@
     <string name="app_name">A&amp;S</string>
 
     <string name="login_title">Sign in</string>
+    <string name="login_sub">Enter your subscription details</string>
     <string name="tab_xtream">Xtream Codes</string>
     <string name="tab_m3u">M3U URL</string>
     <string name="hint_server">Server (http://host:port)</string>

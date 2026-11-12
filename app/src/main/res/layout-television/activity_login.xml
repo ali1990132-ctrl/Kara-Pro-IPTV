@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- واجهة الدخول للتلفزيون: عمودان (بطاقة ترحيب يمين + حقول يسار) -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:layoutDirection="rtl"
+    android:background="@drawable/bg_login"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="48dp"
+    android:paddingVertical="28dp">
+
+    <!-- بطاقة الترحيب (يمين) -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="28dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/bg_card_blue"
+        android:padding="26dp">
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/app_logo"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="@string/login_title"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/login_sub"
+            android:textColor="#E6F2FF"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/support_full_text"
+            android:textColor="#CFE4FF"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/btnSupportNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:padding="6dp"
+            android:focusable="true"
+            android:clickable="true"
+            android:text="@string/support_number"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- الحقول (يسار) -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:fillViewport="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:background="#2600101F"
+                app:tabIndicatorColor="@color/cyan"
+                app:tabSelectedTextColor="@color/cyan"
+                app:tabTextColor="#99CFE4FF"
+                app:tabMode="fixed">
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tab_xtream" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tab_m3u" />
+            </com.google.android.material.tabs.TabLayout>
+
+            <LinearLayout
+                android:id="@+id/llXtream"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText android:id="@+id/etServer" style="@style/InputField"
+                    android:nextFocusDown="@id/etUser"
+                    android:hint="@string/hint_server" android:inputType="textUri" />
+                <EditText android:id="@+id/etUser" style="@style/InputField"
+                    android:nextFocusUp="@id/etServer" android:nextFocusDown="@id/etPass"
+                    android:hint="@string/hint_username" android:inputType="text" />
+                <EditText android:id="@+id/etPass" style="@style/InputField"
+                    android:nextFocusUp="@id/etUser" android:nextFocusDown="@id/etName"
+                    android:imeOptions="actionDone"
+                    android:hint="@string/hint_password" android:inputType="textPassword" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llM3u"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <EditText android:id="@+id/etM3u" style="@style/InputField"
+                    android:nextFocusDown="@id/etName"
+                    android:hint="@string/hint_m3u" android:inputType="textUri" />
+            </LinearLayout>
+
+            <EditText android:id="@+id/etName" style="@style/InputField"
+                android:nextFocusUp="@id/etPass" android:nextFocusDown="@id/cbRemember"
+                android:hint="@string/hint_name" android:inputType="text" />
+
+            <CheckBox
+                android:id="@+id/cbRemember"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:buttonTint="@color/cyan"
+                android:checked="true"
+                android:focusable="true"
+                android:nextFocusUp="@id/etName" android:nextFocusDown="@id/btnLogin"
+                android:text="@string/remember_me"
+                android:textColor="#CFE4FF" />
+
+            <TextView
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_button_blue"
+                android:clickable="true"
+                android:focusable="true"
+                android:nextFocusUp="@id/cbRemember" android:nextFocusDown="@id/btnQrShare"
+                android:gravity="center"
+                android:text="@string/btn_login"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/btnQrShare"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_button_outline"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:focusable="true"
+                android:nextFocusUp="@id/btnLogin">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/ic_phone"
+                    app:tint="@color/cyan"
+                    android:contentDescription="@null" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_qr_share"
+                    android:textColor="@color/cyan"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:indeterminateTint="@color/cyan"
+                android:visibility="gone" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
