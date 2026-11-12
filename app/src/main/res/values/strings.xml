@@ -118,4 +118,11 @@
     <string name="au_weekly">مرة كل أسبوع</string>
     <string name="activation_watermark">للتفعيل 07711608207</string>
     <string name="activation_label">للتفعيل</string>
+
+    <string name="pin_enter">أدخل الرمز السري</string>
+    <string name="pin_wrong">الرمز غير صحيح</string>
+    <string name="change_pin">تغيير الرمز السري للباقات</string>
+    <string name="pin_current">الرمز الحالي</string>
+    <string name="pin_new">الرمز الجديد</string>
+    <string name="pin_changed">تم تغيير الرمز</string>
 </resources>

@@ -100,10 +100,46 @@ object HiddenCategoriesStore {
     }
 }
 
+/** الباقات المقفولة برمز سري لكل نوع */
+object LockedCategoriesStore {
+    private const val PREF = "kara_locked"
+    private fun key(type: com.karastore.iptv.data.model.ContentType) = "locked_${type.name}"
+
+    fun get(ctx: Context, type: com.karastore.iptv.data.model.ContentType): Set<String> =
+        ctx.getSharedPreferences(PREF, Context.MODE_PRIVATE).getStringSet(key(type), emptySet())?.toSet() ?: emptySet()
+
+    fun isLocked(ctx: Context, type: com.karastore.iptv.data.model.ContentType, id: String?): Boolean =
+        id != null && get(ctx, type).contains(id)
+
+    fun setLocked(ctx: Context, type: com.karastore.iptv.data.model.ContentType, id: String, locked: Boolean) {
+        val set = get(ctx, type).toMutableSet()
+        if (locked) set.add(id) else set.remove(id)
+        ctx.getSharedPreferences(PREF, Context.MODE_PRIVATE).edit().putStringSet(key(type), set).apply()
+    }
+}
+
+/** ترتيب الباقات المفضّل لكل نوع (قائمة معرّفات) */
+object CategoryOrderStore {
+    private const val PREF = "kara_cat_order"
+    private val gson = Gson()
+    private fun key(type: com.karastore.iptv.data.model.ContentType) = "order_${type.name}"
+
+    fun get(ctx: Context, type: com.karastore.iptv.data.model.ContentType): List<String> {
+        val json = ctx.getSharedPreferences(PREF, Context.MODE_PRIVATE).getString(key(type), null) ?: return emptyList()
+        val t = object : TypeToken<List<String>>() {}.type
+        return try { gson.fromJson(json, t) ?: emptyList() } catch (e: Exception) { emptyList() }
+    }
+
+    fun set(ctx: Context, type: com.karastore.iptv.data.model.ContentType, ids: List<String>) {
+        ctx.getSharedPreferences(PREF, Context.MODE_PRIVATE).edit().putString(key(type), gson.toJson(ids)).apply()
+    }
+}
+
 /** إعدادات التطبيق */
 object Settings {
     private const val PREF = "kara_settings"
     private const val K_ENGINE_COMPAT = "engine_compat"
+    private const val K_PIN = "pin"
     private const val K_AUTO_UPDATE = "auto_update"
     private const val K_LAST_REFRESH = "last_refresh"
 
@@ -116,6 +152,9 @@ object Settings {
     // 0=يدوي 1=عند الفتح 2=6س 3=12س 4=يومي 5=أسبوعي
     fun autoUpdate(ctx: Context): Int = p(ctx).getInt(K_AUTO_UPDATE, 0)
     fun setAutoUpdate(ctx: Context, mode: Int) = p(ctx).edit().putInt(K_AUTO_UPDATE, mode).apply()
+
+    fun pin(ctx: Context): String = p(ctx).getString(K_PIN, "0000") ?: "0000"
+    fun setPin(ctx: Context, v: String) = p(ctx).edit().putString(K_PIN, v).apply()
 
     fun lastRefresh(ctx: Context): Long = p(ctx).getLong(K_LAST_REFRESH, 0L)
     fun markRefreshed(ctx: Context) = p(ctx).edit().putLong(K_LAST_REFRESH, System.currentTimeMillis()).apply()

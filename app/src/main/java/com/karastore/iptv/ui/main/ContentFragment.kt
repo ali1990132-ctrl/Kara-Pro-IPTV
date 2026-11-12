@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.karastore.iptv.R
 import com.karastore.iptv.data.ContentCache
 import com.karastore.iptv.data.HiddenCategoriesStore
+import com.karastore.iptv.data.LockedCategoriesStore
 import com.karastore.iptv.data.model.ContentItem
 import com.karastore.iptv.data.model.ContentType
 import com.karastore.iptv.databinding.FragmentContentBinding
@@ -101,8 +102,9 @@ class ContentFragment : Fragment() {
     private fun applyCategory(categoryId: String?, label: String) {
         currentCat = categoryId
         currentLabel = label
-        val hidden = HiddenCategoriesStore.get(requireContext(), type)
-        val items = ContentCache.filter(type, categoryId, hidden)
+        val excluded = HiddenCategoriesStore.get(requireContext(), type) +
+            LockedCategoriesStore.get(requireContext(), type)
+        val items = ContentCache.filter(type, categoryId, excluded)
         _b?.let {
             it.tvCatLabel.text = label
             it.etSearch.text?.clear()

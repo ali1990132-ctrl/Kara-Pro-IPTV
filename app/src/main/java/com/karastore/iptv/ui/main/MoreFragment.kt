@@ -50,6 +50,7 @@ class MoreFragment : Fragment() {
         b.rowAutoUpdate.setOnClickListener { pickAutoUpdate() }
         b.rowLanguage.setOnClickListener { pickLanguage() }
         b.rowEngine.setOnClickListener { pickEngine() }
+        b.rowChangePin.setOnClickListener { changePin() }
         b.rowPlaylists.setOnClickListener { PlaylistSheet().show(childFragmentManager, "playlists") }
         b.rowLogout.setOnClickListener { confirmLogout() }
     }
@@ -120,6 +121,41 @@ class MoreFragment : Fragment() {
                 b.tvAutoUpdate.text = labels[which]
                 dialog.dismiss()
             }
+            .show()
+    }
+
+    private fun changePin() {
+        val ctx = requireContext()
+        val cur = android.widget.EditText(ctx).apply {
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_PASSWORD
+            hint = getString(R.string.pin_current)
+        }
+        AlertDialog.Builder(ctx)
+            .setTitle(R.string.pin_current)
+            .setView(cur)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                if (cur.text.toString() != Settings.pin(ctx)) {
+                    android.widget.Toast.makeText(ctx, R.string.pin_wrong, android.widget.Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+                val neu = android.widget.EditText(ctx).apply {
+                    inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_PASSWORD
+                    hint = getString(R.string.pin_new)
+                }
+                AlertDialog.Builder(ctx)
+                    .setTitle(R.string.pin_new)
+                    .setView(neu)
+                    .setPositiveButton(android.R.string.ok) { _, _ ->
+                        val v = neu.text.toString().trim()
+                        if (v.length in 3..8) {
+                            Settings.setPin(ctx, v)
+                            android.widget.Toast.makeText(ctx, R.string.pin_changed, android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
             .show()
     }
 

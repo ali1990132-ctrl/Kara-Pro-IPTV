@@ -121,6 +121,12 @@
             <TextView android:id="@+id/tvEngineValue" style="@style/MoreRowValue" />
         </LinearLayout>
 
+        <LinearLayout android:id="@+id/rowChangePin" style="@style/MoreRow">
+            <ImageView style="@style/MoreRowIcon" android:src="@drawable/ic_lock" />
+            <TextView style="@style/MoreRowTitle" android:text="@string/change_pin" />
+            <ImageView style="@style/MoreRowChevron" />
+        </LinearLayout>
+
         <LinearLayout android:id="@+id/rowPlaylists" style="@style/MoreRow">
             <ImageView style="@style/MoreRowIcon" android:src="@drawable/ic_menu" />
             <TextView style="@style/MoreRowTitle" android:text="@string/my_playlists" />

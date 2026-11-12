@@ -107,4 +107,11 @@
     <string name="au_weekly">Once a week</string>
     <string name="activation_watermark">للتفعيل 07711608207</string>
     <string name="activation_label">للتفعيل</string>
+
+    <string name="pin_enter">Enter PIN</string>
+    <string name="pin_wrong">Wrong PIN</string>
+    <string name="change_pin">Change packages PIN</string>
+    <string name="pin_current">Current PIN</string>
+    <string name="pin_new">New PIN</string>
+    <string name="pin_changed">PIN changed</string>
 </resources>

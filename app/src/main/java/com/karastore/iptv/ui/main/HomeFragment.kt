@@ -18,6 +18,7 @@ import com.google.gson.Gson
 import com.karastore.iptv.R
 import com.karastore.iptv.data.ContentCache
 import com.karastore.iptv.data.HiddenCategoriesStore
+import com.karastore.iptv.data.LockedCategoriesStore
 import com.karastore.iptv.data.Repo
 import com.karastore.iptv.data.model.ContentItem
 import com.karastore.iptv.data.model.ContentType
@@ -60,14 +61,16 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 ContentCache.load(ContentType.MOVIE)
-                val hidden = HiddenCategoriesStore.get(requireContext(), ContentType.MOVIE)
+                val hidden = HiddenCategoriesStore.get(requireContext(), ContentType.MOVIE) +
+                    LockedCategoriesStore.get(requireContext(), ContentType.MOVIE)
                 val recentM = ContentCache.recentlyAdded(ContentType.MOVIE, 15, hidden)
                 setupFeatured(recentM.take(6))
                 show(b.labelRecentMovies, b.rvRecentMovies, recentM)
             } catch (_: Exception) {}
             try {
                 ContentCache.load(ContentType.SERIES)
-                val hiddenS = HiddenCategoriesStore.get(requireContext(), ContentType.SERIES)
+                val hiddenS = HiddenCategoriesStore.get(requireContext(), ContentType.SERIES) +
+                    LockedCategoriesStore.get(requireContext(), ContentType.SERIES)
                 show(b.labelRecentSeries, b.rvRecentSeries, ContentCache.recentlyAdded(ContentType.SERIES, 15, hiddenS))
             } catch (_: Exception) {}
         }
