@@ -80,6 +80,7 @@ class PlayerActivity : AppCompatActivity() {
 
         b.btnRetry.setOnClickListener { initPlayer() }
         b.btnAspect.setOnClickListener { cycleAspect() }
+        b.btnRotate.setOnClickListener { toggleRotation() }
         b.btnLock.setOnClickListener { setLocked(true) }
         b.btnUnlock.setOnClickListener { setLocked(false) }
         b.btnNight.setOnClickListener { sleepMenu() }
@@ -208,6 +209,15 @@ class PlayerActivity : AppCompatActivity() {
     private fun cycleAspect() {
         aspectIndex = (aspectIndex + 1) % aspectModes.size
         b.playerView.resizeMode = aspectModes[aspectIndex]
+    }
+
+    private var landscape = false
+    private fun toggleRotation() {
+        landscape = !landscape
+        requestedOrientation = if (landscape)
+            android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+        else
+            android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
     private fun enterImmersive() {

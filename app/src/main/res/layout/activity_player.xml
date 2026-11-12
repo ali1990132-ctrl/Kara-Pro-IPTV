@@ -37,6 +37,7 @@
         <ImageView android:id="@+id/btnFav" style="@style/PlayerTopBtn" android:src="@drawable/ic_favorite_border" />
         <ImageView android:id="@+id/btnChannels" style="@style/PlayerTopBtn" android:src="@drawable/ic_live" />
         <ImageView android:id="@+id/btnAspect" style="@style/PlayerTopBtn" android:src="@drawable/ic_aspect" />
+        <ImageView android:id="@+id/btnRotate" style="@style/PlayerTopBtn" android:src="@drawable/ic_rotate" />
 
         <TextView
             android:id="@+id/tvTitle"

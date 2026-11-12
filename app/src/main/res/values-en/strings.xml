@@ -94,4 +94,6 @@
 
     <string name="sleep_timer">Sleep timer</string>
     <string name="sleep_off">Off</string>
+    <string name="support_full_text">To activate or renew, message us on WhatsApp at</string>
+    <string name="rotate_screen">Rotate screen</string>
 </resources>

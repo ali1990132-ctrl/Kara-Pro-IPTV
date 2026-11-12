@@ -50,6 +50,13 @@ class LoginActivity : AppCompatActivity() {
         })
 
         b.btnLogin.setOnClickListener { attemptLogin() }
+        b.btnSupportNumber.setOnClickListener {
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://wa.me/${getString(R.string.support_wa)}")))
+            } catch (e: Exception) {
+                Toast.makeText(this, getString(R.string.support_number), Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     private fun attemptLogin() {

@@ -105,4 +105,6 @@
 
     <string name="sleep_timer">مؤقّت النوم</string>
     <string name="sleep_off">إيقاف</string>
+    <string name="support_full_text">للتفعيل وتجديد الاشتراك راسلنا واتساب ع الرقم التالي</string>
+    <string name="rotate_screen">تدوير الشاشة</string>
 </resources>
