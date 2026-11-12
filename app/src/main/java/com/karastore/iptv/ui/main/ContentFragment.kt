@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.karastore.iptv.R
 import com.karastore.iptv.data.ContentCache
+import com.karastore.iptv.data.HiddenCategoriesStore
 import com.karastore.iptv.data.model.ContentItem
 import com.karastore.iptv.data.model.ContentType
 import com.karastore.iptv.databinding.FragmentContentBinding
@@ -29,6 +30,8 @@ class ContentFragment : Fragment() {
     private lateinit var type: ContentType
     private lateinit var contentAdapter: ContentAdapter
     private var loaded = false
+    private var currentCat: String? = null
+    private var currentLabel: String = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, s: Bundle?): View {
         _b = FragmentContentBinding.inflate(inflater, container, false)
@@ -78,11 +81,15 @@ class ContentFragment : Fragment() {
             else ContentCache.categoriesWithCounts(type).firstOrNull { it.id == catId }?.name ?: ""
             applyCategory(catId, label)
         }
+        sheet.onHiddenChanged = { applyCategory(currentCat, currentLabel) }
         sheet.show(childFragmentManager, "cats")
     }
 
     private fun applyCategory(categoryId: String?, label: String) {
-        val items = ContentCache.filter(type, categoryId)
+        currentCat = categoryId
+        currentLabel = label
+        val hidden = HiddenCategoriesStore.get(requireContext(), type)
+        val items = ContentCache.filter(type, categoryId, hidden)
         _b?.let {
             it.tvCatLabel.text = label
             it.etSearch.text?.clear()

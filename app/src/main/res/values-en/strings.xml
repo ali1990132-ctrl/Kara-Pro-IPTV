@@ -79,4 +79,10 @@
     <string name="start_watching">Start watching</string>
     <string name="related">You may also like</string>
     <string name="more">More</string>
+
+    <string name="playlists_title">Playlists</string>
+    <string name="add_playlist">Add playlist</string>
+    <string name="playlist_active">Active</string>
+    <string name="switching">Switching…</string>
+    <string name="featured">Featured</string>
 </resources>

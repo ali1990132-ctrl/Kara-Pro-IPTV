@@ -13,6 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.karastore.iptv.R
 import com.karastore.iptv.data.CategoryCount
 import com.karastore.iptv.data.ContentCache
+import com.karastore.iptv.data.HiddenCategoriesStore
 import com.karastore.iptv.data.model.ContentType
 import com.karastore.iptv.databinding.SheetCategoriesBinding
 
@@ -24,6 +25,7 @@ class CategorySheet : BottomSheetDialogFragment() {
 
     private lateinit var type: ContentType
     var onPick: ((String?) -> Unit)? = null
+    var onHiddenChanged: (() -> Unit)? = null
 
     private val all = mutableListOf<CategoryCount>()
     private lateinit var adapter: CatAdapter
@@ -63,6 +65,7 @@ class CategorySheet : BottomSheetDialogFragment() {
         inner class VH(v: View) : RecyclerView.ViewHolder(v) {
             val name: TextView = v.findViewById(R.id.catName)
             val count: TextView = v.findViewById(R.id.catCount)
+            val sw: androidx.appcompat.widget.SwitchCompat = v.findViewById(R.id.catSwitch)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -74,6 +77,19 @@ class CategorySheet : BottomSheetDialogFragment() {
             val c = items[position]
             holder.name.text = label(c)
             holder.count.text = c.count.toString()
+
+            holder.sw.setOnCheckedChangeListener(null)
+            if (c.id == null) {
+                holder.sw.visibility = View.GONE
+            } else {
+                holder.sw.visibility = View.VISIBLE
+                holder.sw.isChecked = !HiddenCategoriesStore.isHidden(requireContext(), type, c.id)
+                holder.sw.setOnCheckedChangeListener { _, checked ->
+                    HiddenCategoriesStore.setHidden(requireContext(), type, c.id, !checked)
+                    onHiddenChanged?.invoke()
+                }
+            }
+
             holder.itemView.setOnClickListener {
                 onPick?.invoke(c.id)
                 dismiss()

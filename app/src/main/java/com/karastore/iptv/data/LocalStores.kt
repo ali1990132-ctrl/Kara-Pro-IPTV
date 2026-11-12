@@ -74,6 +74,24 @@ object DownloadsStore {
     }
 }
 
+/** التصنيفات/الباقات المخفية لكل نوع */
+object HiddenCategoriesStore {
+    private const val PREF = "kara_hidden"
+    private fun key(type: com.karastore.iptv.data.model.ContentType) = "hidden_${type.name}"
+
+    fun get(ctx: Context, type: com.karastore.iptv.data.model.ContentType): Set<String> =
+        ctx.getSharedPreferences(PREF, Context.MODE_PRIVATE).getStringSet(key(type), emptySet())?.toSet() ?: emptySet()
+
+    fun isHidden(ctx: Context, type: com.karastore.iptv.data.model.ContentType, id: String?): Boolean =
+        id != null && get(ctx, type).contains(id)
+
+    fun setHidden(ctx: Context, type: com.karastore.iptv.data.model.ContentType, id: String, hidden: Boolean) {
+        val set = get(ctx, type).toMutableSet()
+        if (hidden) set.add(id) else set.remove(id)
+        ctx.getSharedPreferences(PREF, Context.MODE_PRIVATE).edit().putStringSet(key(type), set).apply()
+    }
+}
+
 /** إعدادات التطبيق */
 object Settings {
     private const val PREF = "kara_settings"

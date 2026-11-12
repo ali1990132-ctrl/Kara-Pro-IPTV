@@ -1,137 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark"
-    android:fillViewport="true">
+    android:orientation="vertical"
+    android:background="@color/bg_dark">
 
+    <!-- شريط علوي: بحث (يسار) · شعار (وسط) · قوائم (يمين) -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp">
 
-        <!-- بطاقة الاشتراك -->
+        <ImageView
+            android:id="@+id/btnSearch"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_search"
+            app:tint="@color/text_primary"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:contentDescription="@string/search_hint" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="34dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_launcher_foreground"
+            android:contentDescription="@string/app_name" />
+
+        <ImageView
+            android:id="@+id/btnMenu"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_menu"
+            android:contentDescription="@string/playlists_title" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/bg_card"
-            android:padding="20dp">
+            android:paddingBottom="16dp">
 
-            <TextView
-                android:id="@+id/tvName"
+            <!-- كاروسيل مميّز -->
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text_primary"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:maxLines="2"
-                android:ellipsize="end" />
+                android:layout_height="wrap_content">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginVertical="14dp"
-                android:background="@color/divider" />
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="420dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/remaining_time"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/tvRemaining"
+                <LinearLayout
+                    android:id="@+id/dots"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/accent"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal" />
+            </FrameLayout>
+
+            <!-- الأفلام المضافة مؤخراً -->
+            <TextView
+                android:id="@+id/labelRecentMovies"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/recent_movies"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvRecentMovies"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="12dp"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:scrollbars="none" />
+
+            <!-- المسلسلات المضافة مؤخراً -->
+            <TextView
+                android:id="@+id/labelRecentSeries"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/recent_series"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvRecentSeries"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="12dp"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:scrollbars="none" />
         </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/quick_access"
-            android:textColor="@color/text_primary"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:id="@+id/tileLive"
-            style="@style/HomeTileWide"
-            android:background="@drawable/tile_live">
-            <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_live" />
-            <TextView style="@style/HomeTileWideLabel" android:text="@string/home_live" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/tileMovies"
-            style="@style/HomeTileWide"
-            android:background="@drawable/tile_movies">
-            <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_movies" />
-            <TextView style="@style/HomeTileWideLabel" android:text="@string/home_movies" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/tileSeries"
-            style="@style/HomeTileWide"
-            android:background="@drawable/tile_series">
-            <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_series" />
-            <TextView style="@style/HomeTileWideLabel" android:text="@string/home_series" />
-        </LinearLayout>
-
-        <!-- الأفلام المضافة مؤخراً -->
-        <TextView
-            android:id="@+id/labelRecentMovies"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/recent_movies"
-            android:textColor="@color/text_primary"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:visibility="gone" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvRecentMovies"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:orientation="horizontal"
-            android:scrollbars="none" />
-
-        <!-- المسلسلات المضافة مؤخراً -->
-        <TextView
-            android:id="@+id/labelRecentSeries"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/recent_series"
-            android:textColor="@color/text_primary"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:visibility="gone" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvRecentSeries"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:orientation="horizontal"
-            android:scrollbars="none" />
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</LinearLayout>

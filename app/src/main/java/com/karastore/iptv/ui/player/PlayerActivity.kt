@@ -13,6 +13,10 @@ import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
+import androidx.media3.ui.AspectRatioFrameLayout
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.google.gson.Gson
 import com.karastore.iptv.data.HistoryStore
 import com.karastore.iptv.data.Settings
@@ -33,8 +37,11 @@ class PlayerActivity : AppCompatActivity() {
         b = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(b.root)
 
+        enterImmersive()
+
         url = intent.getStringExtra(EXTRA_URL) ?: ""
         b.btnRetry.setOnClickListener { initPlayer() }
+        b.btnAspect.setOnClickListener { cycleAspect() }
 
         // سجّل المشاهدة
         intent.getStringExtra(EXTRA_ITEM)?.let { json ->
@@ -89,6 +96,31 @@ class PlayerActivity : AppCompatActivity() {
 
         b.playerView.player = exo
         player = exo
+    }
+
+    private val aspectModes = intArrayOf(
+        AspectRatioFrameLayout.RESIZE_MODE_FIT,
+        AspectRatioFrameLayout.RESIZE_MODE_ZOOM,
+        AspectRatioFrameLayout.RESIZE_MODE_FILL
+    )
+    private var aspectIndex = 0
+
+    private fun cycleAspect() {
+        aspectIndex = (aspectIndex + 1) % aspectModes.size
+        b.playerView.resizeMode = aspectModes[aspectIndex]
+    }
+
+    private fun enterImmersive() {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        val c = WindowInsetsControllerCompat(window, b.root)
+        c.hide(WindowInsetsCompat.Type.systemBars())
+        c.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) enterImmersive()
     }
 
     private fun showError() {

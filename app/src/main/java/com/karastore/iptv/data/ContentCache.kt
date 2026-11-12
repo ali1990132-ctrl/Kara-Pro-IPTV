@@ -29,9 +29,10 @@ object ContentCache {
 
     fun all(type: ContentType): List<ContentItem> = items[type] ?: emptyList()
 
-    fun filter(type: ContentType, categoryId: String?): List<ContentItem> {
+    fun filter(type: ContentType, categoryId: String?, hidden: Set<String> = emptySet()): List<ContentItem> {
         val list = all(type)
-        return if (categoryId == null) list else list.filter { it.categoryId == categoryId }
+        return if (categoryId == null) list.filter { it.categoryId !in hidden }
+        else list.filter { it.categoryId == categoryId }
     }
 
     /** التصنيفات مع عدد العناصر في كل تصنيف */
@@ -47,9 +48,12 @@ object ContentCache {
         return result
     }
 
-    /** أحدث العناصر المضافة */
-    fun recentlyAdded(type: ContentType, n: Int): List<ContentItem> {
-        return all(type).sortedByDescending { it.added ?: it.id.toLongOrNull() ?: 0L }.take(n)
+    /** أحدث العناصر المضافة (مع استثناء الباقات المخفية) */
+    fun recentlyAdded(type: ContentType, n: Int, hidden: Set<String> = emptySet()): List<ContentItem> {
+        return all(type).asSequence()
+            .filter { it.categoryId !in hidden }
+            .sortedByDescending { it.added ?: it.id.toLongOrNull() ?: 0L }
+            .take(n).toList()
     }
 
     fun clearAll() {

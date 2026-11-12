@@ -14,6 +14,17 @@
         app:show_buffering="when_playing"
         app:use_controller="true" />
 
+    <ImageView
+        android:id="@+id/btnAspect"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="top|end"
+        android:layout_margin="12dp"
+        android:padding="10dp"
+        android:background="@drawable/bg_badge"
+        android:src="@drawable/ic_aspect"
+        android:contentDescription="@null" />
+
     <ProgressBar
         android:id="@+id/progress"
         android:layout_width="wrap_content"

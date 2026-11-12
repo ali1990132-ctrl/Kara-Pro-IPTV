@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayout
 import com.karastore.iptv.R
+import com.karastore.iptv.data.ContentCache
 import com.karastore.iptv.data.LoginMode
+import com.karastore.iptv.data.PlaylistStore
 import com.karastore.iptv.data.Repo
 import com.karastore.iptv.data.Session
 import com.karastore.iptv.data.SessionStore
@@ -23,12 +25,15 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // دخول تلقائي إذا كانت الجلسة محفوظة
-        SessionStore.load(this)?.let { saved ->
-            Repo.init(saved)
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-            return
+        val addMode = intent.getBooleanExtra(EXTRA_ADD, false)
+        // دخول تلقائي إذا كانت الجلسة محفوظة (إلا بوضع "إضافة قائمة")
+        if (!addMode) {
+            SessionStore.load(this)?.let { saved ->
+                Repo.init(saved)
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+                return
+            }
         }
 
         b = ActivityLoginBinding.inflate(layoutInflater)
@@ -69,7 +74,11 @@ class LoginActivity : AppCompatActivity() {
             try {
                 Repo.connect()
                 SessionStore.save(this@LoginActivity, session, b.cbRemember.isChecked)
-                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                PlaylistStore.add(this@LoginActivity, session)
+                ContentCache.clearAll()
+                startActivity(Intent(this@LoginActivity, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                })
                 finish()
             } catch (e: Exception) {
                 setLoading(false)
@@ -93,4 +102,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun toast(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+
+    companion object {
+        const val EXTRA_ADD = "add_mode"
+    }
 }
