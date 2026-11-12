@@ -55,26 +55,15 @@ class PlaylistSheet : BottomSheetDialogFragment() {
 
     private fun switchTo(session: Session) {
         if (PlaylistStore.isActive(Repo.session, session)) { dismiss(); return }
-        val progress = AlertDialog.Builder(requireContext())
-            .setMessage(getString(R.string.switching))
-            .setCancelable(false).create()
-        progress.show()
+        // تبديل فوري بدون انتظار الاتصال؛ المحتوى يتحمّل بالخلفية
+        val ctx = requireContext()
         Repo.init(session)
-        lifecycleScope.launch {
-            try {
-                Repo.connect()
-                SessionStore.save(requireContext(), session, true)
-                ContentCache.clearAll()
-                progress.dismiss()
-                startActivity(Intent(requireContext(), MainActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                })
-                requireActivity().finish()
-            } catch (e: Exception) {
-                progress.dismiss()
-                Toast.makeText(requireContext(), e.message ?: getString(R.string.err_login), Toast.LENGTH_LONG).show()
-            }
-        }
+        SessionStore.save(ctx, session, true)
+        ContentCache.clearAll()
+        startActivity(Intent(ctx, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        })
+        requireActivity().finish()
     }
 
     private fun confirmDelete(session: Session) {
