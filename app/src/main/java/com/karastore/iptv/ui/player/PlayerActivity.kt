@@ -43,6 +43,13 @@ class PlayerActivity : AppCompatActivity() {
         b.btnRetry.setOnClickListener { initPlayer() }
         b.btnAspect.setOnClickListener { cycleAspect() }
 
+        // أظهر زر الأبعاد مع شريط التحكم فقط
+        b.playerView.setControllerVisibilityListener(
+            androidx.media3.ui.PlayerView.ControllerVisibilityListener { visibility ->
+                b.btnAspect.visibility = visibility
+            }
+        )
+
         // سجّل المشاهدة
         intent.getStringExtra(EXTRA_ITEM)?.let { json ->
             try {

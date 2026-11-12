@@ -95,4 +95,10 @@
     <string name="playlist_active">نشطة</string>
     <string name="switching">جارِ التبديل…</string>
     <string name="featured">مميّزة</string>
+
+    <!-- Support -->
+    <string name="section_support">الدعم</string>
+    <string name="support_text">للتفعيل وتجديد الاشتراك راسلنا واتساب</string>
+    <string name="support_number">07711608207</string>
+    <string name="support_wa">9647711608207</string>
 </resources>

@@ -43,6 +43,22 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!-- الدعم -->
+        <TextView style="@style/MoreSection" android:text="@string/section_support" />
+
+        <LinearLayout android:id="@+id/rowSupport" style="@style/MoreRow">
+            <ImageView style="@style/MoreRowIcon" android:src="@drawable/ic_support" />
+            <LinearLayout style="@style/MoreRowTextBox">
+                <TextView style="@style/MoreRowTitleInline" android:text="@string/support_text" />
+                <TextView style="@style/MoreRowSubtitle"
+                    android:text="@string/support_number"
+                    android:textColor="@color/accent"
+                    android:textStyle="bold"
+                    android:textSize="15sp" />
+            </LinearLayout>
+            <ImageView style="@style/MoreRowChevron" />
+        </LinearLayout>
+
         <!-- المكتبة -->
         <TextView style="@style/MoreSection" android:text="@string/section_library" />
 

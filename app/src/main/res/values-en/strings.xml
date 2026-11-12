@@ -85,4 +85,9 @@
     <string name="playlist_active">Active</string>
     <string name="switching">Switching…</string>
     <string name="featured">Featured</string>
+
+    <string name="section_support">Support</string>
+    <string name="support_text">To activate or renew, message us on WhatsApp</string>
+    <string name="support_number">07711608207</string>
+    <string name="support_wa">9647711608207</string>
 </resources>

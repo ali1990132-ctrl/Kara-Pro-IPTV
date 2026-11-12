@@ -41,6 +41,7 @@ class MoreFragment : Fragment() {
             if (Settings.compatMode(requireContext())) R.string.engine_compat else R.string.engine_auto
         )
 
+        b.rowSupport.setOnClickListener { openSupport() }
         b.rowFavorites.setOnClickListener { openList(ContentListActivity.SRC_FAVORITES, getString(R.string.menu_favorites)) }
         b.rowHistory.setOnClickListener { openList(ContentListActivity.SRC_HISTORY, getString(R.string.menu_history)) }
         b.rowDownloads.setOnClickListener { openList(ContentListActivity.SRC_DOWNLOADS, getString(R.string.menu_downloads)) }
@@ -48,6 +49,16 @@ class MoreFragment : Fragment() {
         b.rowLanguage.setOnClickListener { pickLanguage() }
         b.rowEngine.setOnClickListener { pickEngine() }
         b.rowLogout.setOnClickListener { confirmLogout() }
+    }
+
+    private fun openSupport() {
+        val num = getString(R.string.support_wa)
+        val url = "https://wa.me/$num"
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url)))
+        } catch (e: Exception) {
+            android.widget.Toast.makeText(requireContext(), getString(R.string.support_number), android.widget.Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun openList(source: String, title: String) {
