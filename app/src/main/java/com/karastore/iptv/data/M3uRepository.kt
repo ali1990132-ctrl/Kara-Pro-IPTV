@@ -10,7 +10,7 @@ import okhttp3.Request
 import java.io.BufferedReader
 import java.util.concurrent.TimeUnit
 
-/** تحميل وتحليل قائمة M3U/M3U8 */
+/** تحميل وتحليل قائمة M3U/M3U8 مع تصنيفها إلى بث/أفلام/مسلسلات */
 class M3uRepository(private val url: String) {
 
     private val client = OkHttpClient.Builder()
@@ -22,11 +22,11 @@ class M3uRepository(private val url: String) {
         .followSslRedirects(true)
         .build()
 
-    // group-title -> قنوات
-    private var grouped: LinkedHashMap<String, MutableList<ContentItem>> = LinkedHashMap()
+    // النوع -> (اسم المجموعة -> عناصر)
+    private val data = mutableMapOf<ContentType, LinkedHashMap<String, MutableList<ContentItem>>>()
     private var loaded = false
 
-    /** فحص سريع للوصول بدون تحميل القائمة كاملة (لتسريع تسجيل الدخول) */
+    /** فحص سريع للوصول بدون تحميل القائمة كاملة */
     suspend fun probe() = withContext(Dispatchers.IO) {
         val req = Request.Builder().url(url)
             .header("User-Agent", "VLC/3.0.20 LibVLC/3.0.20")
@@ -35,13 +35,7 @@ class M3uRepository(private val url: String) {
         client.newCall(req).execute().use { resp ->
             if (resp.code != 200 && resp.code != 206)
                 throw RuntimeException("السيرفر رفض الطلب (كود ${resp.code}) — تأكد من الرابط")
-            // اقرأ جزء صغير فقط ثم أغلق
-            val head = resp.body?.source()?.let {
-                it.request(2048L); it.buffer.snapshot().utf8().take(2048)
-            } ?: ""
-            if (head.isNotBlank() && !head.contains("#EXTM3U", true) && !head.contains("#EXTINF", true)) {
-                // بعض السيرفرات ترجّع الرابط بدون ترويسة #EXTM3U؛ لا نفشل، فقط نكمل
-            }
+            resp.body?.source()?.let { it.request(2048L) }
         }
     }
 
@@ -50,72 +44,72 @@ class M3uRepository(private val url: String) {
             .header("User-Agent", "VLC/3.0.20 LibVLC/3.0.20")
             .header("Accept", "*/*")
             .build()
-
         client.newCall(req).execute().use { resp ->
-            if (!resp.isSuccessful) {
-                throw RuntimeException("السيرفر رفض الطلب (كود ${resp.code}) — تأكد من الرابط أو جرّب تبويب Xtream Codes")
-            }
+            if (!resp.isSuccessful)
+                throw RuntimeException("السيرفر رفض الطلب (كود ${resp.code}) — تأكد من الرابط")
             val body = resp.body ?: throw RuntimeException("رد فارغ من السيرفر")
-            val reader = body.charStream().buffered()
-            parse(reader)
+            parse(body.charStream().buffered())
         }
-
-        if (grouped.isEmpty()) {
-            throw RuntimeException("ما لگينا أي قناة بالرابط — غالباً الرابط غلط أو منتهي الاشتراك أو مو بصيغة M3U")
-        }
+        if (data.values.all { it.isEmpty() })
+            throw RuntimeException("ما لگينا أي محتوى بالرابط — غالباً الرابط غلط أو منتهي أو مو بصيغة M3U")
         loaded = true
     }
 
-    /** تحليل تدفّقي يتحمّل القوائم الكبيرة بدون استهلاك الذاكرة */
+    private fun bucket(type: ContentType) = data.getOrPut(type) { LinkedHashMap() }
+
     private fun parse(reader: BufferedReader) {
-        grouped = LinkedHashMap()
+        data.clear()
         var idx = 0
-        var pendingName: String? = null
-        var pendingLogo: String? = null
-        var pendingGroup = "عام"
+        var name: String? = null
+        var logo: String? = null
+        var group = "عام"
 
         reader.forEachLine { raw ->
             val line = raw.trim()
             if (line.isEmpty()) return@forEachLine
             when {
-                line.startsWith("#EXTINF", ignoreCase = true) -> {
-                    pendingName = line.substringAfterLast(",").trim()
-                    pendingLogo = attr(line, "tvg-logo")
-                    pendingGroup = attr(line, "group-title")?.ifBlank { null } ?: "عام"
+                line.startsWith("#EXTINF", true) -> {
+                    name = line.substringAfterLast(",").trim()
+                    logo = attr(line, "tvg-logo")
+                    group = attr(line, "group-title")?.ifBlank { null } ?: "عام"
                 }
-                line.startsWith("#") -> { /* تجاهل أسطر التعريف الأخرى */ }
+                line.startsWith("#") -> {}
                 else -> {
-                    // سطر رابط
-                    if (pendingName != null) {
+                    val n = name
+                    if (n != null) {
+                        val type = when {
+                            line.contains("/movie/", true) -> ContentType.MOVIE
+                            line.contains("/series/", true) -> ContentType.SERIES
+                            else -> ContentType.LIVE
+                        }
+                        val ext = if (type != ContentType.LIVE)
+                            line.substringAfterLast('.', "").takeIf { it.length in 2..4 } else null
                         val item = ContentItem(
                             id = (idx++).toString(),
-                            name = pendingName!!.ifBlank { "قناة $idx" },
-                            logo = pendingLogo,
-                            type = ContentType.LIVE,
+                            name = n.ifBlank { "عنصر $idx" },
+                            logo = logo,
+                            type = type,
+                            containerExtension = ext,
                             directUrl = line,
-                            categoryId = pendingGroup
+                            categoryId = group
                         )
-                        grouped.getOrPut(pendingGroup) { mutableListOf() }.add(item)
-                        pendingName = null
-                        pendingLogo = null
-                        pendingGroup = "عام"
+                        bucket(type).getOrPut(group) { mutableListOf() }.add(item)
+                        name = null; logo = null; group = "عام"
                     }
                 }
             }
         }
     }
 
-    private fun attr(line: String, key: String): String? {
-        val regex = Regex("$key=\"([^\"]*)\"")
-        return regex.find(line)?.groupValues?.getOrNull(1)
-    }
+    private fun attr(line: String, key: String): String? =
+        Regex("$key=\"([^\"]*)\"").find(line)?.groupValues?.getOrNull(1)
 
-    fun categories(): List<Category> =
-        grouped.keys.map { name -> Category(name, name) }
+    fun categories(type: ContentType): List<Category> =
+        (data[type]?.keys ?: emptySet()).map { Category(it, it) }
 
-    fun channels(categoryId: String?): List<ContentItem> {
-        if (categoryId == null) return grouped.values.flatten()
-        return grouped[categoryId] ?: emptyList()
+    fun items(type: ContentType, categoryId: String?): List<ContentItem> {
+        val map = data[type] ?: return emptyList()
+        return if (categoryId == null) map.values.flatten() else (map[categoryId] ?: emptyList())
     }
 
     fun isLoaded() = loaded

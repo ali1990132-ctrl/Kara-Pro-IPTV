@@ -32,12 +32,6 @@ class MainActivity : AppCompatActivity() {
             com.karastore.iptv.data.Settings.markRefreshed(this)
         }
 
-        // في وضع M3U لا توجد أفلام/مسلسلات منفصلة
-        if (!Repo.isXtream) {
-            b.bottomNav.menu.findItem(R.id.nav_movies).isVisible = false
-            b.bottomNav.menu.findItem(R.id.nav_series).isVisible = false
-        }
-
         b.bottomNav.setOnItemSelectedListener { item ->
             val f: Fragment = when (item.itemId) {
                 R.id.nav_home -> HomeFragment()
@@ -51,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (savedInstanceState == null) {
-            b.bottomNav.selectedItemId = if (Repo.isXtream) R.id.nav_home else R.id.nav_live
+            b.bottomNav.selectedItemId = R.id.nav_home
         }
     }
 

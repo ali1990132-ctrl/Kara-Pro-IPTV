@@ -27,7 +27,8 @@ object ItemActions {
     }
 
     fun show(activity: Activity, item: ContentItem) {
-        val isVod = item.type == ContentType.MOVIE || item.type == ContentType.EPISODE
+        val isVod = item.type == ContentType.MOVIE || item.type == ContentType.EPISODE ||
+            (item.type == ContentType.SERIES && !item.directUrl.isNullOrBlank())
         val fav = FavoritesStore.isFav(activity, item.id)
 
         val labels = mutableListOf<String>()

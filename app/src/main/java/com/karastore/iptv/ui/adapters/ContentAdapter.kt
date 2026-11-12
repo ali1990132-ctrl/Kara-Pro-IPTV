@@ -67,8 +67,9 @@ class ContentAdapter(
             }
         }
 
-        // زر التنزيل للأفلام والحلقات فقط
-        val isVod = item.type == ContentType.MOVIE || item.type == ContentType.EPISODE
+        // زر التنزيل للأفلام والحلقات والعناصر القابلة للتشغيل مباشرة
+        val isVod = item.type == ContentType.MOVIE || item.type == ContentType.EPISODE ||
+            (item.type == ContentType.SERIES && !item.directUrl.isNullOrBlank())
         if (onDownload != null && isVod) {
             holder.download.visibility = View.VISIBLE
             holder.download.setOnClickListener { onDownload.invoke(item) }

@@ -220,7 +220,7 @@ class ContentListActivity : AppCompatActivity() {
     }
 
     private fun onItemLongClick(item: ContentItem) {
-        if (item.type == ContentType.SERIES) return
+        if (item.type == ContentType.SERIES && item.directUrl.isNullOrBlank()) return
         if (source == SRC_DOWNLOADS) {
             // في التنزيلات: تشغيل أو حذف
             AlertDialog.Builder(this)

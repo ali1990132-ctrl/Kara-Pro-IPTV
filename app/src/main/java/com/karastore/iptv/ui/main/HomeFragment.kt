@@ -54,39 +54,47 @@ class HomeFragment : Fragment() {
         b.rvRecentMovies.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         b.rvRecentSeries.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-        if (Repo.isXtream) loadContent() else loadM3uHome()
+        loadHome()
     }
 
-    private fun loadM3uHome() {
-        b.pager.visibility = View.GONE
-        viewLifecycleOwner.lifecycleScope.launch {
-            try {
-                ContentCache.load(ContentType.LIVE)
-                val live = ContentCache.recentlyAdded(ContentType.LIVE, 30, emptySet())
-                if (_b != null && live.isNotEmpty()) {
-                    b.labelRecentMovies.setText(R.string.nav_live)
-                    show(b.labelRecentMovies, b.rvRecentMovies, live)
-                }
-            } catch (_: Exception) {}
-        }
-    }
+    private fun excluded(t: ContentType) =
+        HiddenCategoriesStore.get(requireContext(), t) + LockedCategoriesStore.get(requireContext(), t)
 
-    private fun loadContent() {
+    private fun loadHome() {
         viewLifecycleOwner.lifecycleScope.launch {
+            var hasVod = false
             try {
                 ContentCache.load(ContentType.MOVIE)
-                val hidden = HiddenCategoriesStore.get(requireContext(), ContentType.MOVIE) +
-                    LockedCategoriesStore.get(requireContext(), ContentType.MOVIE)
-                val recentM = ContentCache.recentlyAdded(ContentType.MOVIE, 15, hidden)
-                setupFeatured(recentM.take(6))
-                show(b.labelRecentMovies, b.rvRecentMovies, recentM)
+                val recentM = ContentCache.recentlyAdded(ContentType.MOVIE, 15, excluded(ContentType.MOVIE))
+                if (recentM.isNotEmpty()) {
+                    hasVod = true
+                    _b?.pager?.visibility = View.VISIBLE
+                    setupFeatured(recentM.take(6))
+                    _b?.labelRecentMovies?.setText(R.string.recent_movies)
+                    show(b.labelRecentMovies, b.rvRecentMovies, recentM)
+                }
             } catch (_: Exception) {}
             try {
                 ContentCache.load(ContentType.SERIES)
-                val hiddenS = HiddenCategoriesStore.get(requireContext(), ContentType.SERIES) +
-                    LockedCategoriesStore.get(requireContext(), ContentType.SERIES)
-                show(b.labelRecentSeries, b.rvRecentSeries, ContentCache.recentlyAdded(ContentType.SERIES, 15, hiddenS))
+                val recentS = ContentCache.recentlyAdded(ContentType.SERIES, 15, excluded(ContentType.SERIES))
+                if (recentS.isNotEmpty()) {
+                    hasVod = true
+                    _b?.labelRecentSeries?.setText(R.string.recent_series)
+                    show(b.labelRecentSeries, b.rvRecentSeries, recentS)
+                }
             } catch (_: Exception) {}
+            // لا أفلام ولا مسلسلات (قائمة بث فقط) → اعرض القنوات
+            if (!hasVod) {
+                try {
+                    _b?.pager?.visibility = View.GONE
+                    ContentCache.load(ContentType.LIVE)
+                    val live = ContentCache.recentlyAdded(ContentType.LIVE, 30, excluded(ContentType.LIVE))
+                    if (live.isNotEmpty()) {
+                        _b?.labelRecentMovies?.setText(R.string.nav_live)
+                        show(b.labelRecentMovies, b.rvRecentMovies, live)
+                    }
+                } catch (_: Exception) {}
+            }
         }
     }
 

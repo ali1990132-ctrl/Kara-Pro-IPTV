@@ -53,7 +53,7 @@ object Repo {
         }
         else -> {
             if (m3u?.isLoaded() != true) m3u!!.load()
-            m3u!!.categories()
+            m3u!!.categories(type)
         }
     }
 
@@ -66,7 +66,7 @@ object Repo {
         }
         else -> {
             if (m3u?.isLoaded() != true) m3u!!.load()
-            m3u!!.channels(categoryId)
+            m3u!!.items(type, categoryId)
         }
     }
 

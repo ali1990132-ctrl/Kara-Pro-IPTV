@@ -59,12 +59,18 @@ class DetailActivity : AppCompatActivity() {
             b.tvRating.visibility = View.VISIBLE
         } else b.tvRating.visibility = View.GONE
 
-        // التحميل متاح للأفلام والحلقات فقط
-        b.btnDownload.visibility = if (item.type == ContentType.MOVIE) View.VISIBLE else View.GONE
+        // التحميل متاح للأفلام والحلقات (وعناصر M3U القابلة للتشغيل)
+        val canDownload = item.type == ContentType.MOVIE ||
+            (item.type == ContentType.SERIES && !item.directUrl.isNullOrBlank())
+        b.btnDownload.visibility = if (canDownload) View.VISIBLE else View.GONE
         refreshFav()
     }
 
     private fun start() {
+        // مسلسلات M3U = حلقة قابلة للتشغيل مباشرة
+        if (item.type == ContentType.SERIES && !item.directUrl.isNullOrBlank()) {
+            ItemActions.play(this, item); return
+        }
         if (item.type == ContentType.SERIES) {
             startActivity(Intent(this, ContentListActivity::class.java).apply {
                 putExtra(ContentListActivity.EXTRA_TYPE, ContentType.SERIES.name)
