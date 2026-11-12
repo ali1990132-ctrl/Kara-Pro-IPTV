@@ -122,15 +122,17 @@ class XtreamApi(
     /** حلقات مسلسل معيّن (مرتبة) */
     suspend fun seriesEpisodes(seriesId: String): List<ContentItem> {
         val info = gson.fromJson(get(api("get_series_info", "&series_id=$seriesId")), XtreamSeriesInfo::class.java)
+        val seriesCover = info?.info?.coverBig?.ifBlank { null } ?: info?.info?.cover?.ifBlank { null }
         val result = mutableListOf<ContentItem>()
         info?.episodes?.toSortedMap(compareBy { it.toIntOrNull() ?: 0 })?.forEach { (season, eps) ->
             eps.forEach { ep ->
                 val ext = ep.containerExtension ?: "mp4"
+                val img = ep.info?.movieImage?.ifBlank { null } ?: seriesCover
                 result.add(
                     ContentItem(
                         id = ep.id ?: "",
                         name = "م$season - ${ep.title ?: "حلقة ${ep.episodeNum}"}",
-                        logo = ep.info?.movieImage,
+                        logo = img,
                         type = ContentType.EPISODE,
                         containerExtension = ext,
                         directUrl = "$base/series/$username/$password/${ep.id}.$ext"

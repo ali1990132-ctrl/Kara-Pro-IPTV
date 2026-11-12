@@ -70,6 +70,7 @@ class DetailActivity : AppCompatActivity() {
                 putExtra(ContentListActivity.EXTRA_TYPE, ContentType.SERIES.name)
                 putExtra(ContentListActivity.EXTRA_TITLE, item.name)
                 putExtra(ContentListActivity.EXTRA_SERIES_ID, item.id)
+                putExtra(ContentListActivity.EXTRA_SERIES_COVER, item.logo)
             })
         } else {
             ItemActions.play(this, item)

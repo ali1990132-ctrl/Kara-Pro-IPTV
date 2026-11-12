@@ -86,7 +86,13 @@ data class XtreamSeries(
 )
 
 data class XtreamSeriesInfo(
+    val info: XtreamSeriesCover?,
     val episodes: Map<String, List<XtreamEpisode>>?
+)
+
+data class XtreamSeriesCover(
+    val cover: String?,
+    @SerializedName("cover_big") val coverBig: String?
 )
 
 data class XtreamEpisode(

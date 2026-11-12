@@ -31,6 +31,7 @@ class ContentListActivity : AppCompatActivity() {
     private lateinit var b: ActivityContentListBinding
     private lateinit var type: ContentType
     private var seriesId: String? = null
+    private var seriesCover: String? = null
     private var source: String? = null
 
     private lateinit var catAdapter: CategoryAdapter
@@ -44,6 +45,7 @@ class ContentListActivity : AppCompatActivity() {
 
         type = ContentType.valueOf(intent.getStringExtra(EXTRA_TYPE) ?: ContentType.LIVE.name)
         seriesId = intent.getStringExtra(EXTRA_SERIES_ID)
+        seriesCover = intent.getStringExtra(EXTRA_SERIES_COVER)
         source = intent.getStringExtra(EXTRA_SOURCE)
         b.tvTitle.text = intent.getStringExtra(EXTRA_TITLE) ?: ""
 
@@ -159,7 +161,10 @@ class ContentListActivity : AppCompatActivity() {
         setLoading(true)
         lifecycleScope.launch {
             try {
-                val items = Repo.episodes(seriesId!!)
+                val raw = Repo.episodes(seriesId!!)
+                val items = raw.map {
+                    if (it.logo.isNullOrBlank()) it.copy(logo = seriesCover) else it
+                }
                 contentAdapter.submit(items)
                 setLoading(false)
                 b.tvEmpty.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
@@ -176,6 +181,7 @@ class ContentListActivity : AppCompatActivity() {
                 putExtra(EXTRA_TYPE, ContentType.SERIES.name)
                 putExtra(EXTRA_TITLE, item.name)
                 putExtra(EXTRA_SERIES_ID, item.id)
+                putExtra(EXTRA_SERIES_COVER, item.logo)
             })
             return
         }
@@ -212,6 +218,7 @@ class ContentListActivity : AppCompatActivity() {
         const val EXTRA_TYPE = "type"
         const val EXTRA_TITLE = "title"
         const val EXTRA_SERIES_ID = "series_id"
+        const val EXTRA_SERIES_COVER = "series_cover"
         const val EXTRA_SOURCE = "source"
         const val SRC_FAVORITES = "favorites"
         const val SRC_HISTORY = "history"
