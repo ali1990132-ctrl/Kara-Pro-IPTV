@@ -17,4 +17,7 @@
     <color name="blue">#1E9BFF</color>
     <color name="blue_dark">#0B6FD6</color>
     <color name="cyan">#22D3EE</color>
+    <color name="rail_bg">#D6ECFF</color>
+    <color name="rail_sel">#0B6FD6</color>
+    <color name="rail_unsel">#3B5A79</color>
 </resources>
