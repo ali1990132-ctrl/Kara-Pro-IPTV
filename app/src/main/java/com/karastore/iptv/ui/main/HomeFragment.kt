@@ -59,42 +59,57 @@ class HomeFragment : Fragment() {
         loadHome()
     }
 
-    private fun excluded(t: ContentType) =
-        HiddenCategoriesStore.get(requireContext(), t) + LockedCategoriesStore.get(requireContext(), t)
+    private fun excluded(t: ContentType): Set<String> {
+        val ctx = context ?: return emptySet()
+        return HiddenCategoriesStore.get(ctx, t) + LockedCategoriesStore.get(ctx, t)
+    }
 
+    /** يحمّل المحتوى بالخلفية ويعبّي الكاروسيل وصفوف المضاف مؤخراً */
     private fun loadHome() {
-        var hasVod = false
-        // اعرض الأفلام/المسلسلات فقط إن كانت محمّلة مسبقاً (بدون تحميل ثقيل من الرئيسية)
-        if (ContentCache.isLoaded(ContentType.MOVIE)) {
-            val recentM = ContentCache.recentlyAdded(ContentType.MOVIE, 15, excluded(ContentType.MOVIE))
-            if (recentM.isNotEmpty()) {
-                hasVod = true
-                b.pager.visibility = View.VISIBLE
-                setupFeatured(recentM.take(6))
-                b.labelRecentMovies.setText(R.string.recent_movies)
-                show(b.labelRecentMovies, b.rvRecentMovies, recentM)
-            }
-        }
-        if (ContentCache.isLoaded(ContentType.SERIES)) {
-            val recentS = ContentCache.recentlyAdded(ContentType.SERIES, 15, excluded(ContentType.SERIES))
-            if (recentS.isNotEmpty()) {
-                hasVod = true
-                b.labelRecentSeries.setText(R.string.recent_series)
-                show(b.labelRecentSeries, b.rvRecentSeries, recentS)
-            }
-        }
-        if (!hasVod) {
-            // أول مرة: حمّل القنوات فقط (أخف) واعرضها
-            b.pager.visibility = View.GONE
-            viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
+            var hasVod = false
+            // أفلام
+            try {
+                val exM = excluded(ContentType.MOVIE)
+                ContentCache.load(ContentType.MOVIE)
+                val recentM = withContext(Dispatchers.IO) {
+                    ContentCache.recentlyAdded(ContentType.MOVIE, 15, exM)
+                }
+                if (_b != null && recentM.isNotEmpty()) {
+                    hasVod = true
+                    b.pager.visibility = View.VISIBLE
+                    setupFeatured(recentM.take(6))
+                    b.labelRecentMovies.setText(R.string.recent_movies)
+                    show(b.labelRecentMovies, b.rvRecentMovies, recentM)
+                }
+            } catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (_: Exception) {}
+            // مسلسلات
+            try {
+                val exS = excluded(ContentType.SERIES)
+                ContentCache.load(ContentType.SERIES)
+                val recentS = withContext(Dispatchers.IO) {
+                    ContentCache.recentlyAdded(ContentType.SERIES, 15, exS)
+                }
+                if (_b != null && recentS.isNotEmpty()) {
+                    hasVod = true
+                    b.labelRecentSeries.setText(R.string.recent_series)
+                    show(b.labelRecentSeries, b.rvRecentSeries, recentS)
+                }
+            } catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (_: Exception) {}
+            // لا أفلام ولا مسلسلات → اعرض القنوات
+            if (!hasVod) {
                 try {
+                    _b?.pager?.visibility = View.GONE
+                    val exL = excluded(ContentType.LIVE)
                     ContentCache.load(ContentType.LIVE)
-                    val live = ContentCache.recentlyAdded(ContentType.LIVE, 30, excluded(ContentType.LIVE))
+                    val live = withContext(Dispatchers.IO) {
+                        ContentCache.recentlyAdded(ContentType.LIVE, 30, exL)
+                    }
                     if (_b != null && live.isNotEmpty()) {
                         b.labelRecentMovies.setText(R.string.nav_live)
                         show(b.labelRecentMovies, b.rvRecentMovies, live)
                     }
-                } catch (_: Exception) {}
+                } catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (_: Exception) {}
             }
         }
     }
