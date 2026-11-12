@@ -80,4 +80,12 @@
     <string name="empty_favorites">لا توجد عناصر بالمفضلة</string>
     <string name="empty_history">السجل فارغ</string>
     <string name="empty_downloads">لا توجد تنزيلات</string>
+
+    <!-- Categories / detail / home -->
+    <string name="all_categories">كل التصنيفات</string>
+    <string name="recent_movies">الأفلام المضافة مؤخراً</string>
+    <string name="recent_series">المسلسلات المضافة مؤخراً</string>
+    <string name="start_watching">ابدأ المشاهدة</string>
+    <string name="related">مقترحات مشابهة</string>
+    <string name="more">المزيد</string>
 </resources>

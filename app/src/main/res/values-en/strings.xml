@@ -72,4 +72,11 @@
     <string name="empty_favorites">No favorites yet</string>
     <string name="empty_history">History is empty</string>
     <string name="empty_downloads">No downloads</string>
+
+    <string name="all_categories">All categories</string>
+    <string name="recent_movies">Recently added movies</string>
+    <string name="recent_series">Recently added series</string>
+    <string name="start_watching">Start watching</string>
+    <string name="related">You may also like</string>
+    <string name="more">More</string>
 </resources>

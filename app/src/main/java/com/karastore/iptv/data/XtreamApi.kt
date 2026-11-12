@@ -76,7 +76,8 @@ class XtreamApi(
                 name = it.name ?: "",
                 logo = it.streamIcon,
                 type = ContentType.LIVE,
-                directUrl = "$base/live/$username/$password/${it.streamId}.ts"
+                directUrl = "$base/live/$username/$password/${it.streamId}.ts",
+                categoryId = it.categoryId
             )
         }
     }
@@ -93,7 +94,10 @@ class XtreamApi(
                 logo = it.streamIcon,
                 type = ContentType.MOVIE,
                 containerExtension = ext,
-                directUrl = "$base/movie/$username/$password/${it.streamId}.$ext"
+                directUrl = "$base/movie/$username/$password/${it.streamId}.$ext",
+                categoryId = it.categoryId,
+                rating = it.rating,
+                added = it.added?.toLongOrNull()
             )
         }
     }
@@ -107,7 +111,10 @@ class XtreamApi(
                 id = it.seriesId?.toString() ?: "",
                 name = it.name ?: "",
                 logo = it.cover,
-                type = ContentType.SERIES
+                type = ContentType.SERIES,
+                categoryId = it.categoryId,
+                rating = it.rating,
+                added = it.lastModified?.toLongOrNull()
             )
         }
     }

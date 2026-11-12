@@ -19,7 +19,11 @@ data class ContentItem(
     val type: ContentType,
     val containerExtension: String? = null,
     /** رابط تشغيل جاهز (يُستخدم مع M3U) */
-    val directUrl: String? = null
+    val directUrl: String? = null,
+    val categoryId: String? = null,
+    val rating: String? = null,
+    /** وقت الإضافة (unix) لترتيب "المضاف مؤخراً" */
+    val added: Long? = null
 )
 
 // ----------------------- نماذج Xtream -----------------------
@@ -66,7 +70,9 @@ data class XtreamVodStream(
     @SerializedName("stream_id") val streamId: Long?,
     @SerializedName("stream_icon") val streamIcon: String?,
     @SerializedName("category_id") val categoryId: String?,
-    @SerializedName("container_extension") val containerExtension: String?
+    @SerializedName("container_extension") val containerExtension: String?,
+    val rating: String?,
+    val added: String?
 )
 
 data class XtreamSeries(
@@ -74,7 +80,9 @@ data class XtreamSeries(
     val name: String?,
     @SerializedName("series_id") val seriesId: Long?,
     val cover: String?,
-    @SerializedName("category_id") val categoryId: String?
+    @SerializedName("category_id") val categoryId: String?,
+    val rating: String?,
+    @SerializedName("last_modified") val lastModified: String?
 )
 
 data class XtreamSeriesInfo(

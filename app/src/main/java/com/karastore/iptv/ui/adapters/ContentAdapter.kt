@@ -34,6 +34,7 @@ class ContentAdapter(
     inner class VH(v: View) : RecyclerView.ViewHolder(v) {
         val poster: ImageView = v.findViewById(R.id.poster)
         val name: TextView = v.findViewById(R.id.name)
+        val rating: TextView = v.findViewById(R.id.rating)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -45,6 +46,11 @@ class ContentAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val item = shown[position]
         holder.name.text = item.name
+        val r = item.rating?.toFloatOrNull()
+        if (r != null && r > 0f) {
+            holder.rating.text = "${item.rating} ★"
+            holder.rating.visibility = View.VISIBLE
+        } else holder.rating.visibility = View.GONE
         holder.poster.load(item.logo) {
             placeholder(R.drawable.ic_placeholder)
             error(R.drawable.ic_placeholder)

@@ -61,9 +61,10 @@ class MoreFragment : Fragment() {
         b.updateProgress.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                val live = Repo.content(ContentType.LIVE, null).size
-                val movies = if (Repo.isXtream) Repo.content(ContentType.MOVIE, null).size else 0
-                val series = if (Repo.isXtream) Repo.content(ContentType.SERIES, null).size else 0
+                com.karastore.iptv.data.ContentCache.clearAll()
+                val live = com.karastore.iptv.data.ContentCache.load(ContentType.LIVE).size
+                val movies = if (Repo.isXtream) com.karastore.iptv.data.ContentCache.load(ContentType.MOVIE).size else 0
+                val series = if (Repo.isXtream) com.karastore.iptv.data.ContentCache.load(ContentType.SERIES).size else 0
                 _b?.tvCounts?.text = getString(R.string.counts_fmt, live, movies, series)
             } catch (e: Exception) {
                 _b?.tvCounts?.text = getString(R.string.err_network)

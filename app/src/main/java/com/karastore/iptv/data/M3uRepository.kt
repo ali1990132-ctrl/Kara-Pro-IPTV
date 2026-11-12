@@ -73,7 +73,8 @@ class M3uRepository(private val url: String) {
                             name = pendingName!!.ifBlank { "قناة $idx" },
                             logo = pendingLogo,
                             type = ContentType.LIVE,
-                            directUrl = line
+                            directUrl = line,
+                            categoryId = pendingGroup
                         )
                         grouped.getOrPut(pendingGroup) { mutableListOf() }.add(item)
                         pendingName = null
