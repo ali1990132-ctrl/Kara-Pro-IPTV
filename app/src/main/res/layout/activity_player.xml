@@ -73,13 +73,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
         android:layout_margin="10dp"
-        android:background="@drawable/bg_badge"
-        android:paddingHorizontal="8dp"
-        android:paddingVertical="3dp"
+        android:background="@drawable/bg_watermark"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
         android:text="@string/activation_watermark"
-        android:textColor="#E6FFFFFF"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
         android:visibility="gone" />
 
     <!-- زر فك القفل (يظهر عند القفل) -->
