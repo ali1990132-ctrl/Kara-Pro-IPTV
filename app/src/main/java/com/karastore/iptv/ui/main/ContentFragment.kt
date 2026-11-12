@@ -41,6 +41,16 @@ class ContentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         type = ContentType.valueOf(arguments?.getString(ARG_TYPE) ?: ContentType.LIVE.name)
 
+        b.tvSectionTitle.setText(
+            when (type) {
+                ContentType.MOVIE -> R.string.nav_movies
+                ContentType.SERIES -> R.string.nav_series
+                else -> R.string.nav_live
+            }
+        )
+        b.tvWatermark.visibility =
+            if (type == ContentType.MOVIE || type == ContentType.SERIES) View.VISIBLE else View.GONE
+
         contentAdapter = ContentAdapter(
             onClick = { item -> onItemClick(item) },
             onLongClick = { item -> if (item.type != ContentType.SERIES) ItemActions.show(requireActivity(), item) },
