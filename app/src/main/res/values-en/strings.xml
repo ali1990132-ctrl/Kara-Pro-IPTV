@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Kara Pro</string>
+    <string name="app_name">A&amp;S</string>
 
     <string name="login_title">Sign in</string>
     <string name="tab_xtream">Xtream Codes</string>
@@ -91,4 +91,7 @@
     <string name="support_text">To activate or renew, message us on WhatsApp</string>
     <string name="support_number">07711608207</string>
     <string name="support_wa">9647711608207</string>
+
+    <string name="sleep_timer">Sleep timer</string>
+    <string name="sleep_off">Off</string>
 </resources>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">كارة برو</string>
+    <string name="app_name">A&amp;S</string>
 
     <!-- Login -->
     <string name="login_title">تسجيل الدخول</string>
@@ -102,4 +102,7 @@
     <string name="support_text">للتفعيل وتجديد الاشتراك راسلنا واتساب</string>
     <string name="support_number">07711608207</string>
     <string name="support_wa">9647711608207</string>
+
+    <string name="sleep_timer">مؤقّت النوم</string>
+    <string name="sleep_off">إيقاف</string>
 </resources>
