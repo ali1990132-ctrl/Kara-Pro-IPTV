@@ -93,7 +93,7 @@
                 <TextView android:id="@+id/tvCounts" style="@style/MoreRowSubtitle" />
             </LinearLayout>
             <ProgressBar android:id="@+id/updateProgress" android:layout_width="22dp"
-                android:layout_height="22dp" android:indeterminateTint="@color/accent"
+                android:layout_height="22dp" android:indeterminateTint="@color/cyan"
                 android:visibility="gone" />
         </LinearLayout>
 

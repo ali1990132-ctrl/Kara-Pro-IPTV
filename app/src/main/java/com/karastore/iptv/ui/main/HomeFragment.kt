@@ -64,17 +64,13 @@ class HomeFragment : Fragment() {
         return HiddenCategoriesStore.get(ctx, t) + LockedCategoriesStore.get(ctx, t)
     }
 
-    /** يحمّل المحتوى بالخلفية ويعبّي الكاروسيل وصفوف المضاف مؤخراً */
+    /** رئيسية خفيفة: تعرض الأفلام/المسلسلات فقط إن كانت محمّلة مسبقاً (بدون سحب الكتالوج الضخم) */
     private fun loadHome() {
         viewLifecycleOwner.lifecycleScope.launch {
             var hasVod = false
-            // أفلام
-            try {
+            if (ContentCache.isLoaded(ContentType.MOVIE)) {
                 val exM = excluded(ContentType.MOVIE)
-                ContentCache.load(ContentType.MOVIE)
-                val recentM = withContext(Dispatchers.IO) {
-                    ContentCache.recentlyAdded(ContentType.MOVIE, 15, exM)
-                }
+                val recentM = withContext(Dispatchers.IO) { ContentCache.recentlyAdded(ContentType.MOVIE, 15, exM) }
                 if (_b != null && recentM.isNotEmpty()) {
                     hasVod = true
                     b.pager.visibility = View.VISIBLE
@@ -82,29 +78,23 @@ class HomeFragment : Fragment() {
                     b.labelRecentMovies.setText(R.string.recent_movies)
                     show(b.labelRecentMovies, b.rvRecentMovies, recentM)
                 }
-            } catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (_: Exception) {}
-            // مسلسلات
-            try {
+            }
+            if (ContentCache.isLoaded(ContentType.SERIES)) {
                 val exS = excluded(ContentType.SERIES)
-                ContentCache.load(ContentType.SERIES)
-                val recentS = withContext(Dispatchers.IO) {
-                    ContentCache.recentlyAdded(ContentType.SERIES, 15, exS)
-                }
+                val recentS = withContext(Dispatchers.IO) { ContentCache.recentlyAdded(ContentType.SERIES, 15, exS) }
                 if (_b != null && recentS.isNotEmpty()) {
                     hasVod = true
                     b.labelRecentSeries.setText(R.string.recent_series)
                     show(b.labelRecentSeries, b.rvRecentSeries, recentS)
                 }
-            } catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (_: Exception) {}
-            // لا أفلام ولا مسلسلات → اعرض القنوات
+            }
+            // أول مرة: حمّل القنوات فقط (أخف من الأفلام/المسلسلات) واعرضها
             if (!hasVod) {
                 try {
                     _b?.pager?.visibility = View.GONE
                     val exL = excluded(ContentType.LIVE)
                     ContentCache.load(ContentType.LIVE)
-                    val live = withContext(Dispatchers.IO) {
-                        ContentCache.recentlyAdded(ContentType.LIVE, 30, exL)
-                    }
+                    val live = withContext(Dispatchers.IO) { ContentCache.recentlyAdded(ContentType.LIVE, 30, exL) }
                     if (_b != null && live.isNotEmpty()) {
                         b.labelRecentMovies.setText(R.string.nav_live)
                         show(b.labelRecentMovies, b.rvRecentMovies, live)
