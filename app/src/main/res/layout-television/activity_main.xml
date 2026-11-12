@@ -16,6 +16,7 @@
         android:focusable="true"
         app:labelVisibilityMode="labeled"
         app:headerLayout="@layout/nav_rail_header"
+        app:itemBackground="@drawable/rail_item_focus"
         app:itemIconTint="@color/nav_item_rail"
         app:itemTextColor="@color/nav_item_rail"
         app:menu="@menu/bottom_nav" />
