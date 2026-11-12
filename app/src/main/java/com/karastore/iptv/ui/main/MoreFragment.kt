@@ -74,15 +74,19 @@ class MoreFragment : Fragment() {
 
     private fun loadCounts() {
         b.updateProgress.visibility = View.VISIBLE
-        lifecycleScope.launch {
+        val errMsg = getString(R.string.err_network)
+        val ctx = requireContext().applicationContext
+        viewLifecycleOwner.lifecycleScope.launch {
             try {
                 com.karastore.iptv.data.ContentCache.clearAll()
                 val live = com.karastore.iptv.data.ContentCache.load(ContentType.LIVE).size
                 val movies = if (Repo.isXtream) com.karastore.iptv.data.ContentCache.load(ContentType.MOVIE).size else 0
                 val series = if (Repo.isXtream) com.karastore.iptv.data.ContentCache.load(ContentType.SERIES).size else 0
-                _b?.tvCounts?.text = getString(R.string.counts_fmt, live, movies, series)
+                _b?.tvCounts?.text = ctx.getString(R.string.counts_fmt, live, movies, series)
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
             } catch (e: Exception) {
-                _b?.tvCounts?.text = getString(R.string.err_network)
+                _b?.tvCounts?.text = errMsg
             } finally {
                 _b?.updateProgress?.visibility = View.GONE
             }

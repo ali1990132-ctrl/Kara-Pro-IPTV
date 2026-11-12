@@ -76,14 +76,19 @@ class ContentFragment : Fragment() {
 
     private fun loadAll() {
         setLoading(true)
+        val allLabel = getString(R.string.all)
+        val errMsg = getString(R.string.err_network)
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 ContentCache.load(type)
                 loaded = true
-                applyCategory(null, getString(R.string.all))
+                applyCategory(null, allLabel)
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
             } catch (e: Exception) {
+                if (_b == null) return@launch
                 setLoading(false)
-                toast(getString(R.string.err_network))
+                toast(errMsg)
             }
         }
     }
@@ -101,10 +106,11 @@ class ContentFragment : Fragment() {
     }
 
     private fun applyCategory(categoryId: String?, label: String) {
+        val ctx = context ?: return
         currentCat = categoryId
         currentLabel = label
-        val excluded = HiddenCategoriesStore.get(requireContext(), type) +
-            LockedCategoriesStore.get(requireContext(), type)
+        val excluded = HiddenCategoriesStore.get(ctx, type) +
+            LockedCategoriesStore.get(ctx, type)
         val full = ContentCache.filter(type, categoryId, excluded)
         // تحديد العدد في عرض "الكل" لتخفيف الحِمل
         val items = if (categoryId == null && full.size > 1500) full.take(1500) else full
@@ -133,7 +139,10 @@ class ContentFragment : Fragment() {
         if (loading) b.tvEmpty.visibility = View.GONE
     }
 
-    private fun toast(msg: String) = Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+    private fun toast(msg: String) {
+        val ctx = context ?: return
+        Toast.makeText(ctx, msg, Toast.LENGTH_SHORT).show()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
