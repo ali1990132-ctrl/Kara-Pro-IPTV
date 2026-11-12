@@ -38,4 +38,46 @@
     <!-- Player -->
     <string name="player_error">تعذّر تشغيل البث</string>
     <string name="retry">إعادة المحاولة</string>
+
+    <!-- Bottom nav -->
+    <string name="nav_home">الرئيسية</string>
+    <string name="nav_live">البث المباشر</string>
+    <string name="nav_movies">الأفلام</string>
+    <string name="nav_series">المسلسلات</string>
+    <string name="nav_more">المزيد</string>
+
+    <!-- More screen -->
+    <string name="section_library">المفضلة وسجل المشاهدة</string>
+    <string name="menu_favorites">المفضلة</string>
+    <string name="menu_history">السجل</string>
+    <string name="menu_downloads">التنزيلات</string>
+    <string name="menu_downloads_sub">الأفلام والحلقات المحفوظة للمشاهدة بدون نت</string>
+    <string name="section_content">المحتوى</string>
+    <string name="section_general">الإعدادات العامة</string>
+    <string name="menu_language">لغة التطبيق</string>
+    <string name="menu_engine">محرّك التشغيل</string>
+    <string name="engine_auto">تلقائي</string>
+    <string name="engine_compat">توافقية أعلى</string>
+    <string name="lang_device">لغة الجهاز</string>
+    <string name="lang_ar">العربية</string>
+    <string name="lang_en">English</string>
+    <string name="remaining_time">الوقت المتبقي</string>
+    <string name="unit_days">يوم</string>
+    <string name="unlimited">غير محدود</string>
+    <string name="counts_fmt">%1$d بث · %2$d أفلام · %3$d مسلسلات</string>
+    <string name="continue_watching">متابعة المشاهدة</string>
+    <string name="quick_access">الأقسام</string>
+
+    <!-- Item actions -->
+    <string name="action_play">تشغيل</string>
+    <string name="action_download">تحميل</string>
+    <string name="action_fav_add">إضافة للمفضلة</string>
+    <string name="action_fav_remove">إزالة من المفضلة</string>
+    <string name="action_delete">حذف</string>
+    <string name="download_started">بدأ التنزيل…</string>
+
+    <!-- Empty states -->
+    <string name="empty_favorites">لا توجد عناصر بالمفضلة</string>
+    <string name="empty_history">السجل فارغ</string>
+    <string name="empty_downloads">لا توجد تنزيلات</string>
 </resources>

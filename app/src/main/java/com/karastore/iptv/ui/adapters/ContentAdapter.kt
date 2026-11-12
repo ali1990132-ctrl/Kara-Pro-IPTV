@@ -11,7 +11,8 @@ import com.karastore.iptv.R
 import com.karastore.iptv.data.model.ContentItem
 
 class ContentAdapter(
-    private val onClick: (ContentItem) -> Unit
+    private val onClick: (ContentItem) -> Unit,
+    private val onLongClick: ((ContentItem) -> Unit)? = null
 ) : RecyclerView.Adapter<ContentAdapter.VH>() {
 
     private val all = mutableListOf<ContentItem>()
@@ -50,6 +51,10 @@ class ContentAdapter(
             crossfade(true)
         }
         holder.itemView.setOnClickListener { onClick(item) }
+        holder.itemView.setOnLongClickListener {
+            onLongClick?.invoke(item)
+            onLongClick != null
+        }
     }
 
     override fun getItemCount() = shown.size

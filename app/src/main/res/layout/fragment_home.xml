@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- بطاقة الاشتراك -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_card"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="14dp"
+                android:background="@color/divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/remaining_time"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvRemaining"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/accent"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/quick_access"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/tileLive"
+            style="@style/HomeTileWide"
+            android:background="@drawable/tile_live">
+            <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_live" />
+            <TextView style="@style/HomeTileWideLabel" android:text="@string/home_live" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tileMovies"
+            style="@style/HomeTileWide"
+            android:background="@drawable/tile_movies">
+            <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_movies" />
+            <TextView style="@style/HomeTileWideLabel" android:text="@string/home_movies" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tileSeries"
+            style="@style/HomeTileWide"
+            android:background="@drawable/tile_series">
+            <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_series" />
+            <TextView style="@style/HomeTileWideLabel" android:text="@string/home_series" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

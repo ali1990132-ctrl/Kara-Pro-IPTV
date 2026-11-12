@@ -6,19 +6,24 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.karastore.iptv.R
+import com.karastore.iptv.data.DownloadsStore
+import com.karastore.iptv.data.Downloader
+import com.karastore.iptv.data.FavoritesStore
+import com.karastore.iptv.data.HistoryStore
 import com.karastore.iptv.data.Repo
 import com.karastore.iptv.data.model.Category
 import com.karastore.iptv.data.model.ContentItem
 import com.karastore.iptv.data.model.ContentType
 import com.karastore.iptv.databinding.ActivityContentListBinding
+import com.karastore.iptv.ui.ItemActions
 import com.karastore.iptv.ui.adapters.CategoryAdapter
 import com.karastore.iptv.ui.adapters.ContentAdapter
-import com.karastore.iptv.ui.player.PlayerActivity
 import kotlinx.coroutines.launch
 
 class ContentListActivity : AppCompatActivity() {
@@ -26,6 +31,7 @@ class ContentListActivity : AppCompatActivity() {
     private lateinit var b: ActivityContentListBinding
     private lateinit var type: ContentType
     private var seriesId: String? = null
+    private var source: String? = null
 
     private lateinit var catAdapter: CategoryAdapter
     private lateinit var contentAdapter: ContentAdapter
@@ -38,6 +44,7 @@ class ContentListActivity : AppCompatActivity() {
 
         type = ContentType.valueOf(intent.getStringExtra(EXTRA_TYPE) ?: ContentType.LIVE.name)
         seriesId = intent.getStringExtra(EXTRA_SERIES_ID)
+        source = intent.getStringExtra(EXTRA_SOURCE)
         b.tvTitle.text = intent.getStringExtra(EXTRA_TITLE) ?: ""
 
         b.btnBack.setOnClickListener { finish() }
@@ -46,7 +53,10 @@ class ContentListActivity : AppCompatActivity() {
         b.rvCategories.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         b.rvCategories.adapter = catAdapter
 
-        contentAdapter = ContentAdapter { item -> onItemClick(item) }
+        contentAdapter = ContentAdapter(
+            onClick = { item -> onItemClick(item) },
+            onLongClick = { item -> onItemLongClick(item) }
+        )
         b.rvContent.layoutManager = GridLayoutManager(this, 3)
         b.rvContent.adapter = contentAdapter
 
@@ -56,13 +66,34 @@ class ContentListActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
         })
 
-        if (seriesId != null) {
-            // وضع الحلقات: لا تصنيفات
-            b.rvCategories.visibility = View.GONE
-            loadEpisodes()
-        } else {
-            loadCategories()
+        when {
+            source != null -> { b.rvCategories.visibility = View.GONE; loadSource() }
+            seriesId != null -> { b.rvCategories.visibility = View.GONE; loadEpisodes() }
+            else -> loadCategories()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // تحديث القوائم المحلية عند الرجوع
+        if (source != null) loadSource()
+    }
+
+    private fun loadSource() {
+        val items: List<ContentItem> = when (source) {
+            SRC_FAVORITES -> FavoritesStore.all(this)
+            SRC_HISTORY -> HistoryStore.all(this)
+            SRC_DOWNLOADS -> DownloadsStore.all(this)
+            else -> emptyList()
+        }
+        contentAdapter.submit(items)
+        b.tvEmpty.text = when (source) {
+            SRC_FAVORITES -> getString(R.string.empty_favorites)
+            SRC_HISTORY -> getString(R.string.empty_history)
+            SRC_DOWNLOADS -> getString(R.string.empty_downloads)
+            else -> getString(R.string.empty_list)
+        }
+        b.tvEmpty.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
     }
 
     private fun loadCategories() {
@@ -82,8 +113,7 @@ class ContentListActivity : AppCompatActivity() {
 
     private fun onCategorySelected(pos: Int) {
         val cat = categories.getOrNull(pos) ?: return
-        val id = if (cat.id == ALL_ID) null else cat.id
-        loadContent(id)
+        loadContent(if (cat.id == ALL_ID) null else cat.id)
     }
 
     private fun loadContent(categoryId: String?) {
@@ -119,7 +149,6 @@ class ContentListActivity : AppCompatActivity() {
 
     private fun onItemClick(item: ContentItem) {
         if (item.type == ContentType.SERIES) {
-            // فتح حلقات المسلسل
             startActivity(Intent(this, ContentListActivity::class.java).apply {
                 putExtra(EXTRA_TYPE, ContentType.SERIES.name)
                 putExtra(EXTRA_TITLE, item.name)
@@ -127,12 +156,26 @@ class ContentListActivity : AppCompatActivity() {
             })
             return
         }
-        val url = item.directUrl
-        if (url.isNullOrBlank()) { toast(getString(R.string.player_error)); return }
-        startActivity(Intent(this, PlayerActivity::class.java).apply {
-            putExtra(PlayerActivity.EXTRA_URL, url)
-            putExtra(PlayerActivity.EXTRA_TITLE, item.name)
-        })
+        ItemActions.play(this, item)
+    }
+
+    private fun onItemLongClick(item: ContentItem) {
+        if (item.type == ContentType.SERIES) return
+        if (source == SRC_DOWNLOADS) {
+            // في التنزيلات: تشغيل أو حذف
+            AlertDialog.Builder(this)
+                .setTitle(item.name)
+                .setItems(arrayOf(getString(R.string.action_play), getString(R.string.action_delete))) { _, which ->
+                    if (which == 0) ItemActions.play(this, item)
+                    else {
+                        Downloader.deleteFile(item)
+                        DownloadsStore.remove(this, item.id)
+                        loadSource()
+                    }
+                }.show()
+        } else {
+            ItemActions.show(this, item)
+        }
     }
 
     private fun setLoading(loading: Boolean) {
@@ -146,6 +189,10 @@ class ContentListActivity : AppCompatActivity() {
         const val EXTRA_TYPE = "type"
         const val EXTRA_TITLE = "title"
         const val EXTRA_SERIES_ID = "series_id"
+        const val EXTRA_SOURCE = "source"
+        const val SRC_FAVORITES = "favorites"
+        const val SRC_HISTORY = "history"
+        const val SRC_DOWNLOADS = "downloads"
         private const val ALL_ID = "__all__"
     }
 }

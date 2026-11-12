@@ -12,7 +12,7 @@ import com.karastore.iptv.data.Repo
 import com.karastore.iptv.data.Session
 import com.karastore.iptv.data.SessionStore
 import com.karastore.iptv.databinding.ActivityLoginBinding
-import com.karastore.iptv.ui.home.HomeActivity
+import com.karastore.iptv.ui.main.MainActivity
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
@@ -26,7 +26,7 @@ class LoginActivity : AppCompatActivity() {
         // دخول تلقائي إذا كانت الجلسة محفوظة
         SessionStore.load(this)?.let { saved ->
             Repo.init(saved)
-            startActivity(Intent(this, HomeActivity::class.java))
+            startActivity(Intent(this, MainActivity::class.java))
             finish()
             return
         }
@@ -69,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
             try {
                 Repo.connect()
                 SessionStore.save(this@LoginActivity, session, b.cbRemember.isChecked)
-                startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
+                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                 finish()
             } catch (e: Exception) {
                 setLoading(false)
