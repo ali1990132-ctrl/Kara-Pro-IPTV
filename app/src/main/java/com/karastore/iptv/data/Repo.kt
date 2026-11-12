@@ -39,7 +39,7 @@ object Repo {
     suspend fun connect() {
         when (session?.mode) {
             LoginMode.XTREAM -> userInfo = xtream!!.login()
-            LoginMode.M3U -> m3u!!.load()
+            LoginMode.M3U -> m3u!!.probe()
             null -> throw IllegalStateException("no session")
         }
     }

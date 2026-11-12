@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (savedInstanceState == null) {
-            b.bottomNav.selectedItemId = R.id.nav_home
+            b.bottomNav.selectedItemId = if (Repo.isXtream) R.id.nav_home else R.id.nav_live
         }
     }
 

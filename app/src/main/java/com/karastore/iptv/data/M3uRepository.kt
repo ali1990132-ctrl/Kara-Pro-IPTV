@@ -26,6 +26,25 @@ class M3uRepository(private val url: String) {
     private var grouped: LinkedHashMap<String, MutableList<ContentItem>> = LinkedHashMap()
     private var loaded = false
 
+    /** فحص سريع للوصول بدون تحميل القائمة كاملة (لتسريع تسجيل الدخول) */
+    suspend fun probe() = withContext(Dispatchers.IO) {
+        val req = Request.Builder().url(url)
+            .header("User-Agent", "VLC/3.0.20 LibVLC/3.0.20")
+            .header("Range", "bytes=0-2048")
+            .build()
+        client.newCall(req).execute().use { resp ->
+            if (resp.code != 200 && resp.code != 206)
+                throw RuntimeException("السيرفر رفض الطلب (كود ${resp.code}) — تأكد من الرابط")
+            // اقرأ جزء صغير فقط ثم أغلق
+            val head = resp.body?.source()?.let {
+                it.request(2048L); it.buffer.snapshot().utf8().take(2048)
+            } ?: ""
+            if (head.isNotBlank() && !head.contains("#EXTM3U", true) && !head.contains("#EXTINF", true)) {
+                // بعض السيرفرات ترجّع الرابط بدون ترويسة #EXTM3U؛ لا نفشل، فقط نكمل
+            }
+        }
+    }
+
     suspend fun load() = withContext(Dispatchers.IO) {
         val req = Request.Builder().url(url)
             .header("User-Agent", "VLC/3.0.20 LibVLC/3.0.20")

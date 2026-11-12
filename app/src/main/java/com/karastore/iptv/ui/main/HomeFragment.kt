@@ -54,7 +54,21 @@ class HomeFragment : Fragment() {
         b.rvRecentMovies.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         b.rvRecentSeries.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-        if (Repo.isXtream) loadContent()
+        if (Repo.isXtream) loadContent() else loadM3uHome()
+    }
+
+    private fun loadM3uHome() {
+        b.pager.visibility = View.GONE
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                ContentCache.load(ContentType.LIVE)
+                val live = ContentCache.recentlyAdded(ContentType.LIVE, 30, emptySet())
+                if (_b != null && live.isNotEmpty()) {
+                    b.labelRecentMovies.setText(R.string.nav_live)
+                    show(b.labelRecentMovies, b.rvRecentMovies, live)
+                }
+            } catch (_: Exception) {}
+        }
     }
 
     private fun loadContent() {
