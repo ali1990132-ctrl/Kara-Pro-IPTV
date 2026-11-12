@@ -12,9 +12,9 @@
     <string name="hint_name">Subscription name (optional)</string>
     <string name="btn_login">Login</string>
     <string name="btn_qr_share">Enter from phone</string>
-    <string name="qr_title">Scan from another device</string>
-    <string name="qr_desc">Open the app on the other device and scan this code with the camera to transfer the subscription</string>
-    <string name="qr_need_fields">Fill in the subscription details first, then tap to show the code</string>
+    <string name="qr_title">Scan with your phone camera</string>
+    <string name="qr_desc">Open your phone camera and scan the code — a page opens to enter the subscription, which is sent to this screen</string>
+    <string name="qr_need_wifi">Connect this device to Wi-Fi (same network as the phone) to show the entry page</string>
     <string name="qr_close">Close</string>
     <string name="remember_me">Remember me</string>
     <string name="logging_in">Connecting…</string>

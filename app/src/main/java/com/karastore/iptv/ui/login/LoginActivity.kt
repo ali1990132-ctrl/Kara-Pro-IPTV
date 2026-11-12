@@ -21,6 +21,8 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var b: ActivityLoginBinding
     private var mode = LoginMode.XTREAM
+    private var pairing: com.karastore.iptv.util.PairingServer? = null
+    private var pairingDialog: androidx.appcompat.app.AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,29 +123,35 @@ class LoginActivity : AppCompatActivity() {
             b.etM3u.setText(s.m3uUrl)
         }
         if (s.name.isNotBlank()) b.etName.setText(s.name)
-        toast(getString(R.string.qr_desc))
     }
 
-    /** يعرض QR يحمل بيانات الاشتراك الحالية لنقلها لجهاز ثاني */
+    /** يشغّل صفحة الإدخال المحلية ويعرض باركودها ليمسحه الموبايل */
     private fun showQr() {
-        val name = b.etName.text.toString().trim()
-        val session: Session = if (mode == LoginMode.XTREAM) {
-            val server = b.etServer.text.toString().trim()
-            val user = b.etUser.text.toString().trim()
-            val pass = b.etPass.text.toString().trim()
-            if (server.isEmpty() || user.isEmpty() || pass.isEmpty()) {
-                toast(getString(R.string.qr_need_fields)); return
-            }
-            Session(LoginMode.XTREAM, server = server, username = user, password = pass, name = name)
-        } else {
-            val url = b.etM3u.text.toString().trim()
-            if (url.isEmpty()) { toast(getString(R.string.qr_need_fields)); return }
-            Session(LoginMode.M3U, m3uUrl = url, name = name)
-        }
+        val ip = com.karastore.iptv.util.PairingServer.localIp()
+        if (ip == null) { toast(getString(R.string.qr_need_wifi)); return }
 
-        val link = com.karastore.iptv.util.QrShare.buildLink(session)
-        val bmp = try { com.karastore.iptv.util.QrShare.bitmap(link) }
-        catch (e: Exception) { toast(e.message ?: "QR error"); return }
+        // أوقف أي سيرفر سابق ثم شغّل واحداً جديداً
+        stopPairing()
+        val server = com.karastore.iptv.util.PairingServer(
+            com.karastore.iptv.util.PairingServer.PORT
+        ) { session ->
+            runOnUiThread {
+                pairingDialog?.dismiss()
+                stopPairing()
+                prefill(session)
+                attemptLogin()
+            }
+        }
+        try {
+            server.start(fi.iki.elonen.NanoHTTPD.SOCKET_READ_TIMEOUT, false)
+        } catch (e: Exception) {
+            toast(e.message ?: "server error"); return
+        }
+        pairing = server
+
+        val url = "http://$ip:${com.karastore.iptv.util.PairingServer.PORT}/"
+        val bmp = try { com.karastore.iptv.util.QrShare.bitmap(url) }
+        catch (e: Exception) { toast(e.message ?: "QR error"); stopPairing(); return }
 
         val dp = resources.displayMetrics.density
         fun px(v: Int) = (v * dp).toInt()
@@ -166,14 +174,30 @@ class LoginActivity : AppCompatActivity() {
             text = getString(R.string.qr_desc)
             textSize = 13f; setTextColor(0xFF5A6472.toInt())
             gravity = android.view.Gravity.CENTER
-            setPadding(0, px(14), 0, 0)
+            setPadding(0, px(14), 0, px(6))
         }
-        container.addView(title); container.addView(img); container.addView(desc)
+        val link = android.widget.TextView(this).apply {
+            text = url
+            textSize = 13f; setTextColor(0xFF1E9BFF.toInt())
+            gravity = android.view.Gravity.CENTER
+        }
+        container.addView(title); container.addView(img); container.addView(desc); container.addView(link)
 
-        androidx.appcompat.app.AlertDialog.Builder(this)
+        pairingDialog = androidx.appcompat.app.AlertDialog.Builder(this)
             .setView(container)
+            .setOnDismissListener { stopPairing() }
             .setPositiveButton(getString(R.string.qr_close), null)
             .show()
+    }
+
+    private fun stopPairing() {
+        try { pairing?.stop() } catch (_: Exception) {}
+        pairing = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopPairing()
     }
 
     private fun setLoading(loading: Boolean) {

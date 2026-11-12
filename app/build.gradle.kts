@@ -11,8 +11,8 @@ android {
         applicationId = "com.asplus.iptv"
         minSdk = 21
         targetSdk = 34
-        versionCode = 5
-        versionName = "1.4"
+        versionCode = 6
+        versionName = "1.5"
     }
 
     signingConfigs {
@@ -74,6 +74,9 @@ dependencies {
 
     // QR code generation (pure Java, no camera)
     implementation("com.google.zxing:core:3.5.3")
+
+    // Local pairing web server (phone fills, TV receives)
+    implementation("org.nanohttpd:nanohttpd:2.3.1")
 
     // Media3 / ExoPlayer
     implementation("androidx.media3:media3-exoplayer:1.3.1")
