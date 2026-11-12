@@ -8,11 +8,11 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.aands.iptv"
+        applicationId = "com.asplus.iptv"
         minSdk = 21
         targetSdk = 34
-        versionCode = 4
-        versionName = "1.3"
+        versionCode = 5
+        versionName = "1.4"
     }
 
     signingConfigs {
@@ -71,6 +71,9 @@ dependencies {
 
     // Image loading
     implementation("io.coil-kt:coil:2.5.0")
+
+    // QR code generation (pure Java, no camera)
+    implementation("com.google.zxing:core:3.5.3")
 
     // Media3 / ExoPlayer
     implementation("androidx.media3:media3-exoplayer:1.3.1")

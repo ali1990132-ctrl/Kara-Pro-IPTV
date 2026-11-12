@@ -34,6 +34,13 @@
                 <!-- يظهر التطبيق بقائمة أندرويد TV -->
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
+            <!-- نقل الاشتراك عبر QR: asiptv://login?... -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="asiptv" android:host="login" />
+            </intent-filter>
         </activity>
 
         <activity

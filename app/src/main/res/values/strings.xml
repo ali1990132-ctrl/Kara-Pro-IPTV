@@ -12,6 +12,11 @@
     <string name="hint_m3u">رابط قائمة M3U / M3U8</string>
     <string name="hint_name">اسم الاشتراك (اختياري)</string>
     <string name="btn_login">دخول</string>
+    <string name="btn_qr_share">الإدخال من الهاتف</string>
+    <string name="qr_title">امسح الكود من جهاز ثاني</string>
+    <string name="qr_desc">افتح التطبيق على الجهاز الثاني وامسح هذا الكود بالكاميرا لنقل الاشتراك</string>
+    <string name="qr_need_fields">عبّي بيانات الاشتراك أولاً ثم اضغط لإظهار الكود</string>
+    <string name="qr_close">إغلاق</string>
     <string name="remember_me">تذكّرني</string>
     <string name="logging_in">جارِ الاتصال بالسيرفر…</string>
     <string name="err_fields">عبّي كل الحقول المطلوبة</string>

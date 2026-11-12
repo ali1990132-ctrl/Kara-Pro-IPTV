@@ -26,8 +26,11 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val addMode = intent.getBooleanExtra(EXTRA_ADD, false)
-        // دخول تلقائي إذا كانت الجلسة محفوظة (إلا بوضع "إضافة قائمة")
-        if (!addMode) {
+        // رابط QR وارد (نقل اشتراك من جهاز ثاني)؟ عبّي الحقول بدل الدخول التلقائي
+        val incoming = com.karastore.iptv.util.QrShare.parse(intent?.data)
+
+        // دخول تلقائي إذا كانت الجلسة محفوظة (إلا بوضع "إضافة قائمة" أو رابط وارد)
+        if (!addMode && incoming == null) {
             SessionStore.load(this)?.let { saved ->
                 Repo.init(saved)
                 startActivity(Intent(this, MainActivity::class.java))
@@ -50,6 +53,7 @@ class LoginActivity : AppCompatActivity() {
         })
 
         b.btnLogin.setOnClickListener { attemptLogin() }
+        b.btnQrShare.setOnClickListener { showQr() }
         b.btnSupportNumber.setOnClickListener {
             try {
                 startActivity(Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://wa.me/${getString(R.string.support_wa)}")))
@@ -57,6 +61,9 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, getString(R.string.support_number), Toast.LENGTH_LONG).show()
             }
         }
+
+        // رابط وارد: عبّي الحقول بعد تجهيز المستمعين
+        incoming?.let { prefill(it) }
     }
 
     private fun attemptLogin() {
@@ -100,6 +107,73 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this@LoginActivity, msg, Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    /** يعبّي الحقول من جلسة واردة (QR) ويختار التبويب المناسب */
+    private fun prefill(s: Session) {
+        if (s.mode == LoginMode.XTREAM) {
+            b.tabs.getTabAt(0)?.select()
+            b.etServer.setText(s.server)
+            b.etUser.setText(s.username)
+            b.etPass.setText(s.password)
+        } else {
+            b.tabs.getTabAt(1)?.select()
+            b.etM3u.setText(s.m3uUrl)
+        }
+        if (s.name.isNotBlank()) b.etName.setText(s.name)
+        toast(getString(R.string.qr_desc))
+    }
+
+    /** يعرض QR يحمل بيانات الاشتراك الحالية لنقلها لجهاز ثاني */
+    private fun showQr() {
+        val name = b.etName.text.toString().trim()
+        val session: Session = if (mode == LoginMode.XTREAM) {
+            val server = b.etServer.text.toString().trim()
+            val user = b.etUser.text.toString().trim()
+            val pass = b.etPass.text.toString().trim()
+            if (server.isEmpty() || user.isEmpty() || pass.isEmpty()) {
+                toast(getString(R.string.qr_need_fields)); return
+            }
+            Session(LoginMode.XTREAM, server = server, username = user, password = pass, name = name)
+        } else {
+            val url = b.etM3u.text.toString().trim()
+            if (url.isEmpty()) { toast(getString(R.string.qr_need_fields)); return }
+            Session(LoginMode.M3U, m3uUrl = url, name = name)
+        }
+
+        val link = com.karastore.iptv.util.QrShare.buildLink(session)
+        val bmp = try { com.karastore.iptv.util.QrShare.bitmap(link) }
+        catch (e: Exception) { toast(e.message ?: "QR error"); return }
+
+        val dp = resources.displayMetrics.density
+        fun px(v: Int) = (v * dp).toInt()
+        val container = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            gravity = android.view.Gravity.CENTER_HORIZONTAL
+            setPadding(px(20), px(20), px(20), px(8))
+        }
+        val title = android.widget.TextView(this).apply {
+            text = getString(R.string.qr_title)
+            textSize = 16f; setTextColor(0xFF0B1220.toInt())
+            gravity = android.view.Gravity.CENTER
+            setPadding(0, 0, 0, px(14))
+        }
+        val img = android.widget.ImageView(this).apply {
+            setImageBitmap(bmp)
+            layoutParams = android.widget.LinearLayout.LayoutParams(px(240), px(240))
+        }
+        val desc = android.widget.TextView(this).apply {
+            text = getString(R.string.qr_desc)
+            textSize = 13f; setTextColor(0xFF5A6472.toInt())
+            gravity = android.view.Gravity.CENTER
+            setPadding(0, px(14), 0, 0)
+        }
+        container.addView(title); container.addView(img); container.addView(desc)
+
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setView(container)
+            .setPositiveButton(getString(R.string.qr_close), null)
+            .show()
     }
 
     private fun setLoading(loading: Boolean) {

@@ -11,6 +11,11 @@
     <string name="hint_m3u">M3U / M3U8 playlist URL</string>
     <string name="hint_name">Subscription name (optional)</string>
     <string name="btn_login">Login</string>
+    <string name="btn_qr_share">Enter from phone</string>
+    <string name="qr_title">Scan from another device</string>
+    <string name="qr_desc">Open the app on the other device and scan this code with the camera to transfer the subscription</string>
+    <string name="qr_need_fields">Fill in the subscription details first, then tap to show the code</string>
+    <string name="qr_close">Close</string>
     <string name="remember_me">Remember me</string>
     <string name="logging_in">Connecting…</string>
     <string name="err_fields">Fill in all required fields</string>
