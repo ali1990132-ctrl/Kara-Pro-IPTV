@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">A&amp;S</string>
+    <string name="app_name">ASLive</string>
 
     <string name="login_title">Sign in</string>
     <string name="tab_xtream">Xtream Codes</string>

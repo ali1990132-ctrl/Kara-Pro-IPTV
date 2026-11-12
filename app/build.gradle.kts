@@ -8,7 +8,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.karastore.iptv"
+        applicationId = "com.aslive.iptv"
         minSdk = 21
         targetSdk = 34
         versionCode = 1
