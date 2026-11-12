@@ -54,6 +54,33 @@
             android:maxLines="1" />
     </LinearLayout>
 
+    <!-- أزرار الأقسام (للمفضلة/السجل/التنزيلات) -->
+    <LinearLayout
+        android:id="@+id/segmentBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_card"
+        android:layout_margin="12dp"
+        android:padding="4dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/segLive"
+            style="@style/SegmentTab"
+            android:text="@string/nav_live" />
+
+        <TextView
+            android:id="@+id/segMovies"
+            style="@style/SegmentTab"
+            android:text="@string/nav_movies" />
+
+        <TextView
+            android:id="@+id/segSeries"
+            style="@style/SegmentTab"
+            android:text="@string/nav_series" />
+    </LinearLayout>
+
     <!-- تصنيفات أفقية -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCategories"

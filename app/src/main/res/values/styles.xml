@@ -128,6 +128,18 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="SegmentTab">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingVertical">10dp</item>
+        <item name="android:background">@drawable/bg_segment</item>
+        <item name="android:textColor">@color/chip_text</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="PlayerTopBtn">
         <item name="android:layout_width">40dp</item>
         <item name="android:layout_height">40dp</item>

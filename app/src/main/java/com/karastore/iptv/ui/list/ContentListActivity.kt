@@ -74,10 +74,40 @@ class ContentListActivity : AppCompatActivity() {
         })
 
         when {
-            source != null -> { b.rvCategories.visibility = View.GONE; loadSource() }
+            source != null -> {
+                b.rvCategories.visibility = View.GONE
+                if (source == SRC_FAVORITES || source == SRC_HISTORY) setupSegments()
+                loadSource()
+            }
             seriesId != null -> { b.rvCategories.visibility = View.GONE; loadEpisodes() }
             else -> loadCategories()
         }
+    }
+
+    private var segType: ContentType = ContentType.LIVE
+    private var segmentsActive = false
+
+    private fun setupSegments() {
+        segmentsActive = true
+        b.segmentBar.visibility = View.VISIBLE
+        b.segLive.setOnClickListener { selectSeg(ContentType.LIVE) }
+        b.segMovies.setOnClickListener { selectSeg(ContentType.MOVIE) }
+        b.segSeries.setOnClickListener { selectSeg(ContentType.SERIES) }
+        selectSeg(ContentType.LIVE)
+    }
+
+    private fun selectSeg(t: ContentType) {
+        segType = t
+        b.segLive.isSelected = t == ContentType.LIVE
+        b.segMovies.isSelected = t == ContentType.MOVIE
+        b.segSeries.isSelected = t == ContentType.SERIES
+        loadSource()
+    }
+
+    private fun matchesSeg(item: ContentItem): Boolean = when (segType) {
+        ContentType.LIVE -> item.type == ContentType.LIVE
+        ContentType.MOVIE -> item.type == ContentType.MOVIE
+        else -> item.type == ContentType.SERIES || item.type == ContentType.EPISODE
     }
 
     private val pollHandler = android.os.Handler(android.os.Looper.getMainLooper())
@@ -105,12 +135,13 @@ class ContentListActivity : AppCompatActivity() {
     }
 
     private fun loadSource() {
-        val items: List<ContentItem> = when (source) {
+        val base: List<ContentItem> = when (source) {
             SRC_FAVORITES -> FavoritesStore.all(this)
             SRC_HISTORY -> HistoryStore.all(this)
             SRC_DOWNLOADS -> DownloadsStore.all(this)
             else -> emptyList()
         }
+        val items = if (segmentsActive) base.filter { matchesSeg(it) } else base
         contentAdapter.submit(items)
         b.tvEmpty.text = when (source) {
             SRC_FAVORITES -> getString(R.string.empty_favorites)
