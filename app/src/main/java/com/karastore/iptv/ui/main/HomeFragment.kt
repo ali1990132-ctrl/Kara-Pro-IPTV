@@ -61,36 +61,35 @@ class HomeFragment : Fragment() {
         HiddenCategoriesStore.get(requireContext(), t) + LockedCategoriesStore.get(requireContext(), t)
 
     private fun loadHome() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            var hasVod = false
-            try {
-                ContentCache.load(ContentType.MOVIE)
-                val recentM = ContentCache.recentlyAdded(ContentType.MOVIE, 15, excluded(ContentType.MOVIE))
-                if (recentM.isNotEmpty()) {
-                    hasVod = true
-                    _b?.pager?.visibility = View.VISIBLE
-                    setupFeatured(recentM.take(6))
-                    _b?.labelRecentMovies?.setText(R.string.recent_movies)
-                    show(b.labelRecentMovies, b.rvRecentMovies, recentM)
-                }
-            } catch (_: Exception) {}
-            try {
-                ContentCache.load(ContentType.SERIES)
-                val recentS = ContentCache.recentlyAdded(ContentType.SERIES, 15, excluded(ContentType.SERIES))
-                if (recentS.isNotEmpty()) {
-                    hasVod = true
-                    _b?.labelRecentSeries?.setText(R.string.recent_series)
-                    show(b.labelRecentSeries, b.rvRecentSeries, recentS)
-                }
-            } catch (_: Exception) {}
-            // لا أفلام ولا مسلسلات (قائمة بث فقط) → اعرض القنوات
-            if (!hasVod) {
+        var hasVod = false
+        // اعرض الأفلام/المسلسلات فقط إن كانت محمّلة مسبقاً (بدون تحميل ثقيل من الرئيسية)
+        if (ContentCache.isLoaded(ContentType.MOVIE)) {
+            val recentM = ContentCache.recentlyAdded(ContentType.MOVIE, 15, excluded(ContentType.MOVIE))
+            if (recentM.isNotEmpty()) {
+                hasVod = true
+                b.pager.visibility = View.VISIBLE
+                setupFeatured(recentM.take(6))
+                b.labelRecentMovies.setText(R.string.recent_movies)
+                show(b.labelRecentMovies, b.rvRecentMovies, recentM)
+            }
+        }
+        if (ContentCache.isLoaded(ContentType.SERIES)) {
+            val recentS = ContentCache.recentlyAdded(ContentType.SERIES, 15, excluded(ContentType.SERIES))
+            if (recentS.isNotEmpty()) {
+                hasVod = true
+                b.labelRecentSeries.setText(R.string.recent_series)
+                show(b.labelRecentSeries, b.rvRecentSeries, recentS)
+            }
+        }
+        if (!hasVod) {
+            // أول مرة: حمّل القنوات فقط (أخف) واعرضها
+            b.pager.visibility = View.GONE
+            viewLifecycleOwner.lifecycleScope.launch {
                 try {
-                    _b?.pager?.visibility = View.GONE
                     ContentCache.load(ContentType.LIVE)
                     val live = ContentCache.recentlyAdded(ContentType.LIVE, 30, excluded(ContentType.LIVE))
-                    if (live.isNotEmpty()) {
-                        _b?.labelRecentMovies?.setText(R.string.nav_live)
+                    if (_b != null && live.isNotEmpty()) {
+                        b.labelRecentMovies.setText(R.string.nav_live)
                         show(b.labelRecentMovies, b.rvRecentMovies, live)
                     }
                 } catch (_: Exception) {}

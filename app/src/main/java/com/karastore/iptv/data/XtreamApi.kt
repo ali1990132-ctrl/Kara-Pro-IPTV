@@ -19,8 +19,8 @@ class XtreamApi(
     private val gson = Gson()
     private val client = OkHttpClient.Builder()
         .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(60, TimeUnit.SECONDS)
-        .callTimeout(90, TimeUnit.SECONDS)
+        .readTimeout(150, TimeUnit.SECONDS)
+        .callTimeout(180, TimeUnit.SECONDS)
         .retryOnConnectionFailure(true)
         .followRedirects(true)
         .build()
@@ -30,7 +30,8 @@ class XtreamApi(
         return "$base/player_api.php?username=$username&password=$password$a$extra"
     }
 
-    private suspend fun get(url: String): String = withContext(Dispatchers.IO) {
+    /** قراءة متدفّقة لتقليل استهلاك الذاكرة مع القوائم الضخمة */
+    private suspend fun <T> fetch(url: String, type: java.lang.reflect.Type): T? = withContext(Dispatchers.IO) {
         val req = Request.Builder().url(url)
             .header("User-Agent", "VLC/3.0.20 LibVLC/3.0.20")
             .header("Accept", "*/*")
@@ -38,18 +39,20 @@ class XtreamApi(
         client.newCall(req).execute().use { resp ->
             if (!resp.isSuccessful)
                 throw RuntimeException("السيرفر رفض الطلب (كود ${resp.code})")
-            resp.body?.string() ?: throw RuntimeException("رد فارغ من السيرفر")
+            val reader = resp.body?.charStream() ?: throw RuntimeException("رد فارغ من السيرفر")
+            try {
+                gson.fromJson<T>(reader, type)
+            } catch (e: com.google.gson.JsonSyntaxException) {
+                throw RuntimeException("رد غير متوقّع من السيرفر — تأكد من العنوان")
+            } catch (e: com.google.gson.JsonIOException) {
+                throw RuntimeException("خطأ بقراءة رد السيرفر")
+            }
         }
     }
 
     /** تسجيل الدخول والتحقق من الاشتراك */
     suspend fun login(): XtreamUserInfo {
-        val json = get(api())
-        val res = try {
-            gson.fromJson(json, XtreamLoginResponse::class.java)
-        } catch (e: Exception) {
-            throw RuntimeException("رد غير متوقّع من السيرفر — تأكد من عنوان السيرفر")
-        }
+        val res: XtreamLoginResponse? = fetch(api(), XtreamLoginResponse::class.java)
         val info = res?.userInfo
             ?: throw RuntimeException("بيانات الدخول غير صحيحة — تأكد من المستخدم وكلمة المرور")
         if (info.auth == 0 || info.status.equals("Disabled", true))
@@ -57,19 +60,23 @@ class XtreamApi(
         return info
     }
 
-    suspend fun liveCategories(): List<Category> =
-        parseCats(get(api("get_live_categories")))
+    private suspend fun cats(action: String): List<Category> {
+        val type = object : TypeToken<List<XtreamCategory>>() {}.type
+        val list: List<XtreamCategory> = fetch(api(action), type) ?: emptyList()
+        return list.mapNotNull { c ->
+            val id = c.categoryId ?: return@mapNotNull null
+            Category(id, c.categoryName ?: "—")
+        }
+    }
 
-    suspend fun vodCategories(): List<Category> =
-        parseCats(get(api("get_vod_categories")))
-
-    suspend fun seriesCategories(): List<Category> =
-        parseCats(get(api("get_series_categories")))
+    suspend fun liveCategories(): List<Category> = cats("get_live_categories")
+    suspend fun vodCategories(): List<Category> = cats("get_vod_categories")
+    suspend fun seriesCategories(): List<Category> = cats("get_series_categories")
 
     suspend fun liveStreams(categoryId: String?): List<ContentItem> {
         val extra = if (categoryId != null) "&category_id=$categoryId" else ""
         val type = object : TypeToken<List<XtreamLiveStream>>() {}.type
-        val list: List<XtreamLiveStream> = gson.fromJson(get(api("get_live_streams", extra)), type) ?: emptyList()
+        val list: List<XtreamLiveStream> = fetch(api("get_live_streams", extra), type) ?: emptyList()
         return list.map {
             ContentItem(
                 id = it.streamId?.toString() ?: "",
@@ -85,7 +92,7 @@ class XtreamApi(
     suspend fun vodStreams(categoryId: String?): List<ContentItem> {
         val extra = if (categoryId != null) "&category_id=$categoryId" else ""
         val type = object : TypeToken<List<XtreamVodStream>>() {}.type
-        val list: List<XtreamVodStream> = gson.fromJson(get(api("get_vod_streams", extra)), type) ?: emptyList()
+        val list: List<XtreamVodStream> = fetch(api("get_vod_streams", extra), type) ?: emptyList()
         return list.map {
             val ext = it.containerExtension ?: "mp4"
             ContentItem(
@@ -105,7 +112,7 @@ class XtreamApi(
     suspend fun seriesList(categoryId: String?): List<ContentItem> {
         val extra = if (categoryId != null) "&category_id=$categoryId" else ""
         val type = object : TypeToken<List<XtreamSeries>>() {}.type
-        val list: List<XtreamSeries> = gson.fromJson(get(api("get_series", extra)), type) ?: emptyList()
+        val list: List<XtreamSeries> = fetch(api("get_series", extra), type) ?: emptyList()
         return list.map {
             ContentItem(
                 id = it.seriesId?.toString() ?: "",
@@ -121,7 +128,7 @@ class XtreamApi(
 
     /** حلقات مسلسل معيّن (مرتبة) */
     suspend fun seriesEpisodes(seriesId: String): List<ContentItem> {
-        val info = gson.fromJson(get(api("get_series_info", "&series_id=$seriesId")), XtreamSeriesInfo::class.java)
+        val info: XtreamSeriesInfo? = fetch(api("get_series_info", "&series_id=$seriesId"), XtreamSeriesInfo::class.java)
         val seriesCover = info?.info?.coverBig?.ifBlank { null } ?: info?.info?.cover?.ifBlank { null }
         val result = mutableListOf<ContentItem>()
         info?.episodes?.toSortedMap(compareBy { it.toIntOrNull() ?: 0 })?.forEach { (season, eps) ->
@@ -141,15 +148,6 @@ class XtreamApi(
             }
         }
         return result
-    }
-
-    private fun parseCats(json: String): List<Category> {
-        val type = object : TypeToken<List<XtreamCategory>>() {}.type
-        val list: List<XtreamCategory> = gson.fromJson(json, type) ?: emptyList()
-        return list.mapNotNull { c ->
-            val id = c.categoryId ?: return@mapNotNull null
-            Category(id, c.categoryName ?: "—")
-        }
     }
 
     companion object {
