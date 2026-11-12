@@ -74,23 +74,16 @@ class ContentFragment : Fragment() {
         if (!loaded) loadAll()
     }
 
-    /** تحميل خفيف: نجلب قائمة التصنيفات فقط ثم نفتح أول باقة */
+    /** يحمّل كل المحتوى ثم يعرض "الكل" */
     private fun loadAll() {
         setLoading(true)
         val allLabel = getString(R.string.all)
         val errMsg = getString(R.string.err_network)
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val cats = ContentCache.ensureCategories(type)
+                ContentCache.load(type)
                 loaded = true
-                // اختر أول باقة غير مخفية تلقائياً بدل تحميل الكتالوج كامل
-                val first = firstVisibleCategory(cats.map { it.id })
-                if (first != null) {
-                    val name = cats.firstOrNull { it.id == first }?.name ?: allLabel
-                    selectCategory(first, name)
-                } else {
-                    selectCategory(null, allLabel)
-                }
+                selectCategory(null, allLabel)
             } catch (e: kotlinx.coroutines.CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -99,14 +92,6 @@ class ContentFragment : Fragment() {
                 toast(errMsg)
             }
         }
-    }
-
-    private fun firstVisibleCategory(ids: List<String>): String? {
-        val ctx = context ?: return ids.firstOrNull()
-        return ids.firstOrNull {
-            !HiddenCategoriesStore.isHidden(ctx, type, it) &&
-                !LockedCategoriesStore.isLocked(ctx, type, it)
-        } ?: ids.firstOrNull()
     }
 
     private fun openFilter() {
@@ -131,11 +116,18 @@ class ContentFragment : Fragment() {
             it.etSearch.text?.clear()
         }
         val errMsg = getString(R.string.err_network)
+        val excluded = context?.let {
+            HiddenCategoriesStore.get(it, type) + LockedCategoriesStore.get(it, type)
+        } ?: emptySet()
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val list = ContentCache.loadCategory(type, categoryId)
-                // في عرض "الكل" نحدّ العدد لتخفيف الحِمل
-                val items = if (categoryId == null && list.size > 1500) list.take(1500) else list
+                var list = ContentCache.loadCategory(type, categoryId)
+                // في عرض "الكل": استثنِ الباقات المخفية/المقفلة وحدّ العدد
+                if (categoryId == null) {
+                    if (excluded.isNotEmpty()) list = list.filter { it.categoryId !in excluded }
+                    if (list.size > 1500) list = list.take(1500)
+                }
+                val items = list
                 _b?.let {
                     contentAdapter.submit(items)
                     it.tvEmpty.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
