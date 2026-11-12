@@ -4,6 +4,9 @@ on:
   push:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,9 +28,20 @@ jobs:
       - name: Build debug APK
         run: gradle assembleDebug --no-daemon
 
-      - name: Upload APK
+      - name: Rename APK
+        run: cp app/build/outputs/apk/debug/app-debug.apk KaraPro.apk
+
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: KaraPro-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: KaraPro.apk
           if-no-files-found: error
+
+      - name: Publish Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Kara Pro — أحدث نسخة
+          body: نسخة تجريبية (debug) من تطبيق كارة برو. نزّل الملف KaraPro.apk ونصّبه على التلفون.
+          files: KaraPro.apk
