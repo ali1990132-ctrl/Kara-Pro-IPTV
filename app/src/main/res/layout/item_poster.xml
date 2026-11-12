@@ -5,7 +5,9 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_marginEnd="10dp"
-    android:background="?attr/selectableItemBackground">
+    android:background="@drawable/item_focus"
+    android:focusable="true"
+    android:padding="4dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"

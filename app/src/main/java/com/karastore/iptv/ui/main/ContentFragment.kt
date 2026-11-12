@@ -59,7 +59,7 @@ class ContentFragment : Fragment() {
             onLongClick = { item -> if (!item.directUrl.isNullOrBlank()) ItemActions.show(requireActivity(), item) },
             onDownload = { item -> ItemActions.download(requireActivity(), item) }
         )
-        b.rvContent.layoutManager = GridLayoutManager(context, 3)
+        b.rvContent.layoutManager = GridLayoutManager(context, gridSpan())
         b.rvContent.setHasFixedSize(true)
         b.rvContent.adapter = contentAdapter
 
@@ -92,6 +92,15 @@ class ContentFragment : Fragment() {
                 toast(errMsg)
             }
         }
+    }
+
+    /** أعمدة الشبكة: أكثر على التلفزيون الأفقي */
+    private fun gridSpan(): Int {
+        val cfg = resources.configuration
+        val isTv = cfg.uiMode and android.content.res.Configuration.UI_MODE_TYPE_MASK ==
+            android.content.res.Configuration.UI_MODE_TYPE_TELEVISION
+        val landscape = cfg.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+        return if (isTv || landscape) 6 else 3
     }
 
     private fun openFilter() {
