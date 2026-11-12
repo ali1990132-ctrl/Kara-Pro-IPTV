@@ -26,13 +26,16 @@ class MainActivity : AppCompatActivity() {
         b = ActivityMainBinding.inflate(layoutInflater)
         setContentView(b.root)
 
+        // الشريط السفلي (هاتف) أو القائمة الجانبية (تلفزيون) — كلاهما NavigationBarView
+        val nav = b.bottomNav as com.google.android.material.navigation.NavigationBarView
+
         // تحديث تلقائي للمكتبة حسب الإعداد
         if (com.karastore.iptv.data.Settings.shouldAutoRefresh(this)) {
             com.karastore.iptv.data.ContentCache.clearAll()
             com.karastore.iptv.data.Settings.markRefreshed(this)
         }
 
-        b.bottomNav.setOnItemSelectedListener { item ->
+        nav.setOnItemSelectedListener { item ->
             val f: Fragment = when (item.itemId) {
                 R.id.nav_home -> HomeFragment()
                 R.id.nav_live -> ContentFragment.newInstance(ContentType.LIVE)
@@ -45,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (savedInstanceState == null) {
-            b.bottomNav.selectedItemId = R.id.nav_home
+            nav.selectedItemId = R.id.nav_home
         }
     }
 
@@ -56,6 +59,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun goToTab(itemId: Int) {
-        b.bottomNav.selectedItemId = itemId
+        (b.bottomNav as com.google.android.material.navigation.NavigationBarView).selectedItemId = itemId
     }
 }
