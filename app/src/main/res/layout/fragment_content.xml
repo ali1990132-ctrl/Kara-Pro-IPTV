@@ -102,8 +102,9 @@
             android:paddingHorizontal="8dp"
             android:paddingVertical="3dp"
             android:text="@string/activation_watermark"
-            android:textColor="#CCFFFFFF"
-            android:textSize="11sp"
+            android:textColor="#E6FFFFFF"
+            android:textSize="15sp"
+            android:textStyle="bold"
             android:visibility="gone" />
     </FrameLayout>
 </LinearLayout>
