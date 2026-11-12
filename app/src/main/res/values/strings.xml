@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ASLive</string>
+    <string name="app_name">A&amp;S</string>
 
     <!-- Login -->
     <string name="login_title">تسجيل الدخول</string>
@@ -64,7 +64,7 @@
     <string name="remaining_time">الوقت المتبقي</string>
     <string name="unit_days">يوم</string>
     <string name="unlimited">غير محدود</string>
-    <string name="counts_fmt">%1$d بث · %2$d أفلام · %3$d مسلسلات</string>
+    <string name="counts_fmt">%1$d بث · %2$d أقسام أفلام · %3$d أقسام مسلسلات</string>
     <string name="continue_watching">متابعة المشاهدة</string>
     <string name="quick_access">الأقسام</string>
 

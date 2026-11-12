@@ -78,11 +78,12 @@ class MoreFragment : Fragment() {
         val ctx = requireContext().applicationContext
         viewLifecycleOwner.lifecycleScope.launch {
             try {
+                // تحديث خفيف: نُفرغ الكاش ونعيد جلب القوائم فقط (بدون الكتالوج الضخم)
                 com.karastore.iptv.data.ContentCache.clearAll()
                 val live = com.karastore.iptv.data.ContentCache.load(ContentType.LIVE).size
-                val movies = if (Repo.isXtream) com.karastore.iptv.data.ContentCache.load(ContentType.MOVIE).size else 0
-                val series = if (Repo.isXtream) com.karastore.iptv.data.ContentCache.load(ContentType.SERIES).size else 0
-                _b?.tvCounts?.text = ctx.getString(R.string.counts_fmt, live, movies, series)
+                val movieCats = if (Repo.isXtream) com.karastore.iptv.data.ContentCache.ensureCategories(ContentType.MOVIE).size else 0
+                val seriesCats = if (Repo.isXtream) com.karastore.iptv.data.ContentCache.ensureCategories(ContentType.SERIES).size else 0
+                _b?.tvCounts?.text = ctx.getString(R.string.counts_fmt, live, movieCats, seriesCats)
             } catch (e: kotlinx.coroutines.CancellationException) {
                 throw e
             } catch (e: Exception) {

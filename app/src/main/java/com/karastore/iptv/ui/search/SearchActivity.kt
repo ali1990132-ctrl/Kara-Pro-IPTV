@@ -55,13 +55,13 @@ class SearchActivity : AppCompatActivity() {
         b.progress.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
+                // البث المباشر: نحمّله بالكامل (قائمة أصغر)
                 ContentCache.load(ContentType.LIVE)
                 pool.addAll(ContentCache.all(ContentType.LIVE))
                 if (Repo.isXtream) {
-                    ContentCache.load(ContentType.MOVIE)
-                    pool.addAll(ContentCache.all(ContentType.MOVIE))
-                    ContentCache.load(ContentType.SERIES)
-                    pool.addAll(ContentCache.all(ContentType.SERIES))
+                    // الأفلام/المسلسلات: نبحث ضمن ما تم تصفّحه فقط (تجنّباً لتحميل كتالوج ضخم)
+                    pool.addAll(ContentCache.loadedItems(ContentType.MOVIE))
+                    pool.addAll(ContentCache.loadedItems(ContentType.SERIES))
                 }
             } catch (_: Exception) {}
             b.progress.visibility = View.GONE

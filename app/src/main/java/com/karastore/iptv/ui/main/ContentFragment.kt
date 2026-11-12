@@ -74,15 +74,23 @@ class ContentFragment : Fragment() {
         if (!loaded) loadAll()
     }
 
+    /** تحميل خفيف: نجلب قائمة التصنيفات فقط ثم نفتح أول باقة */
     private fun loadAll() {
         setLoading(true)
         val allLabel = getString(R.string.all)
         val errMsg = getString(R.string.err_network)
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                ContentCache.load(type)
+                val cats = ContentCache.ensureCategories(type)
                 loaded = true
-                applyCategory(null, allLabel)
+                // اختر أول باقة غير مخفية تلقائياً بدل تحميل الكتالوج كامل
+                val first = firstVisibleCategory(cats.map { it.id })
+                if (first != null) {
+                    val name = cats.firstOrNull { it.id == first }?.name ?: allLabel
+                    selectCategory(first, name)
+                } else {
+                    selectCategory(null, allLabel)
+                }
             } catch (e: kotlinx.coroutines.CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -93,34 +101,54 @@ class ContentFragment : Fragment() {
         }
     }
 
+    private fun firstVisibleCategory(ids: List<String>): String? {
+        val ctx = context ?: return ids.firstOrNull()
+        return ids.firstOrNull {
+            !HiddenCategoriesStore.isHidden(ctx, type, it) &&
+                !LockedCategoriesStore.isLocked(ctx, type, it)
+        } ?: ids.firstOrNull()
+    }
+
     private fun openFilter() {
-        if (!ContentCache.isLoaded(type)) return
+        if (!loaded) return
         val sheet = CategorySheet.newInstance(type)
         sheet.onPick = { catId ->
             val label = if (catId == null) getString(R.string.all)
             else ContentCache.categoriesWithCounts(type).firstOrNull { it.id == catId }?.name ?: ""
-            applyCategory(catId, label)
+            selectCategory(catId, label)
         }
-        sheet.onHiddenChanged = { applyCategory(currentCat, currentLabel) }
+        sheet.onHiddenChanged = { /* يُطبَّق عند الاختيار التالي */ }
         sheet.show(childFragmentManager, "cats")
     }
 
-    private fun applyCategory(categoryId: String?, label: String) {
-        val ctx = context ?: return
+    /** يحمّل عناصر باقة واحدة فقط (سريع) */
+    private fun selectCategory(categoryId: String?, label: String) {
         currentCat = categoryId
         currentLabel = label
-        val excluded = HiddenCategoriesStore.get(ctx, type) +
-            LockedCategoriesStore.get(ctx, type)
-        val full = ContentCache.filter(type, categoryId, excluded)
-        // تحديد العدد في عرض "الكل" لتخفيف الحِمل
-        val items = if (categoryId == null && full.size > 1500) full.take(1500) else full
+        setLoading(true)
         _b?.let {
             it.tvCatLabel.text = label
             it.etSearch.text?.clear()
-            contentAdapter.submit(items)
-            it.tvEmpty.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
         }
-        setLoading(false)
+        val errMsg = getString(R.string.err_network)
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val list = ContentCache.loadCategory(type, categoryId)
+                // في عرض "الكل" نحدّ العدد لتخفيف الحِمل
+                val items = if (categoryId == null && list.size > 1500) list.take(1500) else list
+                _b?.let {
+                    contentAdapter.submit(items)
+                    it.tvEmpty.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
+                }
+                setLoading(false)
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                if (_b == null) return@launch
+                setLoading(false)
+                toast(errMsg)
+            }
+        }
     }
 
     private fun onItemClick(item: ContentItem) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ASLive</string>
+    <string name="app_name">A&amp;S</string>
 
     <string name="login_title">Sign in</string>
     <string name="tab_xtream">Xtream Codes</string>
@@ -58,7 +58,7 @@
     <string name="remaining_time">Time left</string>
     <string name="unit_days">days</string>
     <string name="unlimited">Unlimited</string>
-    <string name="counts_fmt">%1$d live · %2$d movies · %3$d series</string>
+    <string name="counts_fmt">%1$d live · %2$d movie categories · %3$d series categories</string>
     <string name="continue_watching">Continue watching</string>
     <string name="quick_access">Sections</string>
 
