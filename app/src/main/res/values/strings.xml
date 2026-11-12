@@ -93,6 +93,7 @@
     <string name="playlists_title">قوائم التشغيل</string>
     <string name="add_playlist">إضافة قائمة</string>
     <string name="playlist_active">نشطة</string>
+    <string name="my_playlists">قوائم التشغيل الخاصة بي</string>
     <string name="switching">جارِ التبديل…</string>
     <string name="featured">مميّزة</string>
 

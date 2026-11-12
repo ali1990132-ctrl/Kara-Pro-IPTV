@@ -35,7 +35,8 @@ class SearchActivity : AppCompatActivity() {
 
         adapter = ContentAdapter(
             onClick = { item -> onItemClick(item) },
-            onLongClick = { item -> if (item.type != ContentType.SERIES) ItemActions.show(this, item) }
+            onLongClick = { item -> if (item.type != ContentType.SERIES) ItemActions.show(this, item) },
+            onDownload = { item -> ItemActions.download(this, item) }
         )
         b.rvResults.layoutManager = GridLayoutManager(this, 3)
         b.rvResults.adapter = adapter

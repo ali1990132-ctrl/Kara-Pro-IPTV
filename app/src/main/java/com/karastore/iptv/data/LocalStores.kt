@@ -67,6 +67,14 @@ object DownloadsStore {
         if (list.none { it.id == item.id }) { list.add(0, item); writeList(ctx, KEY, list) }
     }
 
+    /** يضيف أو يحدّث عنصراً (لتحديث المسار المحلي بعد اكتمال التحميل) */
+    fun upsert(ctx: Context, item: ContentItem) {
+        val list = readList(ctx, KEY)
+        val idx = list.indexOfFirst { it.id == item.id }
+        if (idx >= 0) list[idx] = item else list.add(0, item)
+        writeList(ctx, KEY, list)
+    }
+
     fun remove(ctx: Context, id: String) {
         val list = readList(ctx, KEY)
         list.removeAll { it.id == id }

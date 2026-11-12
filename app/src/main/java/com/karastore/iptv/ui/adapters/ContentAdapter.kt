@@ -9,10 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.karastore.iptv.R
 import com.karastore.iptv.data.model.ContentItem
+import com.karastore.iptv.data.model.ContentType
 
 class ContentAdapter(
     private val onClick: (ContentItem) -> Unit,
-    private val onLongClick: ((ContentItem) -> Unit)? = null
+    private val onLongClick: ((ContentItem) -> Unit)? = null,
+    private val onDownload: ((ContentItem) -> Unit)? = null,
+    /** يرجّع نسبة التنزيل (0..100، -1 جارٍ غير معروف) أو null إن لم يكن قيد التنزيل */
+    private val downloadingProvider: ((ContentItem) -> Int?)? = null
 ) : RecyclerView.Adapter<ContentAdapter.VH>() {
 
     private val all = mutableListOf<ContentItem>()
@@ -35,6 +39,7 @@ class ContentAdapter(
         val poster: ImageView = v.findViewById(R.id.poster)
         val name: TextView = v.findViewById(R.id.name)
         val rating: TextView = v.findViewById(R.id.rating)
+        val download: ImageView = v.findViewById(R.id.btnDownload)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -46,11 +51,32 @@ class ContentAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val item = shown[position]
         holder.name.text = item.name
-        val r = item.rating?.toFloatOrNull()
-        if (r != null && r > 0f) {
-            holder.rating.text = "${item.rating} ★"
-            holder.rating.visibility = View.VISIBLE
-        } else holder.rating.visibility = View.GONE
+
+        val dl = downloadingProvider?.invoke(item)
+        when {
+            dl != null -> {
+                holder.rating.text = if (dl >= 0) "⬇ $dl%" else "⬇…"
+                holder.rating.visibility = View.VISIBLE
+            }
+            else -> {
+                val r = item.rating?.toFloatOrNull()
+                if (r != null && r > 0f) {
+                    holder.rating.text = "${item.rating} ★"
+                    holder.rating.visibility = View.VISIBLE
+                } else holder.rating.visibility = View.GONE
+            }
+        }
+
+        // زر التنزيل للأفلام والحلقات فقط
+        val isVod = item.type == ContentType.MOVIE || item.type == ContentType.EPISODE
+        if (onDownload != null && isVod) {
+            holder.download.visibility = View.VISIBLE
+            holder.download.setOnClickListener { onDownload.invoke(item) }
+        } else {
+            holder.download.visibility = View.GONE
+            holder.download.setOnClickListener(null)
+        }
+
         holder.poster.load(item.logo) {
             placeholder(R.drawable.ic_placeholder)
             error(R.drawable.ic_placeholder)

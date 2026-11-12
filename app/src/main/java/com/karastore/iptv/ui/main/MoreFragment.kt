@@ -48,6 +48,7 @@ class MoreFragment : Fragment() {
         b.rowUpdate.setOnClickListener { loadCounts() }
         b.rowLanguage.setOnClickListener { pickLanguage() }
         b.rowEngine.setOnClickListener { pickEngine() }
+        b.rowPlaylists.setOnClickListener { PlaylistSheet().show(childFragmentManager, "playlists") }
         b.rowLogout.setOnClickListener { confirmLogout() }
     }
 

@@ -112,6 +112,12 @@
             <TextView android:id="@+id/tvEngineValue" style="@style/MoreRowValue" />
         </LinearLayout>
 
+        <LinearLayout android:id="@+id/rowPlaylists" style="@style/MoreRow">
+            <ImageView style="@style/MoreRowIcon" android:src="@drawable/ic_menu" />
+            <TextView style="@style/MoreRowTitle" android:text="@string/my_playlists" />
+            <ImageView style="@style/MoreRowChevron" />
+        </LinearLayout>
+
         <LinearLayout android:id="@+id/rowLogout" style="@style/MoreRow">
             <ImageView style="@style/MoreRowIcon" android:src="@drawable/ic_logout" />
             <TextView style="@style/MoreRowTitle" android:text="@string/logout" />

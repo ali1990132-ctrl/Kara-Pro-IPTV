@@ -43,7 +43,8 @@ class ContentFragment : Fragment() {
 
         contentAdapter = ContentAdapter(
             onClick = { item -> onItemClick(item) },
-            onLongClick = { item -> if (item.type != ContentType.SERIES) ItemActions.show(requireActivity(), item) }
+            onLongClick = { item -> if (item.type != ContentType.SERIES) ItemActions.show(requireActivity(), item) },
+            onDownload = { item -> ItemActions.download(requireActivity(), item) }
         )
         b.rvContent.layoutManager = GridLayoutManager(context, 3)
         b.rvContent.adapter = contentAdapter

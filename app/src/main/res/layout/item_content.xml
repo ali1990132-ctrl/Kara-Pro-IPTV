@@ -36,6 +36,19 @@
             android:textSize="11sp"
             android:textStyle="bold"
             android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/btnDownload"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="4dp"
+            android:padding="5dp"
+            android:background="@drawable/bg_badge"
+            android:src="@drawable/ic_download"
+            app:tint="@color/white"
+            android:visibility="gone"
+            android:contentDescription="@string/action_download" />
     </androidx.cardview.widget.CardView>
 
     <TextView

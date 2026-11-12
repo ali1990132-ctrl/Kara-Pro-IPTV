@@ -38,7 +38,7 @@ object ItemActions {
 
         if (isVod) {
             labels.add(activity.getString(R.string.action_download))
-            actions.add { startDownload(activity, item) }
+            actions.add { download(activity, item) }
         }
 
         labels.add(activity.getString(if (fav) R.string.action_fav_remove else R.string.action_fav_add))
@@ -57,7 +57,7 @@ object ItemActions {
             .show()
     }
 
-    private fun startDownload(activity: Activity, item: ContentItem) {
+    fun download(activity: Activity, item: ContentItem) {
         Toast.makeText(activity, R.string.download_started, Toast.LENGTH_SHORT).show()
         Downloader.start(activity, item) { _, msg ->
             activity.runOnUiThread {

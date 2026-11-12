@@ -53,9 +53,14 @@ class ContentListActivity : AppCompatActivity() {
         b.rvCategories.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         b.rvCategories.adapter = catAdapter
 
+        val isDownloads = source == SRC_DOWNLOADS
         contentAdapter = ContentAdapter(
             onClick = { item -> onItemClick(item) },
-            onLongClick = { item -> onItemLongClick(item) }
+            onLongClick = { item -> onItemLongClick(item) },
+            onDownload = if (isDownloads) null else { item -> ItemActions.download(this, item) },
+            downloadingProvider = if (!isDownloads) null else { item ->
+                if (Downloader.isDownloading(item.id)) Downloader.progress(item.id) else null
+            }
         )
         b.rvContent.layoutManager = GridLayoutManager(this, 3)
         b.rvContent.adapter = contentAdapter
@@ -73,10 +78,28 @@ class ContentListActivity : AppCompatActivity() {
         }
     }
 
+    private val pollHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val pollRunnable = object : Runnable {
+        override fun run() {
+            loadSource()
+            pollHandler.postDelayed(this, 1500)
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         // تحديث القوائم المحلية عند الرجوع
         if (source != null) loadSource()
+        // تحديث دوري لإظهار تقدّم التنزيل
+        if (source == SRC_DOWNLOADS) {
+            pollHandler.removeCallbacks(pollRunnable)
+            pollHandler.postDelayed(pollRunnable, 1500)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pollHandler.removeCallbacks(pollRunnable)
     }
 
     private fun loadSource() {
