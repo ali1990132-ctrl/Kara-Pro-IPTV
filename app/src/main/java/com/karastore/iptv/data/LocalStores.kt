@@ -104,11 +104,37 @@ object HiddenCategoriesStore {
 object Settings {
     private const val PREF = "kara_settings"
     private const val K_ENGINE_COMPAT = "engine_compat"
+    private const val K_AUTO_UPDATE = "auto_update"
+    private const val K_LAST_REFRESH = "last_refresh"
+
+    private fun p(ctx: Context) = ctx.getSharedPreferences(PREF, Context.MODE_PRIVATE)
 
     /** وضع التوافقية الأعلى في المشغّل */
-    fun compatMode(ctx: Context): Boolean =
-        ctx.getSharedPreferences(PREF, Context.MODE_PRIVATE).getBoolean(K_ENGINE_COMPAT, false)
+    fun compatMode(ctx: Context): Boolean = p(ctx).getBoolean(K_ENGINE_COMPAT, false)
+    fun setCompatMode(ctx: Context, v: Boolean) = p(ctx).edit().putBoolean(K_ENGINE_COMPAT, v).apply()
 
-    fun setCompatMode(ctx: Context, v: Boolean) =
-        ctx.getSharedPreferences(PREF, Context.MODE_PRIVATE).edit().putBoolean(K_ENGINE_COMPAT, v).apply()
+    // 0=يدوي 1=عند الفتح 2=6س 3=12س 4=يومي 5=أسبوعي
+    fun autoUpdate(ctx: Context): Int = p(ctx).getInt(K_AUTO_UPDATE, 0)
+    fun setAutoUpdate(ctx: Context, mode: Int) = p(ctx).edit().putInt(K_AUTO_UPDATE, mode).apply()
+
+    fun lastRefresh(ctx: Context): Long = p(ctx).getLong(K_LAST_REFRESH, 0L)
+    fun markRefreshed(ctx: Context) = p(ctx).edit().putLong(K_LAST_REFRESH, System.currentTimeMillis()).apply()
+
+    private fun intervalMs(mode: Int): Long = when (mode) {
+        2 -> 6 * 3600_000L
+        3 -> 12 * 3600_000L
+        4 -> 24 * 3600_000L
+        5 -> 7 * 24 * 3600_000L
+        else -> 0L
+    }
+
+    /** هل يجب تحديث المكتبة الآن حسب الإعداد؟ */
+    fun shouldAutoRefresh(ctx: Context): Boolean {
+        val mode = autoUpdate(ctx)
+        return when (mode) {
+            0 -> false
+            1 -> true
+            else -> System.currentTimeMillis() - lastRefresh(ctx) >= intervalMs(mode)
+        }
+    }
 }

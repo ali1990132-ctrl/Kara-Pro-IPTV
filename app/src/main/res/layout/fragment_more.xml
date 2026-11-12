@@ -97,6 +97,15 @@
                 android:visibility="gone" />
         </LinearLayout>
 
+        <LinearLayout android:id="@+id/rowAutoUpdate" style="@style/MoreRow">
+            <ImageView style="@style/MoreRowIcon" android:src="@drawable/ic_refresh" />
+            <LinearLayout style="@style/MoreRowTextBox">
+                <TextView style="@style/MoreRowTitleInline" android:text="@string/auto_update" />
+                <TextView android:id="@+id/tvAutoUpdate" style="@style/MoreRowSubtitle" />
+            </LinearLayout>
+            <ImageView style="@style/MoreRowChevron" />
+        </LinearLayout>
+
         <!-- الإعدادات العامة -->
         <TextView style="@style/MoreSection" android:text="@string/section_general" />
 

@@ -46,6 +46,8 @@ class MoreFragment : Fragment() {
         b.rowHistory.setOnClickListener { openList(ContentListActivity.SRC_HISTORY, getString(R.string.menu_history)) }
         b.rowDownloads.setOnClickListener { openList(ContentListActivity.SRC_DOWNLOADS, getString(R.string.menu_downloads)) }
         b.rowUpdate.setOnClickListener { loadCounts() }
+        b.tvAutoUpdate.text = autoUpdateLabels()[Settings.autoUpdate(requireContext())]
+        b.rowAutoUpdate.setOnClickListener { pickAutoUpdate() }
         b.rowLanguage.setOnClickListener { pickLanguage() }
         b.rowEngine.setOnClickListener { pickEngine() }
         b.rowPlaylists.setOnClickListener { PlaylistSheet().show(childFragmentManager, "playlists") }
@@ -99,6 +101,24 @@ class MoreFragment : Fragment() {
                     else -> LocaleListCompat.getEmptyLocaleList()
                 }
                 AppCompatDelegate.setApplicationLocales(locales)
+            }
+            .show()
+    }
+
+    private fun autoUpdateLabels() = arrayOf(
+        getString(R.string.au_manual), getString(R.string.au_on_open), getString(R.string.au_6h),
+        getString(R.string.au_12h), getString(R.string.au_daily), getString(R.string.au_weekly)
+    )
+
+    private fun pickAutoUpdate() {
+        val labels = autoUpdateLabels()
+        val current = Settings.autoUpdate(requireContext())
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.auto_update)
+            .setSingleChoiceItems(labels, current) { dialog, which ->
+                Settings.setAutoUpdate(requireContext(), which)
+                b.tvAutoUpdate.text = labels[which]
+                dialog.dismiss()
             }
             .show()
     }

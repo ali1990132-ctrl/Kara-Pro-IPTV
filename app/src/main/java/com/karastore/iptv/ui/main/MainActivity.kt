@@ -26,6 +26,12 @@ class MainActivity : AppCompatActivity() {
         b = ActivityMainBinding.inflate(layoutInflater)
         setContentView(b.root)
 
+        // تحديث تلقائي للمكتبة حسب الإعداد
+        if (com.karastore.iptv.data.Settings.shouldAutoRefresh(this)) {
+            com.karastore.iptv.data.ContentCache.clearAll()
+            com.karastore.iptv.data.Settings.markRefreshed(this)
+        }
+
         // في وضع M3U لا توجد أفلام/مسلسلات منفصلة
         if (!Repo.isXtream) {
             b.bottomNav.menu.findItem(R.id.nav_movies).isVisible = false
