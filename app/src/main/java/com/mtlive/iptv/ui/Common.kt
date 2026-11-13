@@ -13,7 +13,7 @@ import com.mtlive.iptv.data.ContentType
 import com.mtlive.iptv.data.SessionStore
 import com.mtlive.iptv.databinding.LayoutTopbarBinding
 
-object Tabs { const val HOME = 0; const val LIVE = 1; const val MOVIES = 2; const val SERIES = 3 }
+object Tabs { const val HOME = 0; const val LIVE = 1; const val MOVIES = 2; const val SERIES = 3; const val SETTINGS = 4 }
 
 fun Activity.fullscreen() {
     window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -35,7 +35,7 @@ fun Activity.requireSession(): Boolean {
 }
 
 fun Activity.setupTopbar(tb: LayoutTopbarBinding, current: Int) {
-    val tabs = listOf(tb.tabHome, tb.tabLive, tb.tabMovies, tb.tabSeries)
+    val tabs = listOf(tb.tabHome, tb.tabLive, tb.tabMovies, tb.tabSeries, tb.tabSettings)
     tabs.forEachIndexed { i, v ->
         v.isSelected = i == current
         v.setOnClickListener {
@@ -43,6 +43,10 @@ fun Activity.setupTopbar(tb: LayoutTopbarBinding, current: Int) {
             when (i) {
                 Tabs.HOME -> {
                     startActivity(Intent(this, HomeActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP))
+                    if (this !is HomeActivity) finish()
+                }
+                Tabs.SETTINGS -> {
+                    startActivity(Intent(this, SettingsActivity::class.java))
                     if (this !is HomeActivity) finish()
                 }
                 else -> {

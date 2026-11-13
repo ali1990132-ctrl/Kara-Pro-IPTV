@@ -16,6 +16,8 @@
     <TextView android:id="@+id/tabMovies" style="@style/TabText" android:text="@string/movies" />
     <View android:layout_width="1.5dp" android:layout_height="22dp" android:background="#66FFFFFF" />
     <TextView android:id="@+id/tabSeries" style="@style/TabText" android:text="@string/series" />
+    <View android:layout_width="1.5dp" android:layout_height="22dp" android:background="#66FFFFFF" />
+    <TextView android:id="@+id/tabSettings" style="@style/TabText" android:text="@string/settings" />
 
     <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
 

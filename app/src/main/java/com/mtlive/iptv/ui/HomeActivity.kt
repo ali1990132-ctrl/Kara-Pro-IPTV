@@ -25,6 +25,7 @@ class HomeActivity : AppCompatActivity() {
         b.tileLive.setOnClickListener { startActivity(SectionActivity.intent(this, ContentType.LIVE)) }
         b.tileMovies.setOnClickListener { startActivity(SectionActivity.intent(this, ContentType.MOVIE)) }
         b.tileSeries.setOnClickListener { startActivity(SectionActivity.intent(this, ContentType.SERIES)) }
+        b.tileSettings.setOnClickListener { startActivity(Intent(this, SettingsActivity::class.java)) }
         b.btnReload.setOnClickListener { Cache.clear(); refreshCounts(true) }
         b.btnLogout.setOnClickListener {
             AlertDialog.Builder(this)

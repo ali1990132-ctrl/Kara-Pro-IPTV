@@ -14,9 +14,12 @@ import com.mtlive.iptv.databinding.ItemEpisodeBinding
 import com.mtlive.iptv.databinding.ItemPosterBinding
 import com.mtlive.iptv.databinding.ItemSeasonBinding
 
-data class CatRow(val key: String, val name: String, val count: Int)
+data class CatRow(val key: String, val name: String, val count: Int, val locked: Boolean = false, val special: Boolean = false)
 
-class CategoryAdapter(private val onClick: (CatRow) -> Unit) : RecyclerView.Adapter<CategoryAdapter.VH>() {
+class CategoryAdapter(
+    private val onClick: (CatRow) -> Unit,
+    private val onLongClick: (CatRow) -> Unit = {}
+) : RecyclerView.Adapter<CategoryAdapter.VH>() {
     var rows: List<CatRow> = emptyList(); private set
     var selectedKey: String = ""
 
@@ -28,7 +31,7 @@ class CategoryAdapter(private val onClick: (CatRow) -> Unit) : RecyclerView.Adap
     override fun getItemCount() = rows.size
     override fun onBindViewHolder(h: VH, pos: Int) {
         val r = rows[pos]
-        h.b.tvName.text = r.name
+        h.b.tvName.text = if (r.locked) "🔒 " + r.name else r.name
         h.b.tvCount.text = r.count.toString()
         val sel = r.key == selectedKey
         h.b.root.isSelected = sel
@@ -36,13 +39,15 @@ class CategoryAdapter(private val onClick: (CatRow) -> Unit) : RecyclerView.Adap
         val c = ContextCompat.getColor(ctx, if (sel) R.color.red else R.color.white)
         h.b.tvName.setTextColor(c)
         h.b.tvCount.setTextColor(if (sel) c else ContextCompat.getColor(ctx, R.color.text_secondary))
-        h.b.root.setOnClickListener {
-            val old = rows.indexOfFirst { it.key == selectedKey }
-            selectedKey = r.key
-            if (old >= 0) notifyItemChanged(old)
-            notifyItemChanged(h.bindingAdapterPosition)
-            onClick(r)
-        }
+        h.b.root.setOnClickListener { onClick(r) }
+        h.b.root.setOnLongClickListener { if (!r.special) onLongClick(r); true }
+    }
+    fun select(key: String) {
+        val old = rows.indexOfFirst { it.key == selectedKey }
+        selectedKey = key
+        if (old >= 0) notifyItemChanged(old)
+        val n = rows.indexOfFirst { it.key == key }
+        if (n >= 0) notifyItemChanged(n)
     }
 }
 

@@ -17,6 +17,8 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.ui.AspectRatioFrameLayout
 import com.mtlive.iptv.data.ContentType
+import com.mtlive.iptv.data.HistoryStore
+import com.mtlive.iptv.data.Settings
 import com.mtlive.iptv.data.XtreamApi
 import com.mtlive.iptv.databinding.ActivityPlayerBinding
 
@@ -44,6 +46,7 @@ class PlayerActivity : AppCompatActivity() {
                 b.btnAspect.visibility = v
             }
         )
+        b.imgWatermark.visibility = if (Settings.watermark(this)) View.VISIBLE else View.GONE
         val multi = PlayerQueue.items.size > 1
         b.playerView.setShowNextButton(multi)
         b.playerView.setShowPreviousButton(multi)
@@ -68,8 +71,7 @@ class PlayerActivity : AppCompatActivity() {
         val http = OkHttpDataSource.Factory(XtreamApi.client).setUserAgent(XtreamApi.UA)
         val sources = DefaultMediaSourceFactory(this).setDataSourceFactory(http)
         val renderers = DefaultRenderersFactory(this)
-            .setEnableDecoderFallback(true)
-            .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER)
+            .setEnableDecoderFallback(Settings.compatMode(this))
         val exo = ExoPlayer.Builder(this, renderers).setMediaSourceFactory(sources).build()
 
         val media = PlayerQueue.items.map {
@@ -93,9 +95,11 @@ class PlayerActivity : AppCompatActivity() {
                 PlayerQueue.index = index
                 b.tvTitle.text = mediaItem?.mediaMetadata?.title ?: ""
                 b.errorBox.visibility = View.GONE
+                PlayerQueue.items.getOrNull(index)?.let { HistoryStore.add(this@PlayerActivity, it) }
             }
         })
         b.tvTitle.text = PlayerQueue.items.getOrNull(index)?.name ?: ""
+        PlayerQueue.items.getOrNull(index)?.let { HistoryStore.add(this, it) }
         exo.playWhenReady = true
         exo.prepare()
         b.playerView.player = exo

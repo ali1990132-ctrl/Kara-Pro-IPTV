@@ -7,7 +7,9 @@ import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.mtlive.iptv.R
+import com.mtlive.iptv.data.AccountsStore
 import com.mtlive.iptv.data.Cache
+import com.mtlive.iptv.data.SavedAccount
 import com.mtlive.iptv.data.Session
 import com.mtlive.iptv.data.SessionStore
 import com.mtlive.iptv.data.XtreamApi
@@ -47,6 +49,7 @@ class LoginActivity : AppCompatActivity() {
                 val s = Session(normalized, user, pass, info.expDate, info.activeCons, info.maxConnections)
                 SessionStore.save(this@LoginActivity, s)
                 SessionStore.rememberLast(this@LoginActivity, normalized, user)
+                AccountsStore.add(this@LoginActivity, SavedAccount(normalized, user, pass))
                 Cache.clear()
                 Cache.session = s
                 startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
