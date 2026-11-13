@@ -3,19 +3,12 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <!-- دعم أجهزة أندرويد TV / البوكسات: لا يتطلب لمس ولا واجهة لمسية -->
-    <uses-feature
-        android:name="android.software.leanback"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.touchscreen"
-        android:required="false" />
+    <uses-feature android:name="android.software.leanback" android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
     <application
-        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -23,69 +16,48 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.KaraPro">
+        android:theme="@style/Theme.MT">
 
         <activity
-            android:name=".ui.login.LoginActivity"
+            android:name=".ui.SplashActivity"
             android:exported="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.MT.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-                <!-- يظهر التطبيق بقائمة أندرويد TV -->
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
-            </intent-filter>
-            <!-- نقل الاشتراك عبر QR: asiptv://login?... -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="asiptv" android:host="login" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".ui.LoginActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="sensorLandscape"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".ui.list.ContentListActivity"
+            android:name=".ui.HomeActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="sensorLandscape" />
 
         <activity
-            android:name=".ui.detail.DetailActivity"
+            android:name=".ui.SectionActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="sensorLandscape"
+            android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".ui.search.SearchActivity"
+            android:name=".ui.DetailActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="sensorLandscape" />
 
         <activity
-            android:name=".ui.CrashActivity"
-            android:exported="false"
-            android:process=":crash"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".ui.player.PlayerActivity"
+            android:name=".ui.PlayerActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden|screenLayout|smallestScreenSize"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.KaraPro.Fullscreen" />
-
-        <service
-            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
-            android:enabled="false"
-            android:exported="false">
-            <meta-data
-                android:name="autoStoreLocales"
-                android:value="true" />
-        </service>
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.MT.Fullscreen" />
 
     </application>
-
 </manifest>

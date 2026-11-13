@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/app_bg"
+        android:importantForAccessibility="no" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include android:id="@+id/topbar" layout="@layout/layout_topbar" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layoutDirection="ltr"
+            android:orientation="horizontal"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp">
+
+            <LinearLayout android:id="@+id/tileLive" style="@style/HomeTile">
+                <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_live" />
+                <TextView style="@style/HomeTileTitle" android:text="@string/live" />
+                <TextView android:id="@+id/countLive" style="@style/HomeTileCount" />
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/tileMovies" style="@style/HomeTile">
+                <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_movie" />
+                <TextView style="@style/HomeTileTitle" android:text="@string/movies" />
+                <TextView android:id="@+id/countMovies" style="@style/HomeTileCount" />
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/tileSeries" style="@style/HomeTile">
+                <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_series" />
+                <TextView style="@style/HomeTileTitle" android:text="@string/series" />
+                <TextView android:id="@+id/countSeries" style="@style/HomeTileCount" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layoutDirection="ltr"
+            android:orientation="horizontal"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="14dp">
+
+            <TextView
+                android:id="@+id/tvAccount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp" />
+
+            <TextView android:id="@+id/btnReload" style="@style/Chip" android:text="@string/reload" android:drawableStart="@drawable/ic_refresh" />
+            <TextView android:id="@+id/btnLogout" style="@style/Chip" android:layout_marginStart="10dp" android:text="@string/logout" android:drawableStart="@drawable/ic_logout" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

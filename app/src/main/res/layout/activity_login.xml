@@ -1,180 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@drawable/bg_login">
+    android:background="@color/bg">
 
-    <LinearLayout
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="640dp"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:paddingHorizontal="24dp"
-        android:paddingVertical="36dp">
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/app_bg"
+        android:importantForAccessibility="no" />
 
-        <ImageView
-            android:layout_width="130dp"
-            android:layout_height="130dp"
-            android:src="@drawable/app_logo"
-            android:contentDescription="@null" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:scrollbars="none">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="20dp"
-            android:text="@string/login_title"
-            android:textColor="#CFE4FF"
-            android:textSize="15sp" />
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:background="#2600101F"
-            app:tabIndicatorColor="@color/cyan"
-            app:tabSelectedTextColor="@color/cyan"
-            app:tabTextColor="#99CFE4FF"
-            app:tabMode="fixed">
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp">
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="360dp"
                 android:layout_height="wrap_content"
-                android:text="@string/tab_xtream" />
+                android:layout_gravity="center"
+                android:background="@drawable/bg_card"
+                android:layoutDirection="ltr"
+                android:orientation="vertical"
+                android:paddingStart="24dp"
+                android:paddingTop="18dp"
+                android:paddingEnd="24dp"
+                android:paddingBottom="16dp">
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tab_m3u" />
-        </com.google.android.material.tabs.TabLayout>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="96dp"
+                    android:layout_marginBottom="12dp"
+                    android:contentDescription="@string/app_name"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/logo" />
 
-        <LinearLayout
-            android:id="@+id/llXtream"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/etHost"
+                        style="@style/LoginInput"
+                        android:hint="@string/host"
+                        android:imeOptions="actionNext"
+                        android:inputType="textUri|textNoSuggestions"
+                        android:nextFocusDown="@+id/etUser" />
+                    <ImageView style="@style/LoginIcon" android:src="@drawable/ic_globe" />
+                </FrameLayout>
 
-            <EditText android:id="@+id/etServer" style="@style/InputField"
-                android:nextFocusDown="@id/etUser"
-                android:hint="@string/hint_server" android:inputType="textUri" />
-            <EditText android:id="@+id/etUser" style="@style/InputField"
-                android:nextFocusUp="@id/etServer" android:nextFocusDown="@id/etPass"
-                android:hint="@string/hint_username" android:inputType="text" />
-            <EditText android:id="@+id/etPass" style="@style/InputField"
-                android:nextFocusUp="@id/etUser" android:nextFocusDown="@id/etName"
-                android:imeOptions="actionDone"
-                android:hint="@string/hint_password" android:inputType="textPassword" />
-        </LinearLayout>
+                <FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp">
+                    <EditText
+                        android:id="@+id/etUser"
+                        style="@style/LoginInput"
+                        android:hint="@string/username"
+                        android:imeOptions="actionNext"
+                        android:inputType="text|textNoSuggestions"
+                        android:nextFocusUp="@id/etHost"
+                        android:nextFocusDown="@+id/etPass" />
+                    <ImageView style="@style/LoginIcon" android:src="@drawable/ic_user" />
+                </FrameLayout>
 
-        <LinearLayout
-            android:id="@+id/llM3u"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp">
+                    <EditText
+                        android:id="@+id/etPass"
+                        style="@style/LoginInput"
+                        android:hint="@string/password"
+                        android:imeOptions="actionDone"
+                        android:inputType="textPassword"
+                        android:nextFocusUp="@id/etUser"
+                        android:nextFocusDown="@+id/btnLogin" />
+                    <ImageView style="@style/LoginIcon" android:src="@drawable/ic_lock" />
+                </FrameLayout>
 
-            <EditText android:id="@+id/etM3u" style="@style/InputField"
-                android:nextFocusDown="@id/etName"
-                android:hint="@string/hint_m3u" android:inputType="textUri" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tvError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:textColor="#FFFF6B81"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
 
-        <EditText android:id="@+id/etName" style="@style/InputField"
-            android:nextFocusUp="@id/etPass" android:nextFocusDown="@id/cbRemember"
-            android:hint="@string/hint_name" android:inputType="text" />
-
-        <CheckBox
-            android:id="@+id/cbRemember"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:buttonTint="@color/cyan"
-            android:checked="true"
-            android:focusable="true"
-            android:nextFocusUp="@id/etName" android:nextFocusDown="@id/btnLogin"
-            android:text="@string/remember_me"
-            android:textColor="#CFE4FF" />
-
-        <TextView
-            android:id="@+id/btnLogin"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/bg_button_blue"
-            android:clickable="true"
-            android:focusable="true"
-            android:nextFocusUp="@id/cbRemember" android:nextFocusDown="@id/btnQrShare"
-            android:gravity="center"
-            android:text="@string/btn_login"
-            android:textColor="@color/white"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:id="@+id/btnQrShare"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/bg_button_outline"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:clickable="true"
-            android:focusable="true"
-            android:nextFocusUp="@id/btnLogin">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_marginEnd="8dp"
-                android:src="@drawable/ic_phone"
-                app:tint="@color/cyan"
-                android:contentDescription="@null" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/btn_qr_share"
-                android:textColor="@color/cyan"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <ProgressBar
-            android:id="@+id/progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:indeterminateTint="@color/cyan"
-            android:visibility="gone" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:minHeight="24dp" />
-
-        <!-- عبارة الدعم -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text="@string/support_full_text"
-            android:textColor="#B8CFE4FF"
-            android:textSize="13sp" />
-
-        <TextView
-            android:id="@+id/btnSupportNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:padding="6dp"
-            android:text="@string/support_number"
-            android:textColor="@color/cyan"
-            android:textSize="28sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-</ScrollView>
+                <FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp">
+                    <Button
+                        android:id="@+id/btnLogin"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_btn_red"
+                        android:nextFocusUp="@id/etPass"
+                        android:stateListAnimator="@null"
+                        android:text="@string/login"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <ProgressBar
+                        android:id="@+id/progress"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_gravity="center"
+                        android:elevation="8dp"
+                        android:indeterminateTint="@color/white"
+                        android:visibility="gone" />
+                </FrameLayout>
+            </LinearLayout>
+        </FrameLayout>
+    </ScrollView>
+</FrameLayout>

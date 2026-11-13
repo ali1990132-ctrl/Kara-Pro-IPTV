@@ -1,136 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">A&amp;S</string>
-
-    <!-- Login -->
-    <string name="login_title">تسجيل الدخول</string>
-    <string name="login_sub">أدخل بيانات اشتراكك</string>
-    <string name="tab_xtream">Xtream Codes</string>
-    <string name="tab_m3u">رابط M3U</string>
-    <string name="hint_server">عنوان السيرفر (http://host:port)</string>
-    <string name="hint_username">اسم المستخدم</string>
-    <string name="hint_password">كلمة المرور</string>
-    <string name="hint_m3u">رابط قائمة M3U / M3U8</string>
-    <string name="hint_name">اسم الاشتراك (اختياري)</string>
-    <string name="btn_login">دخول</string>
-    <string name="btn_qr_share">الإدخال من الهاتف</string>
-    <string name="qr_title">امسح الكود بكاميرا الموبايل</string>
-    <string name="qr_desc">افتح كاميرا الموبايل وامسح الكود — تنفتح صفحة تعبّي بيها بيانات الاشتراك فتوصل للشاشة مباشرة</string>
-    <string name="qr_steps">١) الموبايل والشاشة على نفس شبكة الـWi-Fi\n٢) امسح الكود بكاميرا الموبايل\n٣) اضغط على الرابط اللي يطلع حتى تفتح الصفحة\n٤) عبّي البيانات واضغط إرسال</string>
-    <string name="qr_open_hint">إذا ما انفتحت الصفحة، افتح متصفح الموبايل واكتب هذا الرابط:</string>
-    <string name="qr_need_wifi">وصّل الجهاز بشبكة Wi-Fi (نفس شبكة الموبايل) حتى تظهر صفحة الإدخال</string>
-    <string name="qr_close">إغلاق</string>
-    <string name="remember_me">تذكّرني</string>
-    <string name="logging_in">جارِ الاتصال بالسيرفر…</string>
-    <string name="err_fields">عبّي كل الحقول المطلوبة</string>
-    <string name="err_login">فشل تسجيل الدخول — تأكد من البيانات والسيرفر</string>
-    <string name="err_network">خطأ بالشبكة، حاول مرة ثانية</string>
-
-    <!-- Home -->
-    <string name="home_live">البث المباشر</string>
-    <string name="home_movies">الأفلام</string>
-    <string name="home_series">المسلسلات</string>
-    <string name="home_settings">الإعدادات</string>
-    <string name="welcome">أهلاً</string>
-    <string name="expires">تاريخ الانتهاء</string>
-    <string name="status_active">فعّال</string>
-    <string name="status_expired">منتهي</string>
-    <string name="logout">تسجيل الخروج</string>
-
-    <!-- Lists -->
-    <string name="search_hint">بحث…</string>
-    <string name="empty_list">لا توجد عناصر</string>
-    <string name="loading">جارِ التحميل…</string>
+    <string name="app_name">MT LIVE</string>
+    <string name="host">رابط السيرفر (Host)</string>
+    <string name="username">اسم المستخدم</string>
+    <string name="password">كلمة المرور</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="logging_in">جاري تسجيل الدخول…</string>
+    <string name="fill_all">املأ الرابط واسم المستخدم وكلمة المرور</string>
+    <string name="home">الرئيسية</string>
+    <string name="live">بث مباشر</string>
+    <string name="movies">أفلام</string>
+    <string name="series">مسلسلات</string>
+    <string name="search">بحث</string>
+    <string name="back">عودة</string>
     <string name="all">الكل</string>
-
-    <!-- Player -->
-    <string name="player_error">تعذّر تشغيل البث</string>
-    <string name="retry">إعادة المحاولة</string>
-
-    <!-- Bottom nav -->
-    <string name="nav_home">الرئيسية</string>
-    <string name="nav_live">البث المباشر</string>
-    <string name="nav_movies">الأفلام</string>
-    <string name="nav_series">المسلسلات</string>
-    <string name="nav_more">المزيد</string>
-
-    <!-- More screen -->
-    <string name="section_library">المفضلة وسجل المشاهدة</string>
-    <string name="menu_favorites">المفضلة</string>
-    <string name="menu_history">السجل</string>
-    <string name="menu_downloads">التنزيلات</string>
-    <string name="menu_downloads_sub">الأفلام والحلقات المحفوظة للمشاهدة بدون نت</string>
-    <string name="section_content">المحتوى</string>
-    <string name="section_general">الإعدادات العامة</string>
-    <string name="menu_language">لغة التطبيق</string>
-    <string name="menu_engine">محرّك التشغيل</string>
-    <string name="engine_auto">تلقائي</string>
-    <string name="engine_compat">توافقية أعلى</string>
-    <string name="lang_device">لغة الجهاز</string>
-    <string name="lang_ar">العربية</string>
-    <string name="lang_en">English</string>
-    <string name="remaining_time">الوقت المتبقي</string>
-    <string name="unit_days">يوم</string>
+    <string name="favorites">المفضلة</string>
+    <string name="recent">المضاف حديثاً</string>
+    <string name="expires">الاشتراك ينتهي: %1$s</string>
     <string name="unlimited">غير محدود</string>
-    <string name="counts_fmt">%1$d بث · %2$d أفلام · %3$d مسلسلات</string>
-    <string name="continue_watching">متابعة المشاهدة</string>
-    <string name="quick_access">الأقسام</string>
-
-    <!-- Item actions -->
-    <string name="action_play">تشغيل</string>
-    <string name="action_download">تحميل</string>
-    <string name="action_fav_add">إضافة للمفضلة</string>
-    <string name="action_fav_remove">إزالة من المفضلة</string>
-    <string name="action_delete">حذف</string>
-    <string name="download_started">بدأ التنزيل…</string>
-
-    <!-- Empty states -->
-    <string name="empty_favorites">لا توجد عناصر بالمفضلة</string>
-    <string name="empty_history">السجل فارغ</string>
-    <string name="empty_downloads">لا توجد تنزيلات</string>
-
-    <!-- Categories / detail / home -->
-    <string name="all_categories">كل التصنيفات</string>
-    <string name="recent_movies">الأفلام المضافة مؤخراً</string>
-    <string name="recent_series">المسلسلات المضافة مؤخراً</string>
-    <string name="start_watching">ابدأ المشاهدة</string>
-    <string name="related">مقترحات مشابهة</string>
-    <string name="more">المزيد</string>
-
-    <!-- Playlists -->
-    <string name="playlists_title">قوائم التشغيل</string>
-    <string name="add_playlist">إضافة قائمة</string>
-    <string name="playlist_active">نشطة</string>
-    <string name="my_playlists">قوائم التشغيل الخاصة بي</string>
-    <string name="switching">جارِ التبديل…</string>
-    <string name="featured">مميّزة</string>
-
-    <!-- Support -->
-    <string name="section_support">الدعم</string>
-    <string name="support_text">للتفعيل وتجديد الاشتراك راسلنا واتساب</string>
-    <string name="support_number">07711608207</string>
-    <string name="support_wa">9647711608207</string>
-
-    <string name="sleep_timer">مؤقّت النوم</string>
-    <string name="sleep_off">إيقاف</string>
-    <string name="support_full_text">للتفعيل وتجديد الاشتراك راسلنا واتساب ع الرقم التالي</string>
-    <string name="rotate_screen">تدوير الشاشة</string>
-
-    <string name="auto_update">التحديث التلقائي</string>
-    <string name="auto_update_sub">تحديث المكتبة تلقائياً</string>
-    <string name="au_manual">يدوي فقط</string>
-    <string name="au_on_open">في كل مرة يُفتح فيها التطبيق</string>
-    <string name="au_6h">كل 6 ساعات</string>
-    <string name="au_12h">كل 12 ساعة</string>
-    <string name="au_daily">مرة كل يوم</string>
-    <string name="au_weekly">مرة كل أسبوع</string>
-    <string name="activation_watermark">للتفعيل 07711608207</string>
-    <string name="activation_label">للتفعيل</string>
-
-    <string name="pin_enter">أدخل الرمز السري</string>
-    <string name="pin_wrong">الرمز غير صحيح</string>
-    <string name="change_pin">تغيير الرمز السري للباقات</string>
-    <string name="pin_current">الرمز الحالي</string>
-    <string name="pin_new">الرمز الجديد</string>
-    <string name="pin_changed">تم تغيير الرمز</string>
+    <string name="reload">تحديث</string>
+    <string name="logout">تسجيل خروج</string>
+    <string name="logout_confirm">تريد تسجيل الخروج؟</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+    <string name="loading">جاري التحميل…</string>
+    <string name="load_error">تعذّر التحميل: %1$s</string>
+    <string name="retry">إعادة المحاولة</string>
+    <string name="play">تشغيل</string>
+    <string name="add_fav">أضف للمفضلة</string>
+    <string name="remove_fav">إزالة من المفضلة</string>
+    <string name="episodes">الحلقات</string>
+    <string name="no_items">لا يوجد محتوى</string>
+    <string name="player_error">تعذّر تشغيل هذا المحتوى</string>
+    <string name="search_hint">ابحث بالاسم…</string>
+    <string name="account">الحساب: %1$s</string>
+    <string name="connections">الاتصالات: %1$s / %2$s</string>
 </resources>

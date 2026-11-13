@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bg_dark">#0B0E14</color>
-    <color name="bg_card">#161B26</color>
-    <color name="bg_card_elevated">#1E2534</color>
-    <color name="accent">#F5B301</color>
-    <color name="accent_dark">#C68F00</color>
-    <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#9AA4B2</color>
-    <color name="divider">#242B3A</color>
-    <color name="live_tile">#2D6CDF</color>
-    <color name="movies_tile">#E0455E</color>
-    <color name="series_tile">#8B5CF6</color>
-    <color name="settings_tile">#30B37E</color>
-    <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
-    <color name="blue">#1E9BFF</color>
-    <color name="blue_dark">#0B6FD6</color>
-    <color name="cyan">#22D3EE</color>
-    <color name="rail_bg">#D6ECFF</color>
-    <color name="rail_sel">#0B6FD6</color>
-    <color name="rail_unsel">#3B5A79</color>
+    <color name="bg">#FF07070C</color>
+    <color name="panel">#E6111218</color>
+    <color name="card">#FF161821</color>
+    <color name="input">#FF262A35</color>
+    <color name="stroke">#33FFFFFF</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="text_secondary">#B3FFFFFF</color>
+    <color name="text_hint">#80FFFFFF</color>
+    <color name="red">#FFE5173F</color>
+    <color name="red_dark">#FF8B0000</color>
+    <color name="gold">#FFF5C04A</color>
+    <color name="gold_dark">#FFB8860B</color>
+    <color name="selected">#33E5173F</color>
 </resources>

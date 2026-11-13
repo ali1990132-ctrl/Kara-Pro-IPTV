@@ -11,121 +11,85 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:resize_mode="fit"
-        app:show_buffering="when_playing"
-        app:show_next_button="true"
-        app:show_previous_button="true"
-        app:show_rewind_button="false"
-        app:show_fastforward_button="false"
+        app:show_buffering="never"
         app:use_controller="true" />
 
-    <!-- شريط علوي بأدوات التحكّم -->
-    <LinearLayout
-        android:id="@+id/topBar"
+    <TextView
+        android:id="@+id/tvTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
         android:background="@drawable/scrim_top"
-        android:paddingHorizontal="8dp"
-        android:paddingTop="6dp"
-        android:paddingBottom="14dp"
-        android:visibility="gone">
+        android:ellipsize="end"
+        android:paddingStart="16dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="90dp"
+        android:paddingBottom="24dp"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
-        <ImageView android:id="@+id/btnLock" style="@style/PlayerTopBtn" android:src="@drawable/ic_lock_open" />
-        <ImageView android:id="@+id/btnNight" style="@style/PlayerTopBtn" android:src="@drawable/ic_night" />
-        <ImageView android:id="@+id/btnFav" style="@style/PlayerTopBtn" android:src="@drawable/ic_favorite_border" />
-        <ImageView android:id="@+id/btnChannels" style="@style/PlayerTopBtn" android:src="@drawable/ic_live" />
-        <ImageView android:id="@+id/btnAspect" style="@style/PlayerTopBtn" android:src="@drawable/ic_aspect" />
-        <ImageView android:id="@+id/btnRotate" style="@style/PlayerTopBtn" android:src="@drawable/ic_rotate" />
-
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginHorizontal="8dp"
-            android:gravity="end"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:maxLines="1"
-            android:ellipsize="end" />
-
-        <TextView
-            android:id="@+id/liveBadge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_live"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="3dp"
-            android:text="@string/nav_live"
-            android:textColor="@color/white"
-            android:textSize="11sp"
-            android:textStyle="bold"
-            android:visibility="gone" />
-    </LinearLayout>
-
-    <!-- عبارة التفعيل على البث المباشر -->
-    <TextView
-        android:id="@+id/tvWatermark"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_margin="10dp"
-        android:background="@drawable/bg_watermark"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="6dp"
-        android:text="@string/activation_watermark"
-        android:textColor="#FFFFFF"
-        android:textSize="15sp"
-        android:visibility="gone" />
-
-    <!-- زر فك القفل (يظهر عند القفل) -->
     <ImageView
-        android:id="@+id/btnUnlock"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center"
-        android:padding="14dp"
-        android:background="@drawable/bg_badge"
-        android:src="@drawable/ic_lock"
-        android:visibility="gone"
-        android:contentDescription="@null" />
+        android:id="@+id/imgWatermark"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:layout_gravity="top|end"
+        android:layout_margin="10dp"
+        android:alpha="0.85"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/logo" />
+
+    <ImageView
+        android:id="@+id/btnAspect"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="70dp"
+        android:background="@drawable/bg_chip"
+        android:clickable="true"
+        android:contentDescription="aspect"
+        android:focusable="true"
+        android:padding="10dp"
+        android:src="@drawable/ic_aspect" />
 
     <ProgressBar
         android:id="@+id/progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_gravity="center"
-        android:indeterminateTint="@color/cyan" />
+        android:indeterminateTint="@color/red" />
 
     <LinearLayout
         android:id="@+id/errorBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:orientation="vertical"
         android:gravity="center"
+        android:orientation="vertical"
         android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/player_error"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/white"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/btnRetry"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:background="@drawable/bg_button"
-            android:paddingHorizontal="24dp"
-            android:paddingVertical="10dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_btn_red"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
             android:text="@string/retry"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textStyle="bold" />
     </LinearLayout>
 </FrameLayout>

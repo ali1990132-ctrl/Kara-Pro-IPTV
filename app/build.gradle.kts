@@ -4,23 +4,23 @@ plugins {
 }
 
 android {
-    namespace = "com.karastore.iptv"
+    namespace = "com.mtlive.iptv"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.asplus.iptv"
+        applicationId = "com.mtlive.iptv"
         minSdk = 21
         targetSdk = 34
-        versionCode = 14
-        versionName = "2.3"
+        versionCode = 1
+        versionName = "1.0"
     }
 
     signingConfigs {
         create("stable") {
-            storeFile = file("aslive.jks")
-            storePassword = "aslive123"
-            keyAlias = "aslive"
-            keyPassword = "aslive123"
+            storeFile = file("mtlive.jks")
+            storePassword = "mtlive123"
+            keyAlias = "mtlive"
+            keyPassword = "mtlive123"
         }
     }
 
@@ -57,9 +57,7 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
-    implementation("androidx.viewpager2:viewpager2:1.0.0")
     implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
@@ -71,12 +69,6 @@ dependencies {
 
     // Image loading
     implementation("io.coil-kt:coil:2.5.0")
-
-    // QR code generation (pure Java, no camera)
-    implementation("com.google.zxing:core:3.5.3")
-
-    // Local pairing web server (phone fills, TV receives)
-    implementation("org.nanohttpd:nanohttpd:2.3.1")
 
     // Media3 / ExoPlayer
     implementation("androidx.media3:media3-exoplayer:1.3.1")
