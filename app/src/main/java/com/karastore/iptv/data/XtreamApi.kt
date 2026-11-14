@@ -18,7 +18,7 @@ class XtreamApi(
     private val base = normalize(server)
     private val gson = Gson()
     private val client = OkHttpClient.Builder()
-        .connectTimeout(30, TimeUnit.SECONDS)
+        .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(150, TimeUnit.SECONDS)
         .callTimeout(180, TimeUnit.SECONDS)
         .retryOnConnectionFailure(true)

@@ -103,20 +103,6 @@
                     android:text="@string/tab_m3u" />
             </com.google.android.material.tabs.TabLayout>
 
-            <TextView
-                android:id="@+id/btnPickServer"
-                android:layout_width="match_parent"
-                android:layout_height="46dp"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/bg_button_outline"
-                android:gravity="center"
-                android:clickable="true"
-                android:focusable="true"
-                android:text="@string/pick_server"
-                android:textColor="@color/cyan"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
             <LinearLayout
                 android:id="@+id/llXtream"
                 android:layout_width="match_parent"
@@ -124,10 +110,10 @@
                 android:orientation="vertical">
 
                 <EditText android:id="@+id/etServer" style="@style/InputField"
-                    android:nextFocusDown="@id/etUser"
+                    android:visibility="gone"
                     android:hint="@string/hint_server" android:inputType="textUri" />
                 <EditText android:id="@+id/etUser" style="@style/InputField"
-                    android:nextFocusUp="@id/etServer" android:nextFocusDown="@id/etPass"
+                    android:nextFocusDown="@id/etPass"
                     android:hint="@string/hint_username" android:inputType="text" />
                 <EditText android:id="@+id/etPass" style="@style/InputField"
                     android:nextFocusUp="@id/etUser" android:nextFocusDown="@id/etName"

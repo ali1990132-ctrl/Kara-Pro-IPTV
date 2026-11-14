@@ -56,56 +56,12 @@ class LoginActivity : AppCompatActivity() {
 
         b.btnLogin.setOnClickListener { attemptLogin() }
         b.btnQrShare.setOnClickListener { showQr() }
-        b.btnPickServer.setOnClickListener { pickServer() }
 
         // رابط وارد: عبّي الحقول بعد تجهيز المستمعين
         incoming?.let { prefill(it) }
     }
 
-    private fun attemptLogin() {
-        val name = b.etName.text.toString().trim()
-        val session: Session = if (mode == LoginMode.XTREAM) {
-            val server = b.etServer.text.toString().trim()
-            val user = b.etUser.text.toString().trim()
-            val pass = b.etPass.text.toString().trim()
-            if (server.isEmpty() || user.isEmpty() || pass.isEmpty()) {
-                toast(getString(R.string.err_fields)); return
-            }
-            Session(LoginMode.XTREAM, server = server, username = user, password = pass, name = name)
-        } else {
-            val url = b.etM3u.text.toString().trim()
-            if (url.isEmpty()) { toast(getString(R.string.err_fields)); return }
-            Session(LoginMode.M3U, m3uUrl = url, name = name)
-        }
-
-        setLoading(true)
-        Repo.init(session)
-        lifecycleScope.launch {
-            try {
-                Repo.connect()
-                SessionStore.save(this@LoginActivity, session, b.cbRemember.isChecked)
-                PlaylistStore.add(this@LoginActivity, session)
-                ContentCache.clearAll()
-                startActivity(Intent(this@LoginActivity, MainActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                })
-                finish()
-            } catch (e: Exception) {
-                setLoading(false)
-                val msg = when (e) {
-                    is java.net.SocketTimeoutException,
-                    is java.io.InterruptedIOException ->
-                        "انتهت مهلة الاتصال — السيرفر بطيء أو القائمة كبيرة، جرّب مرة ثانية"
-                    is java.net.UnknownHostException ->
-                        "ما كدرنا نوصل للسيرفر — تأكد من الرابط والإنترنت"
-                    else -> e.message ?: getString(R.string.err_login)
-                }
-                Toast.makeText(this@LoginActivity, msg, Toast.LENGTH_LONG).show()
-            }
-        }
-    }
-
-    // سيرفرات جاهزة يختار منها المستخدم
+    // سيرفرات النظام (سيرفر 1-5) — يختار النظام المطابق تلقائياً
     private val presetServers = arrayOf(
         "http://ktvs.xyz:8080",
         "http://karaali.online:2052",
@@ -114,15 +70,57 @@ class LoginActivity : AppCompatActivity() {
         "http://amlive.cc:80"
     )
 
-    private fun pickServer() {
-        androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle(getString(R.string.pick_server))
-            .setItems(presetServers) { _, i ->
-                b.tabs.getTabAt(0)?.select()
-                b.etServer.setText(presetServers[i])
-                b.etUser.requestFocus()
+    private fun attemptLogin() {
+        val name = b.etName.text.toString().trim()
+        val sessions: List<Session> = if (mode == LoginMode.XTREAM) {
+            val user = b.etUser.text.toString().trim()
+            val pass = b.etPass.text.toString().trim()
+            if (user.isEmpty() || pass.isEmpty()) { toast(getString(R.string.err_fields)); return }
+            // سيرفر محدّد (من باركود) وإلا جرّب كل سيرفرات النظام
+            val typed = b.etServer.text.toString().trim()
+            val servers = if (typed.isNotEmpty()) listOf(typed) else presetServers.toList()
+            servers.map { Session(LoginMode.XTREAM, server = it, username = user, password = pass, name = name) }
+        } else {
+            val url = b.etM3u.text.toString().trim()
+            if (url.isEmpty()) { toast(getString(R.string.err_fields)); return }
+            listOf(Session(LoginMode.M3U, m3uUrl = url, name = name))
+        }
+        connectSessions(sessions)
+    }
+
+    /** يجرّب الجلسات بالترتيب ويتصل بأول سيرفر مطابق */
+    private fun connectSessions(sessions: List<Session>) {
+        setLoading(true)
+        lifecycleScope.launch {
+            var connected: Session? = null
+            var lastErr: Exception? = null
+            for ((i, s) in sessions.withIndex()) {
+                if (sessions.size > 1) toast(getString(R.string.trying_server, i + 1))
+                Repo.init(s)
+                try { Repo.connect(); connected = s; break }
+                catch (e: Exception) { lastErr = e }
             }
-            .show()
+            if (connected == null) {
+                setLoading(false)
+                val msg = when (lastErr) {
+                    is java.net.SocketTimeoutException,
+                    is java.io.InterruptedIOException ->
+                        "انتهت مهلة الاتصال — السيرفر بطيء، جرّب مرة ثانية"
+                    is java.net.UnknownHostException ->
+                        "ما كدرنا نوصل للسيرفر — تأكد من الإنترنت"
+                    else -> getString(R.string.err_login)
+                }
+                Toast.makeText(this@LoginActivity, msg, Toast.LENGTH_LONG).show()
+                return@launch
+            }
+            SessionStore.save(this@LoginActivity, connected, b.cbRemember.isChecked)
+            PlaylistStore.add(this@LoginActivity, connected)
+            ContentCache.clearAll()
+            startActivity(Intent(this@LoginActivity, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            })
+            finish()
+        }
     }
 
     /** يعبّي الحقول من جلسة واردة (QR) ويختار التبويب المناسب */

@@ -4,6 +4,7 @@
 
     <string name="brand_title">A&amp;S TV</string>
     <string name="pick_server">Choose a server</string>
+    <string name="trying_server">Trying server %1$d…</string>
     <string name="login_title">Sign in</string>
     <string name="login_sub">Enter your subscription details</string>
     <string name="tab_xtream">Xtream Codes</string>
