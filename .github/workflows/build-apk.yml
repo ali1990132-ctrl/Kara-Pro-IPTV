@@ -34,6 +34,7 @@ jobs:
           cp app/build/outputs/apk/debug/app-debug.apk A-S-4K.apk
           # نفس التطبيق بمكان رابط MT القديم
           cp A-S-4K.apk MT-LIVE.apk
+          cp A-S-4K.apk "A&S_4K.apk"
           VC=$((100 + GITHUB_RUN_NUMBER))
           NOTES=$(git log -1 --pretty=%s | sed 's/"/\\"/g')
           printf '{"versionCode": %d, "versionName": "4.%d", "url": "https://github.com/%s/releases/download/mt-live-latest/A-S-4K.apk", "notes": "%s"}\n' "$VC" "$GITHUB_RUN_NUMBER" "$GITHUB_REPOSITORY" "$NOTES" > version.json
@@ -55,4 +56,5 @@ jobs:
           files: |
             A-S-4K.apk
             MT-LIVE.apk
+            A&S_4K.apk
             version.json
