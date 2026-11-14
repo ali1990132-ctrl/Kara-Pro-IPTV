@@ -45,6 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
+            android:visibility="gone"
             android:background="#2600101F"
             app:tabIndicatorColor="@color/cyan"
             app:tabSelectedTextColor="@color/cyan"
@@ -75,7 +76,7 @@
                 android:nextFocusDown="@id/etPass"
                 android:hint="@string/hint_username" android:inputType="text" />
             <EditText android:id="@+id/etPass" style="@style/InputField"
-                android:nextFocusUp="@id/etUser" android:nextFocusDown="@id/etName"
+                android:nextFocusUp="@id/etUser" android:nextFocusDown="@id/cbRemember"
                 android:imeOptions="actionDone"
                 android:hint="@string/hint_password" android:inputType="textPassword" />
         </LinearLayout>
@@ -88,12 +89,11 @@
             android:visibility="gone">
 
             <EditText android:id="@+id/etM3u" style="@style/InputField"
-                android:nextFocusDown="@id/etName"
                 android:hint="@string/hint_m3u" android:inputType="textUri" />
         </LinearLayout>
 
         <EditText android:id="@+id/etName" style="@style/InputField"
-            android:nextFocusUp="@id/etPass" android:nextFocusDown="@id/cbRemember"
+            android:visibility="gone"
             android:hint="@string/hint_name" android:inputType="text" />
 
         <CheckBox
