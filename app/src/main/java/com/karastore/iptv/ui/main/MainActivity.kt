@@ -49,6 +49,8 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             nav.selectedItemId = R.id.nav_home
+            // فحص تحديث التطبيق تلقائياً (بدون متجر)
+            com.karastore.iptv.util.UpdateFlow.check(this, manual = false)
         }
     }
 

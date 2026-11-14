@@ -75,8 +75,7 @@ class PlayerActivity : AppCompatActivity() {
         b.playerView.setShowNextButton(multi)
         b.playerView.setShowPreviousButton(multi)
         b.liveBadge.visibility = if (isLive) View.VISIBLE else View.GONE
-        b.tvWatermark.text = com.karastore.iptv.util.Watermark.text(this)
-        b.tvWatermark.visibility = View.VISIBLE
+        b.tvWatermark.visibility = View.GONE
         b.btnChannels.visibility = if (multi) View.VISIBLE else View.GONE
         b.tvTitle.text = (channels.getOrNull(currentIndex) ?: item)?.name ?: ""
 

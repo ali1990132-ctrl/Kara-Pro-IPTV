@@ -108,8 +108,8 @@
     <!-- Support -->
     <string name="section_support">الدعم</string>
     <string name="support_text">للتفعيل وتجديد الاشتراك راسلنا واتساب</string>
-    <string name="support_number">07711608207</string>
-    <string name="support_wa">9647711608207</string>
+    <string name="support_number"></string>
+    <string name="support_wa"></string>
 
     <string name="sleep_timer">مؤقّت النوم</string>
     <string name="sleep_off">إيقاف</string>
@@ -124,7 +124,7 @@
     <string name="au_12h">كل 12 ساعة</string>
     <string name="au_daily">مرة كل يوم</string>
     <string name="au_weekly">مرة كل أسبوع</string>
-    <string name="activation_watermark">للتفعيل 07711608207</string>
+    <string name="activation_watermark"></string>
     <string name="activation_label">للتفعيل</string>
 
     <string name="pin_enter">أدخل الرمز السري</string>
@@ -133,4 +133,18 @@
     <string name="pin_current">الرمز الحالي</string>
     <string name="pin_new">الرمز الجديد</string>
     <string name="pin_changed">تم تغيير الرمز</string>
+    <!-- المطور -->
+    <string name="developer_credit">صمم هذا التطبيق بواسطة المطور علي جمال العامري</string>
+    <!-- التحديث داخل التطبيق -->
+    <string name="section_about">عن التطبيق</string>
+    <string name="update_check">التحقق من التحديث</string>
+    <string name="update_check_sub">تنزيل آخر إصدار مباشرة</string>
+    <string name="update_checking">جارٍ التحقق…</string>
+    <string name="update_none">التطبيق محدّث لآخر إصدار</string>
+    <string name="update_available">يتوفر تحديث جديد (%1$s)</string>
+    <string name="update_now">تحديث الآن</string>
+    <string name="update_later">لاحقاً</string>
+    <string name="update_downloading">جارٍ تنزيل التحديث…</string>
+    <string name="update_failed">تعذّر التحديث، تأكد من الإنترنت</string>
+    <string name="update_install_hint">فعّل \"السماح بالتثبيت من هذا المصدر\" إذا طُلب منك</string>
 </resources>

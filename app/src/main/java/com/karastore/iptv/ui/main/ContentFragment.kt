@@ -51,10 +51,7 @@ class ContentFragment : Fragment() {
                 else -> R.string.nav_live
             }
         )
-        if (type == ContentType.MOVIE || type == ContentType.SERIES) {
-            b.tvWatermark.text = com.karastore.iptv.util.Watermark.text(requireContext())
-            b.tvWatermark.visibility = View.VISIBLE
-        } else b.tvWatermark.visibility = View.GONE
+        b.tvWatermark.visibility = View.GONE
 
         sectionAdapter = CategorySectionAdapter(
             onItemClick = { item -> onItemClick(item) },

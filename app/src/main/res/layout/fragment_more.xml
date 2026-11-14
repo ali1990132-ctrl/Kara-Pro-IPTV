@@ -43,18 +43,14 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- الدعم -->
-        <TextView style="@style/MoreSection" android:text="@string/section_support" />
+        <!-- عن التطبيق -->
+        <TextView style="@style/MoreSection" android:text="@string/section_about" />
 
-        <LinearLayout android:id="@+id/rowSupport" style="@style/MoreRow">
+        <LinearLayout android:id="@+id/rowAppUpdate" style="@style/MoreRow">
             <ImageView style="@style/MoreRowIcon" android:src="@drawable/ic_support" />
             <LinearLayout style="@style/MoreRowTextBox">
-                <TextView style="@style/MoreRowTitleInline" android:text="@string/support_text" />
-                <TextView style="@style/MoreRowSubtitle"
-                    android:text="@string/support_number"
-                    android:textColor="@color/accent"
-                    android:textStyle="bold"
-                    android:textSize="15sp" />
+                <TextView style="@style/MoreRowTitleInline" android:text="@string/update_check" />
+                <TextView style="@style/MoreRowSubtitle" android:text="@string/update_check_sub" />
             </LinearLayout>
             <ImageView style="@style/MoreRowChevron" />
         </LinearLayout>
@@ -137,5 +133,14 @@
             <ImageView style="@style/MoreRowIcon" android:src="@drawable/ic_logout" />
             <TextView style="@style/MoreRowTitle" android:text="@string/logout" />
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
+            android:text="@string/developer_credit"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp" />
     </LinearLayout>
 </ScrollView>

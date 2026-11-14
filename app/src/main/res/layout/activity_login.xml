@@ -156,25 +156,15 @@
             android:layout_weight="1"
             android:minHeight="24dp" />
 
-        <!-- عبارة الدعم -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text="@string/support_full_text"
-            android:textColor="#B8CFE4FF"
-            android:textSize="13sp" />
-
+        <!-- عبارة المطوّر -->
         <TextView
             android:id="@+id/btnSupportNumber"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:padding="6dp"
-            android:text="@string/support_number"
-            android:textColor="@color/cyan"
-            android:textSize="28sp"
-            android:textStyle="bold" />
+            android:layout_marginTop="22dp"
+            android:gravity="center"
+            android:text="@string/developer_credit"
+            android:textColor="#B8CFE4FF"
+            android:textSize="12sp" />
     </LinearLayout>
 </ScrollView>

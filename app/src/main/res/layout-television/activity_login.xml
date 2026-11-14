@@ -46,26 +46,14 @@
             android:textSize="14sp" />
 
         <TextView
+            android:id="@+id/btnSupportNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="18dp"
             android:gravity="center"
-            android:text="@string/support_full_text"
-            android:textColor="#CFE4FF"
+            android:text="@string/developer_credit"
+            android:textColor="#E6F2FF"
             android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/btnSupportNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:padding="6dp"
-            android:focusable="true"
-            android:clickable="true"
-            android:text="@string/support_number"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold" />
     </LinearLayout>
 
     <!-- الحقول (يسار) -->

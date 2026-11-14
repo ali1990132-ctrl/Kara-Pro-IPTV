@@ -56,13 +56,6 @@ class LoginActivity : AppCompatActivity() {
 
         b.btnLogin.setOnClickListener { attemptLogin() }
         b.btnQrShare.setOnClickListener { showQr() }
-        b.btnSupportNumber.setOnClickListener {
-            try {
-                startActivity(Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://wa.me/${getString(R.string.support_wa)}")))
-            } catch (e: Exception) {
-                Toast.makeText(this, getString(R.string.support_number), Toast.LENGTH_LONG).show()
-            }
-        }
 
         // رابط وارد: عبّي الحقول بعد تجهيز المستمعين
         incoming?.let { prefill(it) }
