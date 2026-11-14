@@ -1,7 +1,7 @@
 {
-  "versionCode": 9,
-  "versionName": "1.0.8",
+  "versionCode": 10,
+  "versionName": "1.0.9",
   "url": "https://github.com/ali1990132-ctrl/Kara-Pro-IPTV/raw/as-tv-pro-update/AS-TV-Pro.apk",
-  "notes": "ظهور شعار A&S مكان أغلفة الأفلام والمسلسلات غير المتوفرة",
+  "notes": "عبارة المطور بخط كبير وإطار أزرق في واجهة الدخول",
   "force": false
 }
