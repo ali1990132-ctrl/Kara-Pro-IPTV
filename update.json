@@ -1,7 +1,7 @@
 {
-  "versionCode": 7,
-  "versionName": "1.0.6",
+  "versionCode": 8,
+  "versionName": "1.0.7",
   "url": "https://github.com/ali1990132-ctrl/Kara-Pro-IPTV/raw/as-tv-pro-update/AS-TV-Pro.apk",
-  "notes": "اسم التطبيق تحت الشعار بواجهة الدخول، وإزالة الشعار من صفحات الأفلام والمسلسلات",
+  "notes": "عبارة المطور في منتصف أسفل واجهة الدخول",
   "force": false
 }
