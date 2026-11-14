@@ -37,7 +37,6 @@ class SettingsActivity : AppCompatActivity() {
         fullscreen()
         setupTopbar(b.topbar, Tabs.SETTINGS)
         bindAccount()
-        b.btnSupport.setOnClickListener { openSupport() }
         buildRows()
     }
 

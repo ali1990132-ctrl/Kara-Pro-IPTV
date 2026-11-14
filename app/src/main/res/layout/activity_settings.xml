@@ -96,30 +96,6 @@
                         android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
 
-                    <TextView
-                        android:id="@+id/tvSupportText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp"
-                        android:gravity="center"
-                        android:text="@string/support_text"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/btnSupport"
-                        android:layout_width="match_parent"
-                        android:layout_height="42dp"
-                        android:layout_marginTop="6dp"
-                        android:background="@drawable/bg_btn_green"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:text="@string/support_number"
-                        android:textColor="@color/white"
-                        android:textDirection="ltr"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
                 </LinearLayout>
             </ScrollView>
 
