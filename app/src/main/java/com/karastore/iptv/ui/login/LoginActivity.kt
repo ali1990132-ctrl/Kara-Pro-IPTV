@@ -56,6 +56,7 @@ class LoginActivity : AppCompatActivity() {
 
         b.btnLogin.setOnClickListener { attemptLogin() }
         b.btnQrShare.setOnClickListener { showQr() }
+        b.btnPickServer.setOnClickListener { pickServer() }
 
         // رابط وارد: عبّي الحقول بعد تجهيز المستمعين
         incoming?.let { prefill(it) }
@@ -102,6 +103,26 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this@LoginActivity, msg, Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    // سيرفرات جاهزة يختار منها المستخدم
+    private val presetServers = arrayOf(
+        "http://ktvs.xyz:8080",
+        "http://karaali.online:2052",
+        "http://8ksh1856.site:8080",
+        "http://renvioweb.online:8080",
+        "http://amlive.cc:80"
+    )
+
+    private fun pickServer() {
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(getString(R.string.pick_server))
+            .setItems(presetServers) { _, i ->
+                b.tabs.getTabAt(0)?.select()
+                b.etServer.setText(presetServers[i])
+                b.etUser.requestFocus()
+            }
+            .show()
     }
 
     /** يعبّي الحقول من جلسة واردة (QR) ويختار التبويب المناسب */

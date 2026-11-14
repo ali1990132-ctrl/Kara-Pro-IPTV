@@ -138,9 +138,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
+            android:background="@drawable/bg_credit"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="12dp"
             android:gravity="center"
             android:text="@string/developer_credit"
-            android:textColor="@color/text_secondary"
-            android:textSize="12sp" />
+            android:textColor="#D6EBFF"
+            android:textSize="13sp" />
     </LinearLayout>
 </ScrollView>

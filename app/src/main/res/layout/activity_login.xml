@@ -24,11 +24,35 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="6dp"
+            android:text="@string/brand_title"
+            android:textColor="@color/white"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="18dp"
             android:text="@string/login_title"
             android:textColor="#CFE4FF"
             android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/btnPickServer"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_button_outline"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="@string/pick_server"
+            android:textColor="@color/cyan"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
@@ -156,15 +180,18 @@
             android:layout_weight="1"
             android:minHeight="24dp" />
 
-        <!-- عبارة المطوّر -->
+        <!-- عبارة المطوّر بإطار متناسق -->
         <TextView
             android:id="@+id/btnSupportNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
+            android:background="@drawable/bg_credit"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="10dp"
             android:gravity="center"
             android:text="@string/developer_credit"
-            android:textColor="#B8CFE4FF"
+            android:textColor="#D6EBFF"
             android:textSize="12sp" />
     </LinearLayout>
 </ScrollView>

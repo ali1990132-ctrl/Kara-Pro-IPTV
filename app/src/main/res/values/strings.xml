@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">A&amp;S</string>
+    <string name="app_name">A&amp;S TV</string>
 
     <!-- Login -->
+    <string name="brand_title">A&amp;S TV</string>
+    <string name="pick_server">اختر سيرفراً جاهزاً</string>
     <string name="login_title">تسجيل الدخول</string>
     <string name="login_sub">أدخل بيانات اشتراكك</string>
     <string name="tab_xtream">Xtream Codes</string>

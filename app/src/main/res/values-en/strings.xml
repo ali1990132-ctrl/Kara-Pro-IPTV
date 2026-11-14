@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">A&amp;S</string>
+    <string name="app_name">A&amp;S TV</string>
 
+    <string name="brand_title">A&amp;S TV</string>
+    <string name="pick_server">Choose a server</string>
     <string name="login_title">Sign in</string>
     <string name="login_sub">Enter your subscription details</string>
     <string name="tab_xtream">Xtream Codes</string>

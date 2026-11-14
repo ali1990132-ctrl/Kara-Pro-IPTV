@@ -31,10 +31,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/brand_title"
+            android:textColor="@color/white"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="@string/login_title"
             android:textColor="@color/white"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
@@ -50,9 +60,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
+            android:background="@drawable/bg_credit"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
             android:gravity="center"
             android:text="@string/developer_credit"
-            android:textColor="#E6F2FF"
+            android:textColor="#FFFFFF"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -89,6 +102,20 @@
                     android:layout_height="wrap_content"
                     android:text="@string/tab_m3u" />
             </com.google.android.material.tabs.TabLayout>
+
+            <TextView
+                android:id="@+id/btnPickServer"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/bg_button_outline"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="@string/pick_server"
+                android:textColor="@color/cyan"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/llXtream"
