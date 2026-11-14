@@ -29,7 +29,9 @@ jobs:
         run: gradle assembleDebug --no-daemon
 
       - name: Rename APK
-        run: cp app/build/outputs/apk/debug/app-debug.apk A-S.apk
+        run: |
+          cp app/build/outputs/apk/debug/app-debug.apk A-S.apk
+          cp app/build/outputs/apk/debug/app-debug.apk "A&S_Tv.apk"
 
       - name: Generate version.json
         run: |
@@ -50,7 +52,8 @@ jobs:
         with:
           tag_name: latest
           name: A&S — أحدث نسخة
-          body: نسخة A&S. نزّل الملف A-S.apk ونصّبه على التلفون.
+          body: نسخة A&S TV. نزّل الملف A&S_Tv.apk ونصّبه.
           files: |
+            A&S_Tv.apk
             A-S.apk
             version.json
