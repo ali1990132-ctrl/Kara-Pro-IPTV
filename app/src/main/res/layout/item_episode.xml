@@ -29,6 +29,19 @@
             android:alpha="0.85"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_play" />
+
+        <ImageView
+            android:id="@+id/btnDl"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="4dp"
+            android:background="@drawable/bg_badge"
+            android:clickable="true"
+            android:contentDescription="@string/download"
+            android:focusable="true"
+            android:padding="7dp"
+            android:src="@drawable/ic_download" />
     </FrameLayout>
 
     <TextView

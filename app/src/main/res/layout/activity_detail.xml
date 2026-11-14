@@ -111,6 +111,14 @@
                             android:layout_marginStart="12dp"
                             android:drawableStart="@drawable/ic_star_border"
                             android:text="@string/add_fav" />
+
+                        <TextView
+                            android:id="@+id/btnDownload"
+                            style="@style/Chip"
+                            android:layout_height="44dp"
+                            android:layout_marginStart="12dp"
+                            android:drawableStart="@drawable/ic_download"
+                            android:text="@string/download" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

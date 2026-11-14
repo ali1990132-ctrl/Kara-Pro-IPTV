@@ -88,4 +88,23 @@
     <string name="update_failed">Update failed: %1$s</string>
     <string name="update_permission">Allow the app to install updates, then come back and press update again</string>
     <string name="designed_by">Designed by developer Ali Jamal Al-Amiri</string>
+    <string name="update_required">A new version is available (%1$s)\nPlease update to continue watching</string>
+    <string name="update_downloading_mb">Downloading update… %1$s</string>
+    <string name="update_installing">Download complete, opening installer…</string>
+    <string name="install_again">Install</string>
+    <string name="downloads">Downloads</string>
+    <string name="download">Download</string>
+    <string name="download_added">Added to downloads</string>
+    <string name="download_exists">Already in downloads</string>
+    <string name="dl_pending">Pending</string>
+    <string name="dl_running">%1$d%%</string>
+    <string name="dl_done">Completed</string>
+    <string name="dl_failed">Failed</string>
+    <string name="dl_paused">Paused</string>
+    <string name="empty_downloads">No downloads</string>
+    <string name="empty_accounts">No saved accounts</string>
+    <string name="delete_confirm">Delete "%1$s"?</string>
+    <string name="clear_confirm">Clear all watch history?</string>
+    <string name="current_account">Current account</string>
+    <string name="long_press_delete">Long-press to delete</string>
 </resources>

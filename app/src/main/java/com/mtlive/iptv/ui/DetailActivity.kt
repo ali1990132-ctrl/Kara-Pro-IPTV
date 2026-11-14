@@ -3,6 +3,7 @@ package com.mtlive.iptv.ui
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,6 +13,7 @@ import com.mtlive.iptv.R
 import com.mtlive.iptv.data.Cache
 import com.mtlive.iptv.data.ContentItem
 import com.mtlive.iptv.data.ContentType
+import com.mtlive.iptv.data.Downloads
 import com.mtlive.iptv.data.Favorites
 import com.mtlive.iptv.databinding.ActivityDetailBinding
 import kotlinx.coroutines.launch
@@ -52,7 +54,10 @@ class DetailActivity : AppCompatActivity() {
         seasonAdapter = SeasonAdapter { s -> showSeason(s) }
         b.rvSeasons.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         b.rvSeasons.adapter = seasonAdapter
-        episodeAdapter = EpisodeAdapter { index, _ -> playEpisode(index) }
+        episodeAdapter = EpisodeAdapter(
+            onClick = { index, _ -> playEpisode(index) },
+            onDownload = { ep -> download(ep, item.name + " - " + ep.name) }
+        )
         b.rvEpisodes.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         b.rvEpisodes.adapter = episodeAdapter
 
@@ -71,7 +76,18 @@ class DetailActivity : AppCompatActivity() {
         b.imgBackdrop.load(u) { crossfade(true) }
     }
 
+    /** يبدي التنزيل ويضيفه لقائمة التنزيلات مباشرة */
+    private fun download(target: ContentItem, title: String) {
+        if (Downloads.exists(this, target)) {
+            Toast.makeText(this, R.string.download_exists, Toast.LENGTH_SHORT).show()
+        } else if (Downloads.start(this, target, title)) {
+            Toast.makeText(this, R.string.download_added, Toast.LENGTH_SHORT).show()
+        }
+        startActivity(GridActivity.intent(this, GridActivity.Mode.DOWNLOADS))
+    }
+
     private fun loadMovie() {
+        b.btnDownload.setOnClickListener { download(item, item.name) }
         b.btnPlay.setOnClickListener {
             PlayerQueue.set(listOf(item), 0)
             startActivity(Intent(this, PlayerActivity::class.java))
@@ -95,6 +111,15 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun loadSeries() {
+        // للمسلسل: زر التنزيل ينزّل حلقات الموسم المعروض
+        b.btnDownload.setOnClickListener {
+            val season = seasonAdapter.selected
+            val eps = allEpisodes.filter { it.season == season }
+            if (eps.isEmpty()) return@setOnClickListener
+            eps.forEach { ep -> if (!Downloads.exists(this, ep)) Downloads.start(this, ep, item.name + " - " + ep.name) }
+            Toast.makeText(this, R.string.download_added, Toast.LENGTH_SHORT).show()
+            startActivity(GridActivity.intent(this, GridActivity.Mode.DOWNLOADS))
+        }
         b.btnPlay.setOnClickListener { if (episodes.isNotEmpty()) playEpisode(0) }
         b.progress.visibility = View.VISIBLE
         lifecycleScope.launch {

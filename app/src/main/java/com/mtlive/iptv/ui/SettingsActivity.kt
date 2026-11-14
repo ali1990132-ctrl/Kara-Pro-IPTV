@@ -70,9 +70,12 @@ class SettingsActivity : AppCompatActivity() {
         b.rows.removeAllViews()
 
         row(R.drawable.ic_star, R.string.favorites) { pickFavorites() }
-        row(R.drawable.ic_history, R.string.history) { showHistory() }
+        row(R.drawable.ic_history, R.string.history) { startActivity(GridActivity.intent(this, GridActivity.Mode.HISTORY)) }
+        row(R.drawable.ic_download, R.string.downloads, com.mtlive.iptv.data.Downloads.all(this).size.toString()) {
+            startActivity(GridActivity.intent(this, GridActivity.Mode.DOWNLOADS))
+        }
         row(R.drawable.ic_refresh, R.string.refresh_content, countsText() ?: "") { r -> refreshContent(r) }
-        row(R.drawable.ic_accounts, R.string.accounts, AccountsStore.all(this).size.toString()) { showAccounts() }
+        row(R.drawable.ic_accounts, R.string.accounts, AccountsStore.all(this).size.toString()) { startActivity(GridActivity.intent(this, GridActivity.Mode.ACCOUNTS)) }
         row(R.drawable.ic_language, R.string.language, currentLangLabel()) { pickLanguage() }
         row(R.drawable.ic_engine, R.string.engine,
             getString(if (Settings.compatMode(this)) R.string.engine_compat else R.string.engine_auto)) { r -> pickEngine(r) }
@@ -85,10 +88,7 @@ class SettingsActivity : AppCompatActivity() {
             HiddenCategories.clearAll(this)
             Toast.makeText(this, R.string.done, Toast.LENGTH_SHORT).show()
         }
-        row(R.drawable.ic_delete, R.string.clear_history) {
-            HistoryStore.clear(this)
-            Toast.makeText(this, R.string.done, Toast.LENGTH_SHORT).show()
-        }
+        row(R.drawable.ic_delete, R.string.clear_history) { startActivity(GridActivity.intent(this, GridActivity.Mode.HISTORY)) }
         val up = row(R.drawable.ic_update, R.string.tile_update, getString(R.string.tile_update_sub, Updater.currentName)) { r ->
             Updater.manualCheck(this, lifecycleScope) { info ->
                 r.tvValue.text = if (Updater.hasUpdate(info)) getString(R.string.tile_update_new)

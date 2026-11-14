@@ -132,7 +132,10 @@ class SeasonAdapter(private val onClick: (String) -> Unit) : RecyclerView.Adapte
     }
 }
 
-class EpisodeAdapter(private val onClick: (Int, ContentItem) -> Unit) : RecyclerView.Adapter<EpisodeAdapter.VH>() {
+class EpisodeAdapter(
+    private val onClick: (Int, ContentItem) -> Unit,
+    private val onDownload: (ContentItem) -> Unit = {}
+) : RecyclerView.Adapter<EpisodeAdapter.VH>() {
     var items: List<ContentItem> = emptyList(); private set
     fun submit(list: List<ContentItem>) { items = list; notifyDataSetChanged() }
 
@@ -149,5 +152,6 @@ class EpisodeAdapter(private val onClick: (Int, ContentItem) -> Unit) : Recycler
             fallback(R.drawable.channel_placeholder)
         }
         h.b.root.setOnClickListener { _ -> onClick(h.bindingAdapterPosition, item) }
+        h.b.btnDl.setOnClickListener { _ -> onDownload(item) }
     }
 }

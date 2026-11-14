@@ -94,4 +94,23 @@
     <string name="update_failed">فشل التحديث: %1$s</string>
     <string name="update_permission">اسمح للتطبيق بتثبيت التحديثات، وبعدها ارجع واضغط تحديث مرة ثانية</string>
     <string name="designed_by">صمم هذا التطبيق بواسطة المطور علي جمال العامري</string>
+    <string name="update_required">يتوفر إصدار جديد (%1$s)\nلازم تحدّث التطبيق حتى تكمل المشاهدة</string>
+    <string name="update_downloading_mb">جاري تنزيل التحديث… %1$s</string>
+    <string name="update_installing">اكتمل التنزيل، جاري فتح التثبيت…</string>
+    <string name="install_again">تثبيت</string>
+    <string name="downloads">التنزيلات</string>
+    <string name="download">تنزيل</string>
+    <string name="download_added">أضيف لقائمة التنزيلات</string>
+    <string name="download_exists">موجود بالتنزيلات</string>
+    <string name="dl_pending">بالانتظار</string>
+    <string name="dl_running">%1$d%%</string>
+    <string name="dl_done">مكتمل</string>
+    <string name="dl_failed">فشل</string>
+    <string name="dl_paused">متوقف</string>
+    <string name="empty_downloads">ما أكو تنزيلات</string>
+    <string name="empty_accounts">ما أكو حسابات محفوظة</string>
+    <string name="delete_confirm">تريد تحذف "%1$s"؟</string>
+    <string name="clear_confirm">تريد تمسح كل سجل المشاهدة؟</string>
+    <string name="current_account">الحساب الحالي</string>
+    <string name="long_press_delete">اضغط مطولاً للحذف</string>
 </resources>

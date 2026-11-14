@@ -168,6 +168,12 @@ object HistoryStore {
     }
 
     fun clear(ctx: Context) = ctx.getSharedPreferences(PREF, Context.MODE_PRIVATE).edit().clear().apply()
+
+    fun remove(ctx: Context, item: ContentItem) {
+        val l = all(ctx)
+        l.removeAll { it.id == item.id && it.type == item.type }
+        ctx.getSharedPreferences(PREF, Context.MODE_PRIVATE).edit().putString("list", gson.toJson(l)).apply()
+    }
 }
 
 /** الحسابات المحفوظة (قوائم التشغيل) */

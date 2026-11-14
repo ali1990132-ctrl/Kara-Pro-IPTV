@@ -69,7 +69,7 @@ class PlayerActivity : AppCompatActivity() {
         b.progress.visibility = View.VISIBLE
 
         val http = OkHttpDataSource.Factory(XtreamApi.client).setUserAgent(XtreamApi.UA)
-        val sources = DefaultMediaSourceFactory(this).setDataSourceFactory(http)
+        val sources = DefaultMediaSourceFactory(this).setDataSourceFactory(androidx.media3.datasource.DefaultDataSource.Factory(this, http))
         val renderers = DefaultRenderersFactory(this)
             .setEnableDecoderFallback(Settings.compatMode(this))
         val exo = ExoPlayer.Builder(this, renderers).setMediaSourceFactory(sources).build()

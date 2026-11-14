@@ -42,8 +42,8 @@ class HomeActivity : AppCompatActivity() {
         showUpdateState(Updater.latest)
         b.tileLive.requestFocus()
 
-        // فحص التحديث تلقائياً عند فتح التطبيق
-        Updater.autoCheck(this, lifecycleScope) { showUpdateState(it) }
+        // التحديث إجباري: إذا نزل تحديث وهو مفتوح تطلع شاشة التحديث
+        Updater.enforce(this, lifecycleScope) { showUpdateState(it) }
     }
 
     private fun showUpdateState(info: UpdateInfo?) {

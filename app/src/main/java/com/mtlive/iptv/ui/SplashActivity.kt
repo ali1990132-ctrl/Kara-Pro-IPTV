@@ -42,7 +42,14 @@ class SplashActivity : AppCompatActivity() {
                     }
                 }
             }
-            delay(1600)
+            // التحديث إجباري: نفحص قبل الدخول
+            val upd = Updater.fetch()
+            delay(1200)
+            if (Updater.hasUpdate(upd)) {
+                startActivity(Intent(this@SplashActivity, UpdateActivity::class.java))
+                finish()
+                return@launch
+            }
             startActivity(Intent(this@SplashActivity, next))
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             finish()
