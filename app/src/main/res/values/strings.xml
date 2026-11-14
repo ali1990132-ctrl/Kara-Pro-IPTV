@@ -93,4 +93,5 @@
     <string name="update_downloading">جاري تنزيل التحديث… %1$d%%</string>
     <string name="update_failed">فشل التحديث: %1$s</string>
     <string name="update_permission">اسمح للتطبيق بتثبيت التحديثات، وبعدها ارجع واضغط تحديث مرة ثانية</string>
+    <string name="designed_by">صمم هذا التطبيق بواسطة المطور علي جمال العامري</string>
 </resources>

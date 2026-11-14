@@ -43,9 +43,10 @@ class PlayerActivity : AppCompatActivity() {
         b.playerView.setControllerVisibilityListener(
             androidx.media3.ui.PlayerView.ControllerVisibilityListener { v ->
                 b.tvTitle.visibility = v
+                // لما يطلع شريط التحكم نرفع الشعار فوقه
+                b.imgWatermark.animate().translationY(if (v == View.VISIBLE) -90f * resources.displayMetrics.density else 0f).setDuration(150).start()
             }
         )
-        b.imgWatermark.visibility = if (Settings.watermark(this)) View.VISIBLE else View.GONE
         val multi = PlayerQueue.items.size > 1
         b.playerView.setShowNextButton(multi)
         b.playerView.setShowPreviousButton(multi)

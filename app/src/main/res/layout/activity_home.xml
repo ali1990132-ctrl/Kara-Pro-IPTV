@@ -76,8 +76,8 @@
             android:gravity="center_vertical"
             android:layoutDirection="ltr"
             android:orientation="horizontal"
-            android:paddingStart="24dp"
-            android:paddingEnd="24dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:paddingBottom="10dp">
 
             <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
@@ -88,21 +88,22 @@
                 android:background="@drawable/bg_pill"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingStart="18dp"
-                android:paddingEnd="18dp">
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp">
 
                 <TextView
                     android:id="@+id/tvInternet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_signal"
+                    android:drawableStart="@drawable/ic_code"
                     android:drawablePadding="8dp"
-                    android:textColor="@color/white"
-                    android:textSize="15sp"
+                    android:text="@string/designed_by"
+                    android:textColor="@color/gold_light"
+                    android:textSize="12.5sp"
                     android:textStyle="bold"
                     app:drawableTint="@color/gold" />
 
-                <View android:layout_width="1.5dp" android:layout_height="22dp" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" android:background="#80F5C04A" />
+                <View android:layout_width="1.5dp" android:layout_height="22dp" android:layout_marginStart="12dp" android:layout_marginEnd="12dp" android:background="#80F5C04A" />
 
                 <TextView
                     android:id="@+id/tvAccount"
@@ -111,7 +112,7 @@
                     android:drawableStart="@drawable/ic_globe"
                     android:drawablePadding="8dp"
                     android:textColor="@color/white"
-                    android:textSize="15sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     app:drawableTint="@color/gold" />
             </LinearLayout>
@@ -119,14 +120,14 @@
             <TextView
                 android:id="@+id/btnReload"
                 style="@style/PillButton"
-                android:layout_marginStart="14dp"
+                android:layout_marginStart="10dp"
                 android:drawableStart="@drawable/ic_refresh"
                 android:text="@string/reload" />
 
             <TextView
                 android:id="@+id/btnLogout"
                 style="@style/PillButton"
-                android:layout_marginStart="14dp"
+                android:layout_marginStart="10dp"
                 android:drawableStart="@drawable/ic_logout"
                 android:text="@string/logout" />
 

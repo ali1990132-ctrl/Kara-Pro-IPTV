@@ -81,10 +81,6 @@ class SettingsActivity : AppCompatActivity() {
             Settings.setLivePreview(this, !Settings.livePreview(this))
             r.tvValue.text = onOff(Settings.livePreview(this))
         }
-        row(R.drawable.ic_movie, R.string.watermark, onOff(Settings.watermark(this))) { r ->
-            Settings.setWatermark(this, !Settings.watermark(this))
-            r.tvValue.text = onOff(Settings.watermark(this))
-        }
         row(R.drawable.ic_lock, R.string.change_pin, getString(R.string.pin_hint)) { changePin() }
         row(R.drawable.ic_visibility, R.string.show_hidden) {
             HiddenCategories.clearAll(this)

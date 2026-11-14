@@ -112,7 +112,6 @@ class SectionActivity : AppCompatActivity() {
                 b.previewPanel.layoutParams.width = boxW
                 b.previewBox.layoutParams.height = boxW * 9 / 16
                 b.previewPanel.visibility = View.VISIBLE
-                b.previewWatermark.visibility = if (Settings.watermark(this)) View.VISIBLE else View.GONE
                 contentPx -= boxW + (10 * dm.density).toInt()
             }
             val span = ((contentPx / dm.density) / 290).toInt().coerceAtLeast(1)

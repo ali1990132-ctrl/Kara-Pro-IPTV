@@ -87,4 +87,5 @@
     <string name="update_downloading">Downloading update… %1$d%%</string>
     <string name="update_failed">Update failed: %1$s</string>
     <string name="update_permission">Allow the app to install updates, then come back and press update again</string>
+    <string name="designed_by">Designed by developer Ali Jamal Al-Amiri</string>
 </resources>

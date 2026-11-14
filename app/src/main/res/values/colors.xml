@@ -17,4 +17,5 @@
     <color name="navy">#FF071233</color>
     <color name="navy_light">#FF12307A</color>
     <color name="gold_light">#FFFFE08A</color>
+    <color name="icon_bg">#FF020814</color>
 </resources>

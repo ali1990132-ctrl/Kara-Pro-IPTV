@@ -57,7 +57,6 @@ class HomeActivity : AppCompatActivity() {
         setupTopbar(b.topbar, Tabs.HOME)
         val s = Cache.session!!
         b.tvAccount.text = getString(R.string.account_id, s.username)
-        b.tvInternet.text = getString(R.string.internet, "${s.activeCons ?: "0"}/${s.maxCons ?: "∞"}")
         refreshCounts(false)
     }
 

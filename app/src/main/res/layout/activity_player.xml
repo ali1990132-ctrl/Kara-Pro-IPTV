@@ -34,8 +34,8 @@
         android:id="@+id/imgWatermark"
         android:layout_width="66dp"
         android:layout_height="66dp"
-        android:layout_gravity="top|end"
-        android:layout_margin="12dp"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="14dp"
         android:alpha="0.9"
         android:contentDescription="@string/app_name"
         android:src="@drawable/logo" />
