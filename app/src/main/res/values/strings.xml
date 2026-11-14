@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MT LIVE</string>
+    <string name="app_name">A&amp;S 4K</string>
     <string name="host">رابط السيرفر (Host)</string>
     <string name="username">اسم المستخدم</string>
     <string name="password">كلمة المرور</string>
@@ -75,4 +75,22 @@
     <string name="delete">حذف</string>
     <string name="cancel">إلغاء</string>
     <string name="ok">موافق</string>
+    <string name="expires_short">ينتهي: %1$s</string>
+    <string name="tile_live_sub">بجودة عالية</string>
+    <string name="tile_series_sub">أحدث المسلسلات</string>
+    <string name="tile_movies_sub">مشاهدة ممتعة</string>
+    <string name="tile_update">تحديث التطبيق</string>
+    <string name="tile_update_sub">الإصدار %1$s</string>
+    <string name="tile_update_new">إصدار جديد متوفر!</string>
+    <string name="account_id">الحساب: %1$s</string>
+    <string name="internet">الانترنت: %1$s</string>
+    <string name="update_title">تحديث جديد متوفر</string>
+    <string name="update_msg">الإصدار %1$s متوفر الآن.\n%2$s</string>
+    <string name="update_now">تحديث الآن</string>
+    <string name="later">لاحقاً</string>
+    <string name="update_latest">أنت على آخر إصدار (%1$s)</string>
+    <string name="update_checking">جاري البحث عن تحديث…</string>
+    <string name="update_downloading">جاري تنزيل التحديث… %1$d%%</string>
+    <string name="update_failed">فشل التحديث: %1$s</string>
+    <string name="update_permission">اسمح للتطبيق بتثبيت التحديثات، وبعدها ارجع واضغط تحديث مرة ثانية</string>
 </resources>

@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bg">#FF07070C</color>
-    <color name="panel">#E6111218</color>
-    <color name="card">#FF161821</color>
-    <color name="input">#FF262A35</color>
-    <color name="stroke">#33FFFFFF</color>
+    <color name="bg">#FF040A1F</color>
+    <color name="panel">#E6081333</color>
+    <color name="card">#FF0C1838</color>
+    <color name="input">#FF132452</color>
+    <color name="stroke">#40F5C04A</color>
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
     <color name="text_secondary">#B3FFFFFF</color>
     <color name="text_hint">#80FFFFFF</color>
-    <color name="red">#FFE5173F</color>
-    <color name="red_dark">#FF8B0000</color>
+    <color name="red">#FF2E7BFF</color>
+    <color name="red_dark">#FF0A2A72</color>
     <color name="gold">#FFF5C04A</color>
     <color name="gold_dark">#FFB8860B</color>
-    <color name="selected">#33E5173F</color>
+    <color name="selected">#332E7BFF</color>
+    <color name="navy">#FF071233</color>
+    <color name="navy_light">#FF12307A</color>
+    <color name="gold_light">#FFFFE08A</color>
 </resources>

@@ -29,20 +29,27 @@ jobs:
       - name: Build debug APK
         run: gradle assembleDebug --no-daemon
 
-      - name: Rename APK
-        run: cp app/build/outputs/apk/debug/app-debug.apk MT-LIVE.apk
+      - name: Rename APK + version file
+        run: |
+          cp app/build/outputs/apk/debug/app-debug.apk A-S-4K.apk
+          VC=$((100 + GITHUB_RUN_NUMBER))
+          NOTES=$(git log -1 --pretty=%s | sed 's/"/\\"/g')
+          printf '{"versionCode": %d, "versionName": "4.%d", "url": "https://github.com/%s/releases/download/mt-live-latest/A-S-4K.apk", "notes": "%s"}\n' "$VC" "$GITHUB_RUN_NUMBER" "$GITHUB_REPOSITORY" "$NOTES" > version.json
+          cat version.json
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: MT-LIVE-apk
-          path: MT-LIVE.apk
+          name: A-S-4K-apk
+          path: A-S-4K.apk
           if-no-files-found: error
 
       - name: Publish Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: mt-live-latest
-          name: MT LIVE — أحدث نسخة
-          body: نسخة MT LIVE. نزّل الملف MT-LIVE.apk ونصّبه.
-          files: MT-LIVE.apk
+          name: A&S 4K — أحدث نسخة
+          body: نسخة A&S 4K. نزّل الملف A-S-4K.apk ونصّبه — والتحديثات الجاية تنزل من داخل التطبيق.
+          files: |
+            A-S-4K.apk
+            version.json

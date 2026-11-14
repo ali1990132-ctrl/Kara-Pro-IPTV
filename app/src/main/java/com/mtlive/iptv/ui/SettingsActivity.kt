@@ -94,6 +94,13 @@ class SettingsActivity : AppCompatActivity() {
             HistoryStore.clear(this)
             Toast.makeText(this, R.string.done, Toast.LENGTH_SHORT).show()
         }
+        val up = row(R.drawable.ic_update, R.string.tile_update, getString(R.string.tile_update_sub, Updater.currentName)) { r ->
+            Updater.manualCheck(this, lifecycleScope) { info ->
+                r.tvValue.text = if (Updater.hasUpdate(info)) getString(R.string.tile_update_new)
+                                 else getString(R.string.tile_update_sub, Updater.currentName)
+            }
+        }
+        if (Updater.hasUpdate(Updater.latest)) up.tvValue.text = getString(R.string.tile_update_new)
         row(R.drawable.ic_logout, R.string.logout) { confirmLogout() }
 
         b.rows.getChildAt(0)?.requestFocus()

@@ -57,7 +57,8 @@ fun Activity.setupTopbar(tb: LayoutTopbarBinding, current: Int) {
             }
         }
     }
-    val exp = Cache.session?.expiryText()
+    val lang = androidx.core.os.ConfigurationCompat.getLocales(resources.configuration)[0]?.language ?: "ar"
+    val exp = Cache.session?.expiryPretty(lang)
     tb.tvExpiry.visibility = View.VISIBLE
-    tb.tvExpiry.text = getString(R.string.expires, exp ?: getString(R.string.unlimited))
+    tb.tvExpiry.text = getString(R.string.expires_short, exp ?: getString(R.string.unlimited))
 }

@@ -11,8 +11,10 @@ android {
         applicationId = "com.mtlive.iptv"
         minSdk = 21
         targetSdk = 34
-        versionCode = 2
-        versionName = "1.1"
+        // رقم النسخة يزيد تلقائياً مع كل بناء على GitHub (للتحديث من داخل التطبيق)
+        val run = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 0
+        versionCode = 100 + run
+        versionName = "4.$run"
     }
 
     signingConfigs {
@@ -47,6 +49,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 

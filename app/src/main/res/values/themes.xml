@@ -22,14 +22,22 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center</item>
-        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingStart">10dp</item>
         <item name="android:paddingEnd">12dp</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:drawablePadding">5dp</item>
+        <item name="android:textSize">13sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/tab_text</item>
         <item name="android:background">@drawable/bg_tab</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
+    </style>
+    <style name="TabDivider">
+        <item name="android:layout_width">1.5dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:layout_marginStart">2dp</item>
+        <item name="android:layout_marginEnd">2dp</item>
+        <item name="android:background">#80F5C04A</item>
     </style>
     <style name="LoginInput">
         <item name="android:layout_width">match_parent</item>
@@ -54,7 +62,7 @@
 
     <style name="HomeTile">
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">190dp</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_marginStart">10dp</item>
         <item name="android:layout_marginEnd">10dp</item>
@@ -65,8 +73,10 @@
         <item name="android:clickable">true</item>
     </style>
     <style name="HomeTileIcon">
-        <item name="android:layout_width">64dp</item>
-        <item name="android:layout_height">64dp</item>
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:padding">14dp</item>
+        <item name="android:background">@drawable/bg_tile_glow</item>
         <item name="android:tint">@color/gold</item>
         <item name="android:importantForAccessibility">no</item>
     </style>
@@ -75,15 +85,15 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
     </style>
     <style name="HomeTileCount">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">4dp</item>
-        <item name="android:textColor">@color/text_secondary</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/gold_light</item>
+        <item name="android:textSize">14sp</item>
     </style>
     <style name="Chip">
         <item name="android:layout_width">wrap_content</item>
@@ -95,6 +105,50 @@
         <item name="android:drawablePadding">8dp</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="HomeTileFrame">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginStart">9dp</item>
+        <item name="android:layout_marginEnd">9dp</item>
+        <item name="android:background">@drawable/bg_home_tile</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+    <style name="HomeTileInner">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingBottom">22dp</item>
+        <item name="android:duplicateParentState">true</item>
+    </style>
+    <style name="HomeTileArrow">
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">26dp</item>
+        <item name="android:layout_gravity">bottom|center_horizontal</item>
+        <item name="android:background">@drawable/bg_tile_arrow</item>
+        <item name="android:src">@drawable/ic_chevron</item>
+        <item name="android:tint">#FF1A1200</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:importantForAccessibility">no</item>
+    </style>
+    <style name="PillButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">46dp</item>
+        <item name="android:background">@drawable/bg_pill_btn</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">22dp</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="drawableTint">@color/gold</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
     </style>

@@ -23,9 +23,9 @@ class HomeActivity : AppCompatActivity() {
         fullscreen()
 
         b.tileLive.setOnClickListener { startActivity(SectionActivity.intent(this, ContentType.LIVE)) }
-        b.tileMovies.setOnClickListener { startActivity(SectionActivity.intent(this, ContentType.MOVIE)) }
         b.tileSeries.setOnClickListener { startActivity(SectionActivity.intent(this, ContentType.SERIES)) }
-        b.tileSettings.setOnClickListener { startActivity(Intent(this, SettingsActivity::class.java)) }
+        b.tileMovies.setOnClickListener { startActivity(SectionActivity.intent(this, ContentType.MOVIE)) }
+        b.tileUpdate.setOnClickListener { Updater.manualCheck(this, lifecycleScope) { showUpdateState(it) } }
         b.btnReload.setOnClickListener { Cache.clear(); refreshCounts(true) }
         b.btnLogout.setOnClickListener {
             AlertDialog.Builder(this)
@@ -39,27 +39,44 @@ class HomeActivity : AppCompatActivity() {
                 .setNegativeButton(R.string.no, null)
                 .show()
         }
+        showUpdateState(Updater.latest)
         b.tileLive.requestFocus()
+
+        // فحص التحديث تلقائياً عند فتح التطبيق
+        Updater.autoCheck(this, lifecycleScope) { showUpdateState(it) }
+    }
+
+    private fun showUpdateState(info: UpdateInfo?) {
+        b.countUpdate.text = if (Updater.hasUpdate(info)) getString(R.string.tile_update_new)
+                             else getString(R.string.tile_update_sub, Updater.currentName)
     }
 
     override fun onResume() {
         super.onResume()
-        if (Cache.session == null) return
+        if (Cache.session == null || !::b.isInitialized) return
         setupTopbar(b.topbar, Tabs.HOME)
         val s = Cache.session!!
-        val cons = if (s.maxCons != null) "  •  " + getString(R.string.connections, s.activeCons ?: "0", s.maxCons) else ""
-        b.tvAccount.text = getString(R.string.account, s.username) + cons
+        b.tvAccount.text = getString(R.string.account_id, s.username)
+        b.tvInternet.text = getString(R.string.internet, "${s.activeCons ?: "0"}/${s.maxCons ?: "∞"}")
         refreshCounts(false)
     }
 
     private fun refreshCounts(force: Boolean) {
-        val views = mapOf(ContentType.LIVE to b.countLive, ContentType.MOVIE to b.countMovies, ContentType.SERIES to b.countSeries)
-        views.forEach { (type, tv) ->
+        val subs = mapOf(
+            ContentType.LIVE to (b.countLive to R.string.tile_live_sub),
+            ContentType.MOVIE to (b.countMovies to R.string.tile_movies_sub),
+            ContentType.SERIES to (b.countSeries to R.string.tile_series_sub)
+        )
+        subs.forEach { (type, pair) ->
+            val (tv, sub) = pair
             val cached = Cache.items(type)
-            if (cached != null && !force) { tv.text = cached.size.toString(); return@forEach }
-            tv.text = getString(R.string.loading)
+            if (cached != null && !force) { tv.text = "${getString(sub)} • ${cached.size}"; return@forEach }
+            tv.text = getString(sub)
             lifecycleScope.launch {
-                tv.text = try { Cache.load(type, force).second.size.toString() } catch (e: Exception) { "—" }
+                try {
+                    val n = Cache.load(type, force).second.size
+                    tv.text = "${getString(sub)} • $n"
+                } catch (e: Exception) { tv.text = getString(sub) }
             }
         }
     }

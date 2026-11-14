@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg">
@@ -18,6 +19,7 @@
 
         <include android:id="@+id/topbar" layout="@layout/layout_topbar" />
 
+        <!-- المربعات بالترتيب (من اليمين): بث مباشر، مسلسلات، أفلام، تحديث التطبيق -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -25,54 +27,110 @@
             android:gravity="center"
             android:layoutDirection="ltr"
             android:orientation="horizontal"
-            android:paddingStart="24dp"
-            android:paddingEnd="24dp">
+            android:paddingStart="14dp"
+            android:paddingTop="14dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="10dp">
 
-            <LinearLayout android:id="@+id/tileLive" style="@style/HomeTile">
-                <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_live" />
-                <TextView style="@style/HomeTileTitle" android:text="@string/live" />
-                <TextView android:id="@+id/countLive" style="@style/HomeTileCount" />
-            </LinearLayout>
+            <FrameLayout android:id="@+id/tileUpdate" style="@style/HomeTileFrame">
+                <LinearLayout style="@style/HomeTileInner">
+                    <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_update" />
+                    <TextView style="@style/HomeTileTitle" android:text="@string/tile_update" />
+                    <TextView android:id="@+id/countUpdate" style="@style/HomeTileCount" />
+                </LinearLayout>
+                <ImageView style="@style/HomeTileArrow" />
+            </FrameLayout>
 
-            <LinearLayout android:id="@+id/tileMovies" style="@style/HomeTile">
-                <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_movie" />
-                <TextView style="@style/HomeTileTitle" android:text="@string/movies" />
-                <TextView android:id="@+id/countMovies" style="@style/HomeTileCount" />
-            </LinearLayout>
+            <FrameLayout android:id="@+id/tileMovies" style="@style/HomeTileFrame">
+                <LinearLayout style="@style/HomeTileInner">
+                    <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_movie" />
+                    <TextView style="@style/HomeTileTitle" android:text="@string/movies" />
+                    <TextView android:id="@+id/countMovies" style="@style/HomeTileCount" />
+                </LinearLayout>
+                <ImageView style="@style/HomeTileArrow" />
+            </FrameLayout>
 
-            <LinearLayout android:id="@+id/tileSeries" style="@style/HomeTile">
-                <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_series" />
-                <TextView style="@style/HomeTileTitle" android:text="@string/series" />
-                <TextView android:id="@+id/countSeries" style="@style/HomeTileCount" />
-            </LinearLayout>
+            <FrameLayout android:id="@+id/tileSeries" style="@style/HomeTileFrame">
+                <LinearLayout style="@style/HomeTileInner">
+                    <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_live" />
+                    <TextView style="@style/HomeTileTitle" android:text="@string/series" />
+                    <TextView android:id="@+id/countSeries" style="@style/HomeTileCount" />
+                </LinearLayout>
+                <ImageView style="@style/HomeTileArrow" />
+            </FrameLayout>
 
-            <LinearLayout android:id="@+id/tileSettings" style="@style/HomeTile">
-                <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_settings" />
-                <TextView style="@style/HomeTileTitle" android:text="@string/settings" />
-                <TextView style="@style/HomeTileCount" android:text="@string/account_short" />
-            </LinearLayout>
+            <FrameLayout android:id="@+id/tileLive" style="@style/HomeTileFrame">
+                <LinearLayout style="@style/HomeTileInner">
+                    <ImageView style="@style/HomeTileIcon" android:src="@drawable/ic_broadcast" />
+                    <TextView style="@style/HomeTileTitle" android:text="@string/live" />
+                    <TextView android:id="@+id/countLive" style="@style/HomeTileCount" />
+                </LinearLayout>
+                <ImageView style="@style/HomeTileArrow" />
+            </FrameLayout>
         </LinearLayout>
 
+        <!-- الشريط السفلي -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="58dp"
             android:gravity="center_vertical"
             android:layoutDirection="ltr"
             android:orientation="horizontal"
             android:paddingStart="24dp"
             android:paddingEnd="24dp"
-            android:paddingBottom="14dp">
+            android:paddingBottom="10dp">
+
+            <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="46dp"
+                android:background="@drawable/bg_pill"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp">
+
+                <TextView
+                    android:id="@+id/tvInternet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_signal"
+                    android:drawablePadding="8dp"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:drawableTint="@color/gold" />
+
+                <View android:layout_width="1.5dp" android:layout_height="22dp" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" android:background="#80F5C04A" />
+
+                <TextView
+                    android:id="@+id/tvAccount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_globe"
+                    android:drawablePadding="8dp"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:drawableTint="@color/gold" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/tvAccount"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp" />
+                android:id="@+id/btnReload"
+                style="@style/PillButton"
+                android:layout_marginStart="14dp"
+                android:drawableStart="@drawable/ic_refresh"
+                android:text="@string/reload" />
 
-            <TextView android:id="@+id/btnReload" style="@style/Chip" android:text="@string/reload" android:drawableStart="@drawable/ic_refresh" />
-            <TextView android:id="@+id/btnLogout" style="@style/Chip" android:layout_marginStart="10dp" android:text="@string/logout" android:drawableStart="@drawable/ic_logout" />
+            <TextView
+                android:id="@+id/btnLogout"
+                style="@style/PillButton"
+                android:layout_marginStart="14dp"
+                android:drawableStart="@drawable/ic_logout"
+                android:text="@string/logout" />
+
+            <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

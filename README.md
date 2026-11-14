@@ -1,4 +1,4 @@
-# MT LIVE — مشغّل IPTV (Android / Kotlin)
+# A&S 4K — مشغّل IPTV (Android / Kotlin)
 
 نسخة MT LIVE: تسجيل دخول عن طريق **الهوست فقط** (Xtream Codes: رابط السيرفر + اسم المستخدم + كلمة المرور)، بدون M3U.
 

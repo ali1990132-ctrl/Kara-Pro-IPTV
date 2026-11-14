@@ -21,6 +21,16 @@ data class Session(
         if (ts <= 0) return null
         return SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(Date(ts * 1000))
     }
+
+    /** مثل: الجمعة، 03-01-2027 */
+    fun expiryPretty(lang: String): String? {
+        val ts = expDate?.toLongOrNull() ?: return null
+        if (ts <= 0) return null
+        val d = Date(ts * 1000)
+        val day = SimpleDateFormat("EEEE", if (lang == "en") Locale.ENGLISH else Locale("ar")).format(d)
+        val date = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH).format(d)
+        return if (lang == "en") "$day, $date" else "$day، $date"
+    }
 }
 
 object SessionStore {
