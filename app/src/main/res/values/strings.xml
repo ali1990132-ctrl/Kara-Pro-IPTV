@@ -6,7 +6,7 @@
     <string name="password">كلمة المرور</string>
     <string name="login">تسجيل الدخول</string>
     <string name="logging_in">جاري تسجيل الدخول…</string>
-    <string name="fill_all">املأ الرابط واسم المستخدم وكلمة المرور</string>
+    <string name="fill_all">املأ اسم المستخدم وكلمة المرور</string>
     <string name="home">الرئيسية</string>
     <string name="live">بث مباشر</string>
     <string name="movies">أفلام</string>

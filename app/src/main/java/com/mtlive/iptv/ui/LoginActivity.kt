@@ -25,7 +25,6 @@ class LoginActivity : AppCompatActivity() {
         setContentView(b.root)
         fullscreen()
 
-        b.etHost.setText(SessionStore.lastHost(this))
         b.etUser.setText(SessionStore.lastUser(this))
 
         b.btnLogin.setOnClickListener { doLogin() }
@@ -35,17 +34,16 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun doLogin() {
-        val host = b.etHost.text.toString().trim()
         val user = b.etUser.text.toString().trim()
         val pass = b.etPass.text.toString().trim()
-        if (host.isEmpty() || user.isEmpty() || pass.isEmpty()) {
+        if (user.isEmpty() || pass.isEmpty()) {
             showError(getString(R.string.fill_all)); return
         }
         setLoading(true)
         lifecycleScope.launch {
             try {
-                val normalized = XtreamApi.normalize(host)
-                val info = XtreamApi(normalized, user, pass).login()
+                // يجرّب كل السيرفرات المسموحة ويختار اللي يقبل الحساب
+                val (normalized, info) = XtreamApi.autoLogin(user, pass)
                 val s = Session(normalized, user, pass, info.expDate, info.activeCons, info.maxConnections)
                 SessionStore.save(this@LoginActivity, s)
                 SessionStore.rememberLast(this@LoginActivity, normalized, user)

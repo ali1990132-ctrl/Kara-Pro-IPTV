@@ -23,7 +23,7 @@ class SplashActivity : AppCompatActivity() {
         b.imgSplash.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(900).start()
 
         lifecycleScope.launch {
-            val saved = SessionStore.load(this@SplashActivity)
+            val saved = SessionStore.load(this@SplashActivity)?.takeIf { com.mtlive.iptv.data.XtreamApi.isAllowed(it.host) }
             var next: Class<*> = LoginActivity::class.java
             if (saved != null) {
                 Cache.session = saved

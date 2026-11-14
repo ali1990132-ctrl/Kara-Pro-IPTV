@@ -44,25 +44,14 @@
                     android:scaleType="fitCenter"
                     android:src="@drawable/logo" />
 
-                <FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/etHost"
-                        style="@style/LoginInput"
-                        android:hint="@string/host"
-                        android:imeOptions="actionNext"
-                        android:inputType="textUri|textNoSuggestions"
-                        android:nextFocusDown="@+id/etUser" />
-                    <ImageView style="@style/LoginIcon" android:src="@drawable/ic_globe" />
-                </FrameLayout>
 
-                <FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content">
                     <EditText
                         android:id="@+id/etUser"
                         style="@style/LoginInput"
                         android:hint="@string/username"
                         android:imeOptions="actionNext"
                         android:inputType="text|textNoSuggestions"
-                        android:nextFocusUp="@id/etHost"
                         android:nextFocusDown="@+id/etPass" />
                     <ImageView style="@style/LoginIcon" android:src="@drawable/ic_user" />
                 </FrameLayout>

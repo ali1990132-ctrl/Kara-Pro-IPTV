@@ -8,7 +8,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.mtlive.iptv"
+        applicationId = "com.as4k.live"
         minSdk = 21
         targetSdk = 34
         // رقم النسخة يزيد تلقائياً مع كل بناء على GitHub (للتحديث من داخل التطبيق)

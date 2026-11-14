@@ -44,7 +44,7 @@ class SettingsActivity : AppCompatActivity() {
     private fun bindAccount() {
         val s = Cache.session ?: return
         b.tvUser.text = s.username
-        b.tvHost.text = s.host
+        b.tvHost.text = com.mtlive.iptv.data.XtreamApi.serverLabel(s.host)
         b.tvExpiryBig.text = getString(R.string.expires, s.expiryText() ?: getString(R.string.unlimited))
         val exp = s.expDate?.toLongOrNull()
         if (exp != null && exp > 0) {
@@ -163,11 +163,11 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun showAccounts() {
-        val accounts = AccountsStore.all(this)
+        val accounts = AccountsStore.all(this).filter { com.mtlive.iptv.data.XtreamApi.isAllowed(it.host) }
         val current = Cache.session
         val labels = accounts.map { a ->
             val mark = if (current != null && a.host == current.host && a.username == current.username) "✓  " else ""
-            "$mark${a.username}  —  ${a.host.removePrefix("http://").removePrefix("https://")}"
+            "$mark${a.username}  —  ${com.mtlive.iptv.data.XtreamApi.serverLabel(a.host)}"
         }.toMutableList()
         labels.add("＋  " + getString(R.string.add_account))
         AlertDialog.Builder(this)

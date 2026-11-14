@@ -26,6 +26,11 @@ fun Activity.fullscreen() {
 /** يتأكد من وجود جلسة؛ إذا ما موجودة يرجع لتسجيل الدخول */
 fun Activity.requireSession(): Boolean {
     if (Cache.session == null) Cache.session = SessionStore.load(this)
+    val cur = Cache.session
+    if (cur != null && !com.mtlive.iptv.data.XtreamApi.isAllowed(cur.host)) {
+        SessionStore.clear(this)
+        Cache.session = null
+    }
     if (Cache.session == null) {
         startActivity(Intent(this, LoginActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
         finish()

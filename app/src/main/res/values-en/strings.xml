@@ -5,7 +5,7 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="logging_in">Logging in…</string>
-    <string name="fill_all">Fill in the host, username and password</string>
+    <string name="fill_all">Fill in the username and password</string>
     <string name="home">Home</string>
     <string name="live">Live TV</string>
     <string name="movies">Movies</string>

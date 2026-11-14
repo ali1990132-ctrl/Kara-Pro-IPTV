@@ -39,11 +39,10 @@ class PlayerActivity : AppCompatActivity() {
         if (PlayerQueue.items.isEmpty()) { finish(); return }
 
         b.btnRetry.setOnClickListener { position = 0L; initPlayer() }
-        b.btnAspect.setOnClickListener { cycleAspect() }
+        setupZoomButtons()
         b.playerView.setControllerVisibilityListener(
             androidx.media3.ui.PlayerView.ControllerVisibilityListener { v ->
                 b.tvTitle.visibility = v
-                b.btnAspect.visibility = v
             }
         )
         b.imgWatermark.visibility = if (Settings.watermark(this)) View.VISIBLE else View.GONE
@@ -115,6 +114,31 @@ class PlayerActivity : AppCompatActivity() {
     private fun cycleAspect() {
         modeIndex = (modeIndex + 1) % modes.size
         b.playerView.resizeMode = modes[modeIndex]
+        val label = when (modeIndex) { 0 -> "Fit"; 1 -> "Zoom"; else -> "Fill" }
+        android.widget.Toast.makeText(this, label, android.widget.Toast.LENGTH_SHORT).show()
+    }
+
+    /** أيقونات تكبير الشاشة داخل شريط التحكم (جنب الإعدادات) */
+    private fun setupZoomButtons() {
+        // زر ملء الشاشة المدمج: يكبّر الصورة (Zoom) ويرجعها
+        b.playerView.setFullscreenButtonClickListener { full ->
+            modeIndex = if (full) 1 else 0
+            b.playerView.resizeMode = modes[modeIndex]
+        }
+        // زر إضافي يبدّل بين: ملائم / تكبير / تمديد
+        val bar = b.playerView.findViewById<android.view.ViewGroup>(androidx.media3.ui.R.id.exo_basic_controls) ?: return
+        val size = (48 * resources.displayMetrics.density).toInt()
+        val btn = android.widget.ImageButton(this).apply {
+            setImageResource(com.mtlive.iptv.R.drawable.ic_aspect)
+            setBackgroundResource(android.R.color.transparent)
+            scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
+            val pad = (12 * resources.displayMetrics.density).toInt()
+            setPadding(pad, pad, pad, pad)
+            contentDescription = "zoom"
+            isFocusable = true
+            setOnClickListener { cycleAspect() }
+        }
+        bar.addView(btn, 0, android.view.ViewGroup.LayoutParams(size, size))
     }
 
     /** ريموت التلفزيون: فوق/تحت يغيّر القناة بالبث المباشر */

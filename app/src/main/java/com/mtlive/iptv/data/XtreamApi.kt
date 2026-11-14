@@ -3,6 +3,7 @@ package com.mtlive.iptv.data
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -23,12 +24,14 @@ class XtreamApi(server: String, private val username: String, private val passwo
         return "$base/player_api.php?username=$u&password=$p$a$extra"
     }
 
-    private suspend fun <T> fetch(url: String, type: Type): T? = withContext(Dispatchers.IO) {
+    private suspend fun <T> fetch(url: String, type: Type): T? = fetchWith(client, url, type)
+
+    private suspend fun <T> fetchWith(http: OkHttpClient, url: String, type: Type): T? = withContext(Dispatchers.IO) {
         val req = Request.Builder().url(url)
             .header("User-Agent", UA)
             .header("Accept", "*/*")
             .build()
-        client.newCall(req).execute().use { resp ->
+        http.newCall(req).execute().use { resp ->
             if (!resp.isSuccessful) throw RuntimeException("السيرفر رفض الطلب (${resp.code})")
             val reader = resp.body?.charStream() ?: throw RuntimeException("رد فارغ من السيرفر")
             try {
@@ -39,8 +42,11 @@ class XtreamApi(server: String, private val username: String, private val passwo
         }
     }
 
-    suspend fun login(): XUser {
-        val res: XLogin? = fetch(api(), XLogin::class.java)
+    suspend fun login(): XUser = loginWith(client)
+
+    suspend fun loginWith(http: OkHttpClient): XUser {
+        if (!isAllowed(base)) throw RuntimeException("السيرفر غير مسموح")
+        val res: XLogin? = fetchWith(http, api(), XLogin::class.java)
         val info = res?.userInfo ?: throw RuntimeException("بيانات الدخول غير صحيحة")
         if (info.auth == 0) throw RuntimeException("بيانات الدخول غير صحيحة")
         if (info.status.equals("Disabled", true) || info.status.equals("Expired", true))
@@ -138,6 +144,60 @@ class XtreamApi(server: String, private val username: String, private val passwo
 
     companion object {
         const val UA = "VLC/3.0.20 LibVLC/3.0.20"
+
+        /** التطبيق يشتغل فقط على هاي السيرفرات */
+        val ALLOWED_HOSTS = listOf(
+            "http://8ksh1856.site:8080",
+            "http://ktvs.xyz:8080",
+            "http://karaali.online:2052",
+            "http://renvioweb.online:8080",
+            "http://amlive.cc:80"
+        )
+
+        fun isAllowed(host: String): Boolean {
+            val h = normalize(host).lowercase()
+            return ALLOWED_HOSTS.any { it.lowercase() == h || it.lowercase().removeSuffix(":80") == h }
+        }
+
+        /** رقم السيرفر للعرض بدل الرابط */
+        fun serverLabel(host: String): String {
+            val h = normalize(host).lowercase()
+            val i = ALLOWED_HOSTS.indexOfFirst { it.lowercase() == h || it.lowercase().removeSuffix(":80") == h }
+            return if (i >= 0) "Server ${i + 1}" else "—"
+        }
+
+        private val loginClient: OkHttpClient by lazy {
+            client.newBuilder()
+                .connectTimeout(12, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .callTimeout(25, TimeUnit.SECONDS)
+                .build()
+        }
+
+        /**
+         * يجرّب اسم المستخدم وكلمة المرور على كل السيرفرات بنفس الوقت،
+         * ويرجع أول سيرفر يقبل الدخول.
+         */
+        suspend fun autoLogin(username: String, password: String): Pair<String, XUser> {
+            val scope = kotlinx.coroutines.CoroutineScope(Dispatchers.IO + kotlinx.coroutines.SupervisorJob())
+            val result = kotlinx.coroutines.CompletableDeferred<Pair<String, XUser>>()
+            val errors = java.util.Collections.synchronizedList(mutableListOf<Exception>())
+            val jobs = ALLOWED_HOSTS.map { host ->
+                scope.launch {
+                    try {
+                        val info = XtreamApi(host, username, password).loginWith(loginClient)
+                        result.complete(host to info)
+                    } catch (e: Exception) {
+                        errors.add(e)
+                        if (errors.size == ALLOWED_HOSTS.size) {
+                            val authFail = errors.firstOrNull { (it.message ?: "").contains("الاشتراك") || (it.message ?: "").contains("غير صحيحة") }
+                            result.completeExceptionally(authFail ?: RuntimeException("بيانات الدخول غير صحيحة أو السيرفر غير متاح"))
+                        }
+                    }
+                }
+            }
+            try { return result.await() } finally { jobs.forEach { it.cancel() } }
+        }
 
         val client: OkHttpClient = OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
