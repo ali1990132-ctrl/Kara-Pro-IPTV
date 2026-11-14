@@ -55,6 +55,18 @@
             <ImageView style="@style/MoreRowChevron" />
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/bg_credit"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="12dp"
+            android:gravity="center"
+            android:text="@string/developer_credit"
+            android:textColor="#D6EBFF"
+            android:textSize="13sp" />
+
         <!-- المكتبة -->
         <TextView style="@style/MoreSection" android:text="@string/section_library" />
 
@@ -133,17 +145,5 @@
             <ImageView style="@style/MoreRowIcon" android:src="@drawable/ic_logout" />
             <TextView style="@style/MoreRowTitle" android:text="@string/logout" />
         </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:background="@drawable/bg_credit"
-            android:paddingHorizontal="14dp"
-            android:paddingVertical="12dp"
-            android:gravity="center"
-            android:text="@string/developer_credit"
-            android:textColor="#D6EBFF"
-            android:textSize="13sp" />
     </LinearLayout>
 </ScrollView>

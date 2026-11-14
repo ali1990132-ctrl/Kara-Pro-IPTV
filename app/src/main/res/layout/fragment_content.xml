@@ -84,13 +84,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|start"
-            android:layout_margin="10dp"
-            android:background="@drawable/bg_watermark"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="6dp"
-            android:text="@string/activation_watermark"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
             android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/ivBrand"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_gravity="bottom|start"
+            android:layout_margin="10dp"
+            android:alpha="0.7"
+            android:src="@drawable/app_logo"
+            android:contentDescription="@null" />
     </FrameLayout>
 </LinearLayout>

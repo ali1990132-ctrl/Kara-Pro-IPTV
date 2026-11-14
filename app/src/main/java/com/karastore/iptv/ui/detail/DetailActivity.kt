@@ -46,7 +46,7 @@ class DetailActivity : AppCompatActivity() {
 
     private fun bind() {
         b.tvTitle.text = item.name
-        b.imgBackdrop.load(item.logo) { error(R.drawable.ic_placeholder) }
+        b.imgBackdrop.load(item.logo) { error(R.drawable.poster_placeholder) }
 
         val catName = ContentCache.categoriesWithCounts(item.type)
             .firstOrNull { it.id == item.categoryId }?.name

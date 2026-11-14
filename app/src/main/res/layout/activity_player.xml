@@ -66,20 +66,23 @@
             android:visibility="gone" />
     </LinearLayout>
 
-    <!-- عبارة التفعيل على البث المباشر -->
     <TextView
         android:id="@+id/tvWatermark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
-        android:layout_margin="10dp"
-        android:background="@drawable/bg_watermark"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="6dp"
-        android:text="@string/activation_watermark"
-        android:textColor="#FFFFFF"
-        android:textSize="15sp"
         android:visibility="gone" />
+
+    <!-- شعار التطبيق أسفل اليسار -->
+    <ImageView
+        android:id="@+id/ivBrand"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="12dp"
+        android:alpha="0.6"
+        android:src="@drawable/app_logo"
+        android:contentDescription="@null" />
 
     <!-- زر فك القفل (يظهر عند القفل) -->
     <ImageView

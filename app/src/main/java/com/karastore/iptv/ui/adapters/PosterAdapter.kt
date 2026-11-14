@@ -41,8 +41,8 @@ class PosterAdapter(
             holder.rating.visibility = View.VISIBLE
         } else holder.rating.visibility = View.GONE
         holder.poster.load(item.logo) {
-            placeholder(R.drawable.ic_placeholder)
-            error(R.drawable.ic_placeholder)
+            placeholder(R.drawable.poster_placeholder)
+            error(R.drawable.poster_placeholder)
             crossfade(true)
         }
         holder.itemView.setOnClickListener { onClick(item) }

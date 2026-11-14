@@ -79,8 +79,8 @@ class ContentAdapter(
         }
 
         holder.poster.load(item.logo) {
-            placeholder(R.drawable.ic_placeholder)
-            error(R.drawable.ic_placeholder)
+            placeholder(R.drawable.poster_placeholder)
+            error(R.drawable.poster_placeholder)
             crossfade(false)
         }
         holder.itemView.setOnClickListener { onClick(item) }

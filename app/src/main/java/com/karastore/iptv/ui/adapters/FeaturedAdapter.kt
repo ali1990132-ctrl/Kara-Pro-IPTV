@@ -39,7 +39,7 @@ class FeaturedAdapter(
         val item = items[position]
         val ctx = holder.itemView.context
         holder.title.text = item.name
-        holder.backdrop.load(item.logo) { error(R.drawable.ic_placeholder) }
+        holder.backdrop.load(item.logo) { error(R.drawable.poster_placeholder) }
         val r = item.rating?.toFloatOrNull()
         if (r != null && r > 0f) {
             holder.rating.text = "${item.rating} ★"
