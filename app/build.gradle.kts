@@ -11,8 +11,8 @@ android {
         applicationId = "com.asplus.iptv"
         minSdk = 21
         targetSdk = 34
-        versionCode = 19
-        versionName = "2.8"
+        versionCode = 20
+        versionName = "2.9"
     }
 
     signingConfigs {

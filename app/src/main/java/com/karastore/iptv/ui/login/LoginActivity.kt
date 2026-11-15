@@ -44,6 +44,9 @@ class LoginActivity : AppCompatActivity() {
         b = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(b.root)
 
+        // تحديث إجباري حتى قبل تسجيل الدخول
+        com.karastore.iptv.util.UpdateFlow.check(this, manual = false)
+
         b.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 mode = if (tab.position == 0) LoginMode.XTREAM else LoginMode.M3U

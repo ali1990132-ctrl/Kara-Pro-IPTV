@@ -150,4 +150,5 @@
     <string name="update_downloading">جارٍ تنزيل التحديث…</string>
     <string name="update_failed">تعذّر التحديث، تأكد من الإنترنت</string>
     <string name="update_install_hint">فعّل \"السماح بالتثبيت من هذا المصدر\" إذا طُلب منك</string>
+    <string name="update_mandatory">يجب تحديث التطبيق للاستمرار. اضغط تحديث الآن، وإذا طُلب منك فعّل السماح بالتثبيت من هذا المصدر.</string>
 </resources>

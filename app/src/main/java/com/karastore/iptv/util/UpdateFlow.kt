@@ -20,22 +20,35 @@ object UpdateFlow {
                 if (manual) toast(activity, activity.getString(R.string.update_none))
                 return@launch
             }
-            AlertDialog.Builder(activity)
-                .setTitle(activity.getString(R.string.update_available, info.versionName))
-                .setMessage(activity.getString(R.string.update_install_hint))
-                .setCancelable(true)
-                .setPositiveButton(activity.getString(R.string.update_now)) { _, _ ->
-                    startDownload(activity, info.url)
-                }
-                .setNegativeButton(activity.getString(R.string.update_later), null)
-                .show()
+            showMandatory(activity, info)
         }
     }
 
-    private fun startDownload(activity: AppCompatActivity, url: String) {
+    /** حوار تحديث إجباري: لا يُغلق ولا يوجد زر "لاحقاً" */
+    private fun showMandatory(activity: AppCompatActivity, info: Updater.Info) {
+        if (activity.isFinishing) return
+        val dlg = AlertDialog.Builder(activity)
+            .setTitle(activity.getString(R.string.update_available, info.versionName))
+            .setMessage(activity.getString(R.string.update_mandatory))
+            .setCancelable(false)
+            .setPositiveButton(activity.getString(R.string.update_now), null)
+            .create()
+        dlg.setCanceledOnTouchOutside(false)
+        dlg.setOnShowListener {
+            dlg.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                dlg.dismiss()
+                startDownload(activity, info)
+            }
+        }
+        dlg.show()
+    }
+
+    private fun startDownload(activity: AppCompatActivity, info: Updater.Info) {
+        val url = info.url
         if (!Updater.canInstall(activity)) {
             toast(activity, activity.getString(R.string.update_install_hint))
             Updater.openInstallSettings(activity)
+            showMandatory(activity, info)
             return
         }
         @Suppress("DEPRECATION")
@@ -49,8 +62,13 @@ object UpdateFlow {
             val file = Updater.download(activity, url)
             if (dlg.isShowing) dlg.dismiss()
             if (activity.isFinishing) return@launch
-            if (file != null) Updater.install(activity, file)
-            else toast(activity, activity.getString(R.string.update_failed))
+            if (file != null) {
+                Updater.install(activity, file)
+            } else {
+                toast(activity, activity.getString(R.string.update_failed))
+            }
+            // يبقى الحوار حتى يكتمل التحديث
+            showMandatory(activity, info)
         }
     }
 
