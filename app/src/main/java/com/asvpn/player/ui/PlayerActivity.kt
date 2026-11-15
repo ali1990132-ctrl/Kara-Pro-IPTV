@@ -110,7 +110,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun initPlayer(index: Int) {
-        val http = OkHttpDataSource.Factory(Net.client).setUserAgent(Net.UA)
+        val http = OkHttpDataSource.Factory(com.asvpn.player.data.XtreamApi.client).setUserAgent(com.asvpn.player.data.XtreamApi.UA)
         val dataSource = DefaultDataSource.Factory(this, http)
         val loadControl = DefaultLoadControl.Builder()
             .setBufferDurationsMs(15_000, 60_000, 1_500, 3_000)

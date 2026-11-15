@@ -11,7 +11,9 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.asvpn.player.R
+import com.asvpn.player.data.SessionStore
 import com.asvpn.player.data.Store
+import android.content.Intent
 import com.google.android.material.materialswitch.MaterialSwitch
 
 class SettingsFragment : Fragment() {
@@ -77,5 +79,18 @@ class SettingsFragment : Fragment() {
         } catch (_: Exception) { "" }
         v.findViewById<TextView>(R.id.version).text = "الإصدار $ver"
         refresh()
+
+        v.findViewById<View>(R.id.rowVpn).setOnClickListener { HostActivity.open(requireContext(), HostActivity.VPN) }
+        v.findViewById<View>(R.id.rowLinks).setOnClickListener { HostActivity.open(requireContext(), HostActivity.LINKS) }
+        v.findViewById<View>(R.id.rowLists).setOnClickListener { HostActivity.open(requireContext(), HostActivity.LISTS) }
+        val logout = v.findViewById<View>(R.id.rowLogout)
+        logout.visibility = if (SessionStore.load(requireContext()) != null) View.VISIBLE else View.GONE
+        logout.setOnClickListener {
+            Ui.confirm(requireContext(), "تسجيل الخروج من الحساب؟") {
+                SessionStore.clear(requireContext())
+                startActivity(Intent(requireContext(), LoginActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
+            }
+        }
     }
 }

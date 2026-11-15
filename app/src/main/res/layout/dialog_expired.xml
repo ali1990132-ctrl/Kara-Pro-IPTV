@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="22dp">
+
+    <ImageView
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@drawable/bg_status_bad"
+        android:padding="14dp"
+        android:src="@drawable/ic_warning"
+        app:tint="@color/red" />
+
+    <TextView
+        android:id="@+id/dlgTitle"
+        style="@style/Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="انتهت صلاحية باقتك"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/dlgMsg"
+        style="@style/Sub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:lineSpacingExtra="4dp"
+        android:text="اشتراكك متوقف حالياً. جدّد الباقة لدى الموزّع الذي اشتركت منه، ثم أعد فتح التطبيق."
+        android:textSize="14sp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/dlgClose"
+        style="@style/BtnOutline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="إغلاق"
+        app:icon="@drawable/ic_close"
+        app:iconTint="@color/text" />
+</LinearLayout>

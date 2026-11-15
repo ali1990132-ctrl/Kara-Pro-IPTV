@@ -17,7 +17,7 @@ import com.asvpn.player.R
 import com.asvpn.player.data.Link
 import com.asvpn.player.data.Store
 
-class HomeFragment : Fragment() {
+class LinksFragment : Fragment() {
 
     private lateinit var adapter: RowAdapter
     private var history: List<Link> = emptyList()
@@ -33,7 +33,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View =
-        i.inflate(R.layout.fragment_home, c, false)
+        i.inflate(R.layout.fragment_links, c, false)
 
     override fun onViewCreated(v: View, savedInstanceState: Bundle?) {
         val input = v.findViewById<EditText>(R.id.urlInput)
@@ -64,7 +64,7 @@ class HomeFragment : Fragment() {
         )
         v.findViewById<RecyclerView>(R.id.historyList).apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = this@HomeFragment.adapter
+            adapter = this@LinksFragment.adapter
         }
     }
 

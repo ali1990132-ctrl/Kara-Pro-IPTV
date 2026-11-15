@@ -11,22 +11,23 @@
         android:layout_height="64dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:paddingStart="14dp"
+        android:paddingEnd="10dp">
 
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
             android:src="@drawable/app_logo" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="8dp"
             android:layout_weight="1"
+            android:maxLines="1"
             android:text="@string/app_name"
             android:textColor="@color/text"
-            android:textSize="20sp"
+            android:textSize="19sp"
             android:textStyle="bold" />
 
         <TextView
@@ -34,29 +35,60 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_chip"
-            android:drawablePadding="6dp"
-            android:paddingStart="12dp"
+            android:paddingStart="10dp"
             android:paddingTop="6dp"
-            android:paddingEnd="12dp"
+            android:paddingEnd="10dp"
             android:paddingBottom="6dp"
-            android:text="VPN غير متصل"
+            android:text="VPN"
             android:textColor="@color/text2"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/btnSearch"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/bg_round_btn"
+            android:padding="10dp"
+            android:src="@drawable/ic_search"
+            app:tint="@color/text" />
+
+        <ImageView
+            android:id="@+id/btnSettings"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/bg_round_btn"
+            android:padding="10dp"
+            android:src="@drawable/ic_settings"
+            app:tint="@color/text" />
     </LinearLayout>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/tabs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="8dp">
+
+            <TextView android:id="@+id/tabHome" style="@style/Tab" android:text="الرئيسية" />
+            <TextView android:id="@+id/tabLive" style="@style/Tab" android:text="بث مباشر" />
+            <TextView android:id="@+id/tabMovies" style="@style/Tab" android:text="أفلام" />
+            <TextView android:id="@+id/tabSeries" style="@style/Tab" android:text="مسلسلات" />
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/surface"
-        app:itemIconTint="@color/nav_item"
-        app:itemTextColor="@color/nav_item"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_nav" />
 </LinearLayout>
