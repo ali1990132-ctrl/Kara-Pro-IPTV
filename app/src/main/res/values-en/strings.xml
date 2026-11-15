@@ -138,4 +138,6 @@
     <string name="update_failed">Update failed, check your connection</string>
     <string name="update_install_hint">Allow \"install from this source\" if asked</string>
     <string name="update_mandatory">You must update the app to continue. Tap Update now and allow installing from this source if asked.</string>
+    <string name="update_title">App update</string>
+    <string name="update_downloading_pct">Downloading update... %1$d%%</string>
 </resources>

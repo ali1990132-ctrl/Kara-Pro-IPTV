@@ -1,15 +1,20 @@
 package com.karastore.iptv.util
 
-import android.app.ProgressDialog
+import android.app.Dialog
+import android.view.View
+import android.view.WindowManager
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.karastore.iptv.R
 import kotlinx.coroutines.launch
 
-/** تدفّق التحديث داخل التطبيق: فحص ثم حوار ثم تنزيل وتثبيت */
+/** تدفّق التحديث الإجباري: شاشة بشعار التطبيق ← تنزيل بنسبة مئوية ← تثبيت */
 object UpdateFlow {
+
+    private var current: Dialog? = null
 
     fun check(activity: AppCompatActivity, manual: Boolean) {
         activity.lifecycleScope.launch {
@@ -20,56 +25,67 @@ object UpdateFlow {
                 if (manual) toast(activity, activity.getString(R.string.update_none))
                 return@launch
             }
-            showMandatory(activity, info)
+            show(activity, info)
         }
     }
 
-    /** حوار تحديث إجباري: لا يُغلق ولا يوجد زر "لاحقاً" */
-    private fun showMandatory(activity: AppCompatActivity, info: Updater.Info) {
+    /** يعرض شاشة التحديث (لا تُغلق حتى يتم التحديث) */
+    private fun show(activity: AppCompatActivity, info: Updater.Info) {
         if (activity.isFinishing) return
-        val dlg = AlertDialog.Builder(activity)
-            .setTitle(activity.getString(R.string.update_available, info.versionName))
-            .setMessage(activity.getString(R.string.update_mandatory))
-            .setCancelable(false)
-            .setPositiveButton(activity.getString(R.string.update_now), null)
-            .create()
-        dlg.setCanceledOnTouchOutside(false)
-        dlg.setOnShowListener {
-            dlg.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                dlg.dismiss()
-                startDownload(activity, info)
-            }
-        }
-        dlg.show()
-    }
+        current?.let { if (it.isShowing && it.ownerActivity == activity) return }
 
-    private fun startDownload(activity: AppCompatActivity, info: Updater.Info) {
-        val url = info.url
-        if (!Updater.canInstall(activity)) {
-            toast(activity, activity.getString(R.string.update_install_hint))
-            Updater.openInstallSettings(activity)
-            showMandatory(activity, info)
-            return
+        val dlg = Dialog(activity, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        dlg.setOwnerActivity(activity)
+        dlg.setContentView(R.layout.dialog_update)
+        dlg.setCancelable(false)
+        dlg.setCanceledOnTouchOutside(false)
+        dlg.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+        val msg = dlg.findViewById<TextView>(R.id.updMsg)
+        val bar = dlg.findViewById<ProgressBar>(R.id.updProgress)
+        val btn = dlg.findViewById<TextView>(R.id.updBtn)
+
+        fun promptState() {
+            msg.text = activity.getString(R.string.update_available, info.versionName) +
+                "\n" + activity.getString(R.string.update_mandatory)
+            bar.visibility = View.GONE
+            btn.visibility = View.VISIBLE
+            btn.requestFocus()
         }
-        @Suppress("DEPRECATION")
-        val dlg = ProgressDialog(activity).apply {
-            setMessage(activity.getString(R.string.update_downloading))
-            setCancelable(false)
-            isIndeterminate = true
-            show()
-        }
-        activity.lifecycleScope.launch {
-            val file = Updater.download(activity, url)
-            if (dlg.isShowing) dlg.dismiss()
-            if (activity.isFinishing) return@launch
-            if (file != null) {
-                Updater.install(activity, file)
-            } else {
-                toast(activity, activity.getString(R.string.update_failed))
+
+        btn.setOnClickListener {
+            if (!Updater.canInstall(activity)) {
+                toast(activity, activity.getString(R.string.update_install_hint))
+                Updater.openInstallSettings(activity)
+                return@setOnClickListener
             }
-            // يبقى الحوار حتى يكتمل التحديث
-            showMandatory(activity, info)
+            // حالة التنزيل: نسبة مئوية + شريط
+            btn.visibility = View.GONE
+            bar.visibility = View.VISIBLE
+            bar.progress = 0
+            msg.text = activity.getString(R.string.update_downloading_pct, 0)
+
+            activity.lifecycleScope.launch {
+                val file = Updater.download(activity, info.url) { pct ->
+                    activity.runOnUiThread {
+                        bar.progress = pct
+                        msg.text = activity.getString(R.string.update_downloading_pct, pct)
+                    }
+                }
+                if (activity.isFinishing) return@launch
+                if (file != null) {
+                    Updater.install(activity, file)
+                } else {
+                    toast(activity, activity.getString(R.string.update_failed))
+                }
+                // تبقى الشاشة حتى يكتمل التثبيت
+                promptState()
+            }
         }
+
+        promptState()
+        current = dlg
+        dlg.show()
     }
 
     private fun toast(activity: AppCompatActivity, msg: String) {

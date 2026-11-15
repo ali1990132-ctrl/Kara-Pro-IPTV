@@ -53,21 +53,39 @@ object Updater {
     }
 
     /** ينزّل ملف الـAPK ويرجّع مساره */
-    suspend fun download(ctx: Context, url: String): File? = withContext(Dispatchers.IO) {
-        try {
-            val req = Request.Builder().url(url).build()
-            client.newCall(req).execute().use { resp ->
-                if (!resp.isSuccessful) return@withContext null
-                val dir = File(ctx.cacheDir, "updates").apply { mkdirs() }
-                val out = File(dir, "as-update.apk")
-                if (out.exists()) out.delete()
-                resp.body?.byteStream()?.use { input ->
-                    out.outputStream().use { input.copyTo(it) }
+    suspend fun download(ctx: Context, url: String, onProgress: (Int) -> Unit = {}): File? =
+        withContext(Dispatchers.IO) {
+            try {
+                val req = Request.Builder().url(url).build()
+                client.newCall(req).execute().use { resp ->
+                    if (!resp.isSuccessful) return@withContext null
+                    val body = resp.body ?: return@withContext null
+                    val total = body.contentLength()
+                    val dir = File(ctx.cacheDir, "updates").apply { mkdirs() }
+                    val out = File(dir, "as-update.apk")
+                    if (out.exists()) out.delete()
+                    body.byteStream().use { input ->
+                        out.outputStream().use { output ->
+                            val buf = ByteArray(64 * 1024)
+                            var done = 0L
+                            var last = -1
+                            while (true) {
+                                val n = input.read(buf)
+                                if (n < 0) break
+                                output.write(buf, 0, n)
+                                done += n
+                                if (total > 0) {
+                                    val pct = ((done * 100) / total).toInt()
+                                    if (pct != last) { last = pct; onProgress(pct) }
+                                }
+                            }
+                        }
+                    }
+                    onProgress(100)
+                    out
                 }
-                out
-            }
-        } catch (e: Exception) { null }
-    }
+            } catch (e: Exception) { null }
+        }
 
     /** هل يُسمح بتثبيت التطبيقات من مصدر غير معروف؟ */
     fun canInstall(ctx: Context): Boolean =
