@@ -32,7 +32,9 @@ window.DEFAULT_DATA={
     "مدبلج عربي"
    ],
    "description": "قصة ماجد وحلمه بكرة القدم، من القناة الرسمية للكابتن ماجد بالعربي.",
-   "youtubePlaylist": "PLZ-CdRG36aUQ4iZuv-Ki8-GmD0-uBhV98"
+   "youtubePlaylist": "PLZ-CdRG36aUQ4iZuv-Ki8-GmD0-uBhV98",
+   "poster": "posters/captain-majid-1.jpg",
+   "banner": "posters/captain-majid-1-wide.jpg"
   },
   {
    "id": "spacetube",
@@ -45,7 +47,9 @@ window.DEFAULT_DATA={
     "منوّع"
    ],
    "description": "حلقات مختارة من أنميات سبيستون، من قناة سبيستون الرسمية.",
-   "youtubePlaylist": "PLbwI0LE0f2MEVoW2d4CF3sAW7CNJ_vTGP"
+   "youtubePlaylist": "PLbwI0LE0f2MEVoW2d4CF3sAW7CNJ_vTGP",
+   "poster": "posters/spacetube.jpg",
+   "banner": "posters/spacetube-wide.jpg"
   },
   {
    "id": "inazuma-go",
@@ -57,7 +61,9 @@ window.DEFAULT_DATA={
     "مقاطع قصيرة"
    ],
    "description": "أقوى المباريات والمهارات من أبطال الكرة الفرسان، من قناة سبيستون الرسمية.",
-   "youtubePlaylist": "PLbwI0LE0f2MER_fruGBsEwrTU7z-l2Ssl"
+   "youtubePlaylist": "PLbwI0LE0f2MER_fruGBsEwrTU7z-l2Ssl",
+   "poster": "posters/inazuma-go.jpg",
+   "banner": "posters/inazuma-go-wide.jpg"
   },
   {
    "id": "love-playlist-1",
@@ -71,7 +77,9 @@ window.DEFAULT_DATA={
     "حلقات قصيرة"
    ],
    "description": "دراما كورية قصيرة عن حب وصداقة طلاب الجامعة، الحلقة حوالي 10 دقايق. من قناة PlayList Global الرسمية (ترجمة إنكليزية).",
-   "youtubePlaylist": "PLS--ClexQbQ1lg6TttQTcE3a60T_noSnh"
+   "youtubePlaylist": "PLS--ClexQbQ1lg6TttQTcE3a60T_noSnh",
+   "poster": "posters/love-playlist-1.jpg",
+   "banner": "posters/love-playlist-1-wide.jpg"
   },
   {
    "id": "love-playlist-2",
@@ -84,7 +92,9 @@ window.DEFAULT_DATA={
     "حلقات قصيرة"
    ],
    "description": "الموسم الثاني من Love Playlist. من قناة PlayList Global الرسمية.",
-   "youtubePlaylist": "PLS--ClexQbQ07WPPZBGgkEZHGQ63rKQdb"
+   "youtubePlaylist": "PLS--ClexQbQ07WPPZBGgkEZHGQ63rKQdb",
+   "poster": "posters/love-playlist-2.jpg",
+   "banner": "posters/love-playlist-2-wide.jpg"
   },
   {
    "id": "kbs-drama-special-2016",
@@ -95,7 +105,9 @@ window.DEFAULT_DATA={
     "قصص منفصلة"
    ],
    "description": "كل حلقة قصة كاملة لوحدها. من قناة KBS WORLD TV الرسمية.",
-   "youtubePlaylist": "PLMf7VY8La5REIgqJKfcqEo0JdociF0DnP"
+   "youtubePlaylist": "PLMf7VY8La5REIgqJKfcqEo0JdociF0DnP",
+   "poster": "posters/kbs-drama-special-2016.jpg",
+   "banner": "posters/kbs-drama-special-2016-wide.jpg"
   },
   {
    "id": "kbs-you-are-the-best",
@@ -106,7 +118,9 @@ window.DEFAULT_DATA={
     "رومانسي"
    ],
    "description": "مسلسل كوري عائلي كامل (50 حلقة). من قناة KBS WORLD TV الرسمية.",
-   "youtubePlaylist": "PLMf7VY8La5RFvSlbp5Wg9fei9J9qwGNJ1"
+   "youtubePlaylist": "PLMf7VY8La5RFvSlbp5Wg9fei9J9qwGNJ1",
+   "poster": "posters/kbs-you-are-the-best.jpg",
+   "banner": "posters/kbs-you-are-the-best-wide.jpg"
   },
   {
    "id": "blender-films",

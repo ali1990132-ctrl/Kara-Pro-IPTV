@@ -58,7 +58,7 @@ h2.sec small{font-size:12px;color:var(--mut);font-weight:400}
 .rail{display:flex;gap:10px;overflow-x:auto;padding:0 16px}
 .card{position:relative;flex:0 0 112px;width:112px}
 .poster{position:relative;width:100%;aspect-ratio:2/3;border-radius:12px;overflow:hidden;background:var(--card)}
-.poster img{width:100%;height:100%;object-fit:cover}
+.poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .poster .fb{position:absolute;inset:0;display:grid;place-items:center;padding:8px;text-align:center;font-weight:800;font-size:14px;line-height:1.4;background:var(--grad)}
 .poster .badge{position:absolute;top:6px;right:6px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;background:var(--a1)}
 .poster .eps{position:absolute;bottom:6px;left:6px;font-size:10px;padding:2px 7px;border-radius:6px;background:rgba(0,0,0,.65)}
@@ -453,7 +453,7 @@ function renderHome(){
 
   var feat=S.filter(function(s){return s.featured;}); if(!feat.length) feat=S.slice(0,5);
   h+='<div class="hero" id="hero">'+feat.map(function(s){
-    return '<div class="hero-item" data-sid="'+esc(s.id)+'"><div class="poster" style="position:absolute;inset:0;aspect-ratio:auto;border-radius:0"><div class="fb">'+esc(s.title)+'</div>'+(s.poster?'<img src="'+esc(s.poster)+'" alt="" onerror="this.remove()">':'')+'</div><div class="shade"></div><div class="info"><h3>'+esc(s.title)+'</h3><p>'+esc(catName(s.category))+' • '+(s.pending?'يوتيوب':s.episodes.length+' حلقة')+(s.tags.length?(' • '+esc(s.tags.slice(0,2).join("، "))):'')+'</p><span class="btn pri" data-play="'+esc(s.id)+'">'+ICON.play+'شاهد الآن</span></div></div>';
+    return '<div class="hero-item" data-sid="'+esc(s.id)+'"><div class="poster" style="position:absolute;inset:0;aspect-ratio:auto;border-radius:0"><div class="fb">'+esc(s.title)+'</div>'+((s.banner||s.poster)?'<img src="'+esc(s.banner||s.poster)+'" alt="" onerror="this.remove()">':'')+'</div><div class="shade"></div><div class="info"><h3>'+esc(s.title)+'</h3><p>'+esc(catName(s.category))+' • '+(s.pending?'يوتيوب':s.episodes.length+' حلقة')+(s.tags.length?(' • '+esc(s.tags.slice(0,2).join("، "))):'')+'</p><span class="btn pri" data-play="'+esc(s.id)+'">'+ICON.play+'شاهد الآن</span></div></div>';
   }).join("")+'</div><div class="dots">'+feat.map(function(_,i){return '<span'+(i?'':' class="on"')+'></span>';}).join("")+'</div>';
 
   // أكمل المشاهدة
@@ -501,13 +501,16 @@ function setupHero(){
   clearInterval(heroTimer);
   var hero=$("#hero"); if(!hero) return;
   var dots=$$(".dots span"), n=dots.length, idx=0;
-  function cur(){var w=hero.clientWidth+12;return Math.round(Math.abs(hero.scrollLeft)/w);}
+  function cur(){var it=hero.children[0];var w=(it?it.offsetWidth:hero.clientWidth)+12;return Math.round(Math.abs(hero.scrollLeft)/w);}
   hero.addEventListener("scroll",function(){idx=cur();dots.forEach(function(d,i){d.classList.toggle("on",i===idx);});},{passive:true});
   if(n<2) return;
   heroTimer=setInterval(function(){
     if(state.tab!=="home"||!$("#player").classList.contains("hide")) return;
+    var view=$("#v-home"); if(view.scrollTop>hero.offsetTop+hero.offsetHeight) return; // لا تحرك البانر إذا نازل تحت
     idx=(cur()+1)%n;
-    var item=hero.children[idx]; if(item) item.scrollIntoView({behavior:"smooth",block:"nearest",inline:"center"});
+    var item=hero.children[idx]; if(!item) return;
+    var step=item.offsetWidth+12, rtl=getComputedStyle(hero).direction==="rtl";
+    hero.scrollTo({left:(rtl?-1:1)*idx*step,behavior:"smooth"});
   },5000);
 }
 
@@ -903,7 +906,11 @@ $("#btn-refresh").onclick=function(){
 };
 
 function renderAll(){
+  var vh=$("#v-home"), y=vh.scrollTop;
+  var rails=$$("#home-body .rail").map(function(r){return r.scrollLeft;});
   renderHome();
+  vh.scrollTop=y;
+  $$("#home-body .rail").forEach(function(r,i){if(rails[i])r.scrollLeft=rails[i];});
   if(state.tab==="list") renderList();
   if(state.tab==="search") renderSearch();
 }
