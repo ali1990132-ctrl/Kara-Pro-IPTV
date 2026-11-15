@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>محرر محتوى A&amp;S Shorts</title>
+<style>
+:root{--bg:#0b0b10;--card:#16161f;--card2:#1f1f2b;--line:#2a2a38;--txt:#f4f4f8;--mut:#9a9ab0;--a1:#ff2e63;--a2:#8b5cf6;--grad:linear-gradient(135deg,#ff2e63,#8b5cf6)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:"Noto Sans Arabic","Segoe UI",Roboto,Tahoma,sans-serif;font-size:15px;line-height:1.6}
+.wrap{max-width:720px;margin:0 auto;padding:16px 14px 120px}
+h1{font-size:21px;margin:4px 0 2px}
+h1 b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mut);font-size:13px;margin-bottom:14px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:14px}
+.box h2{font-size:16px;margin:0 0 10px;display:flex;justify-content:space-between;align-items:center}
+label{display:block;font-size:12.5px;color:var(--mut);margin:10px 0 4px}
+input,textarea,select{width:100%;background:var(--card2);border:1px solid var(--line);border-radius:10px;color:var(--txt);padding:10px 12px;font:inherit;font-size:14px;outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--a2)}
+textarea{min-height:110px;direction:ltr;text-align:left;font-family:ui-monospace,Consolas,monospace;font-size:12.5px}
+textarea.rtl{direction:rtl;text-align:right;font-family:inherit;font-size:14px;min-height:70px}
+.row{display:flex;gap:10px}
+.row>*{flex:1}
+.chk{display:flex;gap:16px;margin-top:12px;font-size:14px}
+.chk label{display:flex;align-items:center;gap:6px;margin:0;color:var(--txt);font-size:14px}
+.chk input{width:auto}
+button{font:inherit;cursor:pointer;border:0;border-radius:11px;padding:10px 16px;font-weight:700;font-size:14px;color:var(--txt);background:var(--card2)}
+button.pri{background:var(--grad);color:#fff}
+button.del{background:rgba(255,46,99,.15);color:#ff7a9a}
+button.sm{padding:6px 11px;font-size:12.5px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.s-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:var(--card2);margin-bottom:8px}
+.s-item img,.s-item .ph{width:44px;height:62px;border-radius:8px;object-fit:cover;background:var(--grad);flex:none}
+.s-item .tx{flex:1;min-width:0}
+.s-item .tx b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s-item .tx small{color:var(--mut)}
+.s-item .ac{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.cat{display:flex;gap:8px;margin-bottom:8px}
+.hint{font-size:12px;color:var(--mut);margin-top:6px}
+.bar{position:fixed;bottom:0;right:0;left:0;background:rgba(15,15,22,.97);border-top:1px solid var(--line);padding:10px 14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#22222e;padding:10px 18px;border-radius:12px;font-size:13px;z-index:9;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:8;overflow-y:auto;padding:20px 12px}
+.modal .box{max-width:680px;margin:0 auto}
+.steps{font-size:13.5px;color:#cfcfdc;padding-right:18px;margin:6px 0 0}
+.steps li{margin-bottom:6px}
+code{background:var(--card2);padding:1px 6px;border-radius:6px;direction:ltr;display:inline-block}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>محرر محتوى <b>A&amp;S Shorts</b></h1>
+  <div class="sub">ضيف المسلسلات والحلقات هنا، وبعدين انسخ الملف وحطه بـ GitHub — يطلع بالتطبيق فوراً.</div>
+
+  <div class="box">
+    <h2>١. حمّل المحتوى الحالي</h2>
+    <label>رابط ملف المحتوى (raw)</label>
+    <input id="url" value="https://raw.githubusercontent.com/ali1990132-ctrl/Kara-Pro-IPTV/as-shorts/content/shorts.json">
+    <div class="btns">
+      <button class="pri" id="load-url">تحميل من GitHub</button>
+      <button id="open-paste">لصق JSON يدوي</button>
+      <button class="del" id="reset">بدء من الصفر</button>
+    </div>
+    <div class="hint" id="url-hint">شغلك ينحفظ تلقائياً بهذا المتصفح لحد ما تنسخه.</div>
+  </div>
+
+  <div class="box">
+    <h2>٢. إعدادات التطبيق</h2>
+    <label>رسالة تظهر أعلى الرئيسية (فارغة = بدون رسالة)</label>
+    <textarea class="rtl" id="notice"></textarea>
+    <div class="row">
+      <div><label>رقم آخر إصدار (للتحديث داخل التطبيق)</label><input id="lv" type="number" min="0"></div>
+    </div>
+    <label>رابط تحميل APK</label>
+    <input id="apk" dir="ltr">
+    <label>نص رسالة التحديث</label>
+    <input id="updtxt">
+  </div>
+
+  <div class="box">
+    <h2>٣. الأقسام <button class="sm" id="add-cat">+ قسم</button></h2>
+    <div id="cats"></div>
+  </div>
+
+  <div class="box">
+    <h2>٤. المسلسلات <span><button class="sm pri" id="add-s">+ مسلسل جديد</button></span></h2>
+    <div id="list"></div>
+  </div>
+
+  <div class="box">
+    <h2>٥. انشر التحديث</h2>
+    <ol class="steps">
+      <li>اضغط <b>نسخ الملف</b> بالأسفل.</li>
+      <li>افتح <a id="gh-edit" style="color:#c4b5fd" target="_blank">صفحة تعديل الملف بـ GitHub</a>، امسح كل اللي بيه والصق.</li>
+      <li>اضغط <b>Commit changes</b> — خلال دقيقة يطلع بالتطبيق (زر التحديث ↻ بالرئيسية).</li>
+    </ol>
+  </div>
+</div>
+
+<div class="bar">
+  <button class="pri" id="copy">نسخ الملف</button>
+  <button id="dl">تحميل shorts.json</button>
+</div>
+
+<script>
+(function(){
+var $=function(s,r){return (r||document).querySelector(s);};
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function sure(b,fn){if(b.dataset.sure){fn();return;}var o=b.textContent;b.dataset.sure=1;b.textContent="متأكد؟";setTimeout(function(){delete b.dataset.sure;b.textContent=o;},3000);}
+function toast(m){var o=$(".toast");if(o)o.remove();var d=document.createElement("div");d.className="toast";d.textContent=m;document.body.appendChild(d);setTimeout(function(){d.remove();},2300);}
+var EMPTY={app:{name:"A&S Shorts",notice:"",latestVersion:0,apkUrl:"https://github.com/ali1990132-ctrl/Kara-Pro-IPTV/releases/download/as-shorts-latest/A-S-Shorts.apk",updateText:""},categories:[{id:"anime",name:"أنمي"},{id:"korean",name:"كوري"}],series:[]};
+var D;
+function store(){try{localStorage.setItem("as_editor",JSON.stringify(D));}catch(e){}}
+function restore(){try{var v=localStorage.getItem("as_editor");return v?JSON.parse(v):null;}catch(e){return null;}}
+function fix(d){
+  d=d&&typeof d==="object"?d:{};
+  d.app=d.app||{};d.categories=Array.isArray(d.categories)?d.categories:[];d.series=Array.isArray(d.series)?d.series:[];
+  return d;
+}
+function setD(d){D=fix(d);renderAll();store();}
+
+function renderAll(){
+  $("#notice").value=D.app.notice||"";
+  $("#lv").value=D.app.latestVersion||0;
+  $("#apk").value=D.app.apkUrl||"";
+  $("#updtxt").value=D.app.updateText||"";
+  renderCats();renderList();
+  var u=$("#url").value.match(/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/(.+)$/);
+  $("#gh-edit").href=u?("https://github.com/"+u[1]+"/"+u[2]+"/edit/"+u[3]+"/"+u[4]):"https://github.com";
+}
+["notice","lv","apk","updtxt"].forEach(function(id){
+  $("#"+id).addEventListener("input",function(){
+    D.app.notice=$("#notice").value;D.app.latestVersion=parseInt($("#lv").value||"0",10)||0;
+    D.app.apkUrl=$("#apk").value.trim();D.app.updateText=$("#updtxt").value;store();
+  });
+});
+
+function renderCats(){
+  $("#cats").innerHTML=D.categories.map(function(c,i){
+    return '<div class="cat"><input data-i="'+i+'" data-f="name" value="'+esc(c.name)+'" placeholder="اسم القسم"><input data-i="'+i+'" data-f="id" value="'+esc(c.id)+'" placeholder="id بالإنكليزي" dir="ltr" style="max-width:130px"><button class="sm del" data-del="'+i+'">حذف</button></div>';
+  }).join("")||'<div class="hint">ماكو أقسام</div>';
+  Array.prototype.forEach.call($("#cats").querySelectorAll("input"),function(inp){
+    inp.oninput=function(){var c=D.categories[+inp.dataset.i];var old=c.id;c[inp.dataset.f]=inp.value.trim();
+      if(inp.dataset.f==="id"){D.series.forEach(function(s){if(s.category===old)s.category=c.id;});}
+      store();};
+  });
+  Array.prototype.forEach.call($("#cats").querySelectorAll("[data-del]"),function(b){
+    b.onclick=function(){sure(b,function(){D.categories.splice(+b.dataset.del,1);store();renderCats();});};
+  });
+}
+$("#add-cat").onclick=function(){D.categories.push({id:"cat"+(D.categories.length+1),name:"قسم جديد"});store();renderCats();toast("عدّل اسم القسم والـ id");};
+
+function catName(id){for(var i=0;i<D.categories.length;i++)if(D.categories[i].id===id)return D.categories[i].name;return id||"—";}
+function renderList(){
+  $("#list").innerHTML=D.series.map(function(s,i){
+    return '<div class="s-item">'+(s.poster?'<img src="'+esc(s.poster)+'" onerror="this.className=\'ph\';this.removeAttribute(\'src\')">':'<div class="ph"></div>')+
+      '<div class="tx"><b>'+esc(s.title)+'</b><small>'+esc(catName(s.category))+' • '+(s.youtubePlaylist&&!(s.episodes||[]).length?'قائمة يوتيوب':(s.episodes||[]).length+' حلقة')+(s.featured?' • مميز':'')+(s.new?' • جديد':'')+'</small></div>'+
+      '<div class="ac"><button class="sm" data-up="'+i+'">▲</button><button class="sm" data-ed="'+i+'">تعديل</button><button class="sm del" data-rm="'+i+'">حذف</button></div></div>';
+  }).join("")||'<div class="hint">ماكو مسلسلات — اضغط "+ مسلسل جديد"</div>';
+  var L=$("#list");
+  Array.prototype.forEach.call(L.querySelectorAll("[data-ed]"),function(b){b.onclick=function(){editSeries(+b.dataset.ed);};});
+  Array.prototype.forEach.call(L.querySelectorAll("[data-rm]"),function(b){b.onclick=function(){sure(b,function(){D.series.splice(+b.dataset.rm,1);store();renderList();});};});
+  Array.prototype.forEach.call(L.querySelectorAll("[data-up]"),function(b){b.onclick=function(){var i=+b.dataset.up;if(!i)return;var t=D.series[i];D.series[i]=D.series[i-1];D.series[i-1]=t;store();renderList();};});
+}
+$("#add-s").onclick=function(){editSeries(-1);};
+
+function epsToText(eps){return (eps||[]).map(function(e,i){var def="الحلقة "+(i+1);return (e.title&&e.title!==def?e.title+" | ":"")+e.url;}).join("\n");}
+function textToEps(t){
+  return t.split(/\n+/).map(function(l){return l.trim();}).filter(Boolean).map(function(l,i){
+    var p=l.split("|");var url=p.pop().trim();var title=p.join("|").trim()||("الحلقة "+(i+1));
+    return {title:title,url:url};
+  }).filter(function(e){return /^https?:\/\//i.test(e.url);});
+}
+function slug(t){var s=String(t).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");return (s||"s")+"-"+Date.now().toString(36).slice(-5);}
+
+function editSeries(i){
+  var s=i>-1?D.series[i]:{title:"",category:(D.categories[0]||{}).id||"",poster:"",year:new Date().getFullYear(),tags:[],description:"",featured:false,new:true,episodes:[]};
+  var m=document.createElement("div");m.className="modal";
+  m.innerHTML='<div class="box"><h2>'+(i>-1?"تعديل مسلسل":"مسلسل جديد")+'<button class="sm" id="m-x">✕</button></h2>'+
+    '<label>اسم المسلسل *</label><input id="m-title" value="'+esc(s.title)+'">'+
+    '<div class="row"><div><label>القسم</label><select id="m-cat">'+D.categories.map(function(c){return '<option value="'+esc(c.id)+'"'+(c.id===s.category?" selected":"")+'>'+esc(c.name)+'</option>';}).join("")+'</select></div>'+
+    '<div><label>السنة</label><input id="m-year" type="number" value="'+esc(s.year||"")+'"></div></div>'+
+    '<label>رابط صورة البوستر (اختياري — ليوتيوب ياخذ صورة الحلقة الأولى)</label><input id="m-poster" dir="ltr" value="'+esc(s.poster||"")+'">'+
+    '<label>التصنيفات (افصل بفاصلة)</label><input id="m-tags" value="'+esc((s.tags||[]).join("، "))+'" placeholder="رومانسي، أكشن">'+
+    '<label>القصة</label><textarea class="rtl" id="m-desc">'+esc(s.description||"")+'</textarea>'+
+    '<div class="chk"><label><input type="checkbox" id="m-feat"'+(s.featured?" checked":"")+'> مميز (بالواجهة)</label><label><input type="checkbox" id="m-new"'+(s.new?" checked":"")+'> جديد</label></div>'+
+    '<label>رابط قائمة تشغيل يوتيوب (playlist) — يجيب كل الحلقات تلقائياً</label><input id="m-yt" dir="ltr" placeholder="https://www.youtube.com/playlist?list=PL..." value="'+esc(s.youtubePlaylist||"")+'">'+
+    '<div class="hint">أو بدالها، حط الحلقات يدوياً تحت:</div>'+
+    '<label>الحلقات — كل حلقة بسطر (رابط يوتيوب أو mp4 أو m3u8)</label>'+
+    '<textarea id="m-eps" placeholder="https://.../ep1.mp4\nhttps://.../ep2.mp4\nالحلقة الخاصة | https://.../sp.mp4">'+esc(epsToText(s.episodes))+'</textarea>'+
+    '<div class="hint" id="m-count"></div>'+
+    '<div class="btns"><button class="pri" id="m-save">حفظ</button><button id="m-cancel">إلغاء</button></div></div>';
+  document.body.appendChild(m);
+  function cnt(){$("#m-count",m).textContent="عدد الحلقات: "+textToEps($("#m-eps",m).value).length;}
+  cnt();$("#m-eps",m).oninput=cnt;
+  function close(){m.remove();}
+  $("#m-x",m).onclick=close;$("#m-cancel",m).onclick=close;
+  $("#m-save",m).onclick=function(){
+    var title=$("#m-title",m).value.trim();
+    var eps=textToEps($("#m-eps",m).value);
+    if(!title){toast("اكتب اسم المسلسل");return;}
+    var yt=$("#m-yt",m).value.trim(); var lm=yt.match(/[?&]list=([\w-]+)/); if(lm) yt=lm[1];
+    if(!eps.length&&!yt){toast("ضيف رابط قائمة يوتيوب أو حلقة وحدة على الأقل");return;}
+    var o={
+      id:s.id||slug(title),title:title,category:$("#m-cat",m).value,poster:$("#m-poster",m).value.trim(),
+      year:parseInt($("#m-year",m).value,10)||undefined,
+      tags:$("#m-tags",m).value.split(/[،,]/).map(function(t){return t.trim();}).filter(Boolean),
+      description:$("#m-desc",m).value.trim(),featured:$("#m-feat",m).checked,new:$("#m-new",m).checked,episodes:eps
+    };
+    if(yt) o.youtubePlaylist=yt; if(!eps.length) delete o.episodes; if(!o.poster) delete o.poster;
+    if(!o.featured)delete o.featured;if(!o.new)delete o.new;if(!o.year)delete o.year;
+    if(i>-1)D.series[i]=o;else D.series.unshift(o);
+    store();renderList();close();toast("انحفظ ✓ — لا تنسى تنسخ الملف وتحطه بـ GitHub");
+  };
+}
+
+function out(){return JSON.stringify(D,null,1);}
+$("#copy").onclick=function(){
+  var t=out();
+  function fb(){var a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();try{document.execCommand("copy");toast("انسخ الملف ✓");}catch(e){toast("ما انسخ، استخدم التحميل");}a.remove();}
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){toast("انسخ الملف ✓");},fb);else fb();
+};
+$("#dl").onclick=function(){var b=new Blob([out()],{type:"application/json"});var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="shorts.json";a.click();};
+
+$("#load-url").onclick=function(){
+  var u=$("#url").value.trim();if(!u)return;
+  fetch(u+(u.indexOf("?")>-1?"&":"?")+"t="+Date.now()).then(function(r){if(!r.ok)throw 0;return r.json();})
+  .then(function(d){setD(d);toast("انحمل من GitHub ✓");})
+  .catch(function(){toast("ما كدرت أحمّل — استخدم لصق JSON يدوي");});
+};
+$("#open-paste").onclick=function(){
+  var m=document.createElement("div");m.className="modal";
+  m.innerHTML='<div class="box"><h2>لصق محتوى JSON</h2><textarea id="p-t" style="min-height:260px" placeholder="{ ... }"></textarea><div class="btns"><button class="pri" id="p-ok">تحميل</button><button id="p-x">إلغاء</button></div></div>';
+  document.body.appendChild(m);
+  $("#p-x",m).onclick=function(){m.remove();};
+  $("#p-ok",m).onclick=function(){try{setD(JSON.parse($("#p-t",m).value));m.remove();toast("انحمل ✓");}catch(e){toast("الصيغة غلط — تأكد انك نسخت الملف كامل");}};
+};
+$("#reset").onclick=function(){var b=this;sure(b,function(){setD(JSON.parse(JSON.stringify(EMPTY)));});};
+$("#url").addEventListener("change",renderAll);
+
+var framed=false;try{framed=window.self!==window.top;}catch(e){framed=true;}
+if(framed){$("#dl").style.display="none";$("#load-url").style.display="none";$("#url-hint").textContent="افتح ملف shorts.json بـ GitHub، انسخ محتواه، واضغط \"لصق JSON يدوي\".";}
+setD(restore()||JSON.parse(JSON.stringify(EMPTY)));
+})();
+</script>
+</body>
+</html>

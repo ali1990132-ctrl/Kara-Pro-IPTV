@@ -1,0 +1,142 @@
+{
+ "app": {
+  "name": "A&S Shorts",
+  "notice": "🎬 كل المسلسلات من قنوات رسمية ومجانية — إذا حلقة ما اشتغلت ببلدك، اضغط «افتح بيوتيوب».",
+  "latestVersion": 0,
+  "apkUrl": "https://github.com/ali1990132-ctrl/Kara-Pro-IPTV/releases/download/as-shorts-latest/A-S-Shorts.apk",
+  "updateText": ""
+ },
+ "categories": [
+  {
+   "id": "anime",
+   "name": "أنمي"
+  },
+  {
+   "id": "korean",
+   "name": "كوري"
+  },
+  {
+   "id": "animation",
+   "name": "أفلام أنيميشن"
+  }
+ ],
+ "series": [
+  {
+   "id": "captain-majid-1",
+   "title": "الكابتن ماجد - الجزء الأول",
+   "category": "anime",
+   "featured": true,
+   "tags": [
+    "رياضي",
+    "كلاسيكي",
+    "مدبلج عربي"
+   ],
+   "description": "قصة ماجد وحلمه بكرة القدم، من القناة الرسمية للكابتن ماجد بالعربي.",
+   "youtubePlaylist": "PLZ-CdRG36aUQ4iZuv-Ki8-GmD0-uBhV98"
+  },
+  {
+   "id": "spacetube",
+   "title": "مختارات سبيستون",
+   "category": "anime",
+   "featured": true,
+   "new": true,
+   "tags": [
+    "مدبلج عربي",
+    "منوّع"
+   ],
+   "description": "حلقات مختارة من أنميات سبيستون، من قناة سبيستون الرسمية.",
+   "youtubePlaylist": "PLbwI0LE0f2MEVoW2d4CF3sAW7CNJ_vTGP"
+  },
+  {
+   "id": "inazuma-go",
+   "title": "أبطال الكرة الفرسان - أقوى المواجهات",
+   "category": "anime",
+   "tags": [
+    "رياضي",
+    "مدبلج عربي",
+    "مقاطع قصيرة"
+   ],
+   "description": "أقوى المباريات والمهارات من أبطال الكرة الفرسان، من قناة سبيستون الرسمية.",
+   "youtubePlaylist": "PLbwI0LE0f2MER_fruGBsEwrTU7z-l2Ssl"
+  },
+  {
+   "id": "love-playlist-1",
+   "title": "Love Playlist - الموسم 1",
+   "category": "korean",
+   "featured": true,
+   "new": true,
+   "tags": [
+    "رومانسي",
+    "جامعي",
+    "حلقات قصيرة"
+   ],
+   "description": "دراما كورية قصيرة عن حب وصداقة طلاب الجامعة، الحلقة حوالي 10 دقايق. من قناة PlayList Global الرسمية (ترجمة إنكليزية).",
+   "youtubePlaylist": "PLS--ClexQbQ1lg6TttQTcE3a60T_noSnh"
+  },
+  {
+   "id": "love-playlist-2",
+   "title": "Love Playlist - الموسم 2",
+   "category": "korean",
+   "new": true,
+   "tags": [
+    "رومانسي",
+    "جامعي",
+    "حلقات قصيرة"
+   ],
+   "description": "الموسم الثاني من Love Playlist. من قناة PlayList Global الرسمية.",
+   "youtubePlaylist": "PLS--ClexQbQ07WPPZBGgkEZHGQ63rKQdb"
+  },
+  {
+   "id": "kbs-drama-special-2016",
+   "title": "KBS Drama Special 2016",
+   "category": "korean",
+   "tags": [
+    "دراما",
+    "قصص منفصلة"
+   ],
+   "description": "كل حلقة قصة كاملة لوحدها. من قناة KBS WORLD TV الرسمية.",
+   "youtubePlaylist": "PLMf7VY8La5REIgqJKfcqEo0JdociF0DnP"
+  },
+  {
+   "id": "kbs-you-are-the-best",
+   "title": "You Are The Best - أنتِ الأفضل",
+   "category": "korean",
+   "tags": [
+    "عائلي",
+    "رومانسي"
+   ],
+   "description": "مسلسل كوري عائلي كامل (50 حلقة). من قناة KBS WORLD TV الرسمية.",
+   "youtubePlaylist": "PLMf7VY8La5RFvSlbp5Wg9fei9J9qwGNJ1"
+  },
+  {
+   "id": "blender-films",
+   "title": "أفلام Blender القصيرة",
+   "category": "animation",
+   "tags": [
+    "مغامرة",
+    "خيال",
+    "مجاني ومفتوح"
+   ],
+   "description": "أفلام أنيميشن قصيرة مفتوحة المصدر من مؤسسة Blender، مسموح نشرها مجاناً.",
+   "poster": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/Sintel.jpg",
+   "episodes": [
+    {
+     "title": "Sintel",
+     "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4"
+    },
+    {
+     "title": "Big Buck Bunny",
+     "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    },
+    {
+     "title": "Elephants Dream",
+     "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+    },
+    {
+     "title": "Tears of Steel",
+     "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
+    }
+   ]
+  }
+ ]
+}
