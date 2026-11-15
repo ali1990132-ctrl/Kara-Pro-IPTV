@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "KaraProIPTV"
+rootProject.name = "ASVPN"
 include(":app")

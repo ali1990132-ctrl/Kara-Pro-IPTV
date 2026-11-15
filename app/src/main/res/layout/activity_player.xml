@@ -3,132 +3,89 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
-    android:keepScreenOn="true">
+    android:background="@android:color/black">
 
     <androidx.media3.ui.PlayerView
         android:id="@+id/playerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:resize_mode="fit"
-        app:show_buffering="when_playing"
-        app:show_next_button="true"
-        app:show_previous_button="true"
-        app:show_rewind_button="false"
-        app:show_fastforward_button="false"
-        app:use_controller="true" />
+        app:show_buffering="always" />
 
-    <!-- شريط علوي بأدوات التحكّم -->
     <LinearLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:orientation="horizontal"
+        android:background="@drawable/bg_topbar"
         android:gravity="center_vertical"
-        android:background="@drawable/scrim_top"
-        android:paddingHorizontal="8dp"
-        android:paddingTop="6dp"
-        android:paddingBottom="14dp"
-        android:visibility="gone">
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="24dp">
 
-        <ImageView android:id="@+id/btnLock" style="@style/PlayerTopBtn" android:src="@drawable/ic_lock_open" />
-        <ImageView android:id="@+id/btnNight" style="@style/PlayerTopBtn" android:src="@drawable/ic_night" />
-        <ImageView android:id="@+id/btnFav" style="@style/PlayerTopBtn" android:src="@drawable/ic_favorite_border" />
-        <ImageView android:id="@+id/btnChannels" style="@style/PlayerTopBtn" android:src="@drawable/ic_live" />
-        <ImageView android:id="@+id/btnAspect" style="@style/PlayerTopBtn" android:src="@drawable/ic_aspect" />
-        <ImageView android:id="@+id/btnRotate" style="@style/PlayerTopBtn" android:src="@drawable/ic_rotate" />
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="10dp"
+            android:src="@drawable/ic_back"
+            app:tint="@android:color/white" />
 
         <TextView
-            android:id="@+id/tvTitle"
+            android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
             android:layout_weight="1"
-            android:layout_marginHorizontal="8dp"
-            android:gravity="end"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            android:textStyle="bold"
+            android:ellipsize="end"
             android:maxLines="1"
-            android:ellipsize="end" />
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/liveBadge"
+            android:id="@+id/vpnBadge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_live"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="3dp"
-            android:text="@string/nav_live"
-            android:textColor="@color/white"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/bg_chip"
+            android:paddingStart="10dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="4dp"
+            android:text="VPN"
+            android:textColor="@color/green"
             android:textSize="11sp"
             android:textStyle="bold"
             android:visibility="gone" />
-    </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvWatermark"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:visibility="gone" />
+        <ImageView
+            android:id="@+id/btnSubs"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="10dp"
+            android:src="@drawable/ic_subtitles"
+            app:tint="@android:color/white" />
 
-    <!-- شعار التطبيق أسفل اليسار -->
-    <ImageView
-        android:id="@+id/ivBrand"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_gravity="bottom|start"
-        android:layout_margin="12dp"
-        android:alpha="0.6"
-        android:src="@drawable/app_logo"
-        android:contentDescription="@null" />
+        <ImageView
+            android:id="@+id/btnSpeed"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="10dp"
+            android:src="@drawable/ic_speed"
+            app:tint="@android:color/white" />
 
-    <!-- زر فك القفل (يظهر عند القفل) -->
-    <ImageView
-        android:id="@+id/btnUnlock"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center"
-        android:padding="14dp"
-        android:background="@drawable/bg_badge"
-        android:src="@drawable/ic_lock"
-        android:visibility="gone"
-        android:contentDescription="@null" />
-
-    <ProgressBar
-        android:id="@+id/progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:indeterminateTint="@color/cyan" />
-
-    <LinearLayout
-        android:id="@+id/errorBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/player_error"
-            android:textColor="@color/text_primary"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/btnRetry"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:background="@drawable/bg_button"
-            android:paddingHorizontal="24dp"
-            android:paddingVertical="10dp"
-            android:text="@string/retry"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/btnAspect"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="10dp"
+            android:src="@drawable/ic_aspect"
+            app:tint="@android:color/white" />
     </LinearLayout>
 </FrameLayout>
