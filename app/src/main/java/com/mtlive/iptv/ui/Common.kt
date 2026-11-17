@@ -24,7 +24,20 @@ fun Activity.fullscreen() {
 }
 
 /** يتأكد من وجود جلسة؛ إذا ما موجودة يرجع لتسجيل الدخول */
+/** يسدّ التطبيق لو التوقيع متعدّل */
+fun Activity.guardTamper(): Boolean {
+    if (!com.mtlive.iptv.App.tampered) return true
+    androidx.appcompat.app.AlertDialog.Builder(this)
+        .setCancelable(false)
+        .setTitle(com.mtlive.iptv.R.string.tamper_title)
+        .setMessage(com.mtlive.iptv.R.string.tamper_msg)
+        .setPositiveButton(android.R.string.ok) { _, _ -> finishAffinity() }
+        .show()
+    return false
+}
+
 fun Activity.requireSession(): Boolean {
+    if (!guardTamper()) return false
     if (Cache.session == null) Cache.session = SessionStore.load(this)
     val cur = Cache.session
     if (cur != null && !com.mtlive.iptv.data.XtreamApi.isAllowed(cur.host)) {

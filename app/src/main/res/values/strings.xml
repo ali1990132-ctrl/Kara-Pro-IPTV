@@ -113,4 +113,6 @@
     <string name="clear_confirm">تريد تمسح كل سجل المشاهدة؟</string>
     <string name="current_account">الحساب الحالي</string>
     <string name="long_press_delete">اضغط مطولاً للحذف</string>
+    <string name="tamper_title">نسخة غير رسمية</string>
+    <string name="tamper_msg">هذا التطبيق نسخة معدّلة وغير رسمية. حمّل النسخة الأصلية من مصدرها الرسمي.</string>
 </resources>

@@ -17,6 +17,8 @@ class SplashActivity : AppCompatActivity() {
         setContentView(b.root)
         fullscreen()
 
+        if (!guardTamper()) return
+
         b.imgSplash.alpha = 0f
         b.imgSplash.scaleX = 0.8f
         b.imgSplash.scaleY = 0.8f

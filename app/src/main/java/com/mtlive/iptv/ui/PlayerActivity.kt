@@ -64,6 +64,7 @@ class PlayerActivity : AppCompatActivity() {
     private fun isLive() = PlayerQueue.items.getOrNull(index)?.type == ContentType.LIVE
 
     private fun initPlayer() {
+        if (com.mtlive.iptv.App.tampered) { finishAffinity(); return }
         player?.release()
         b.errorBox.visibility = View.GONE
         b.progress.visibility = View.VISIBLE

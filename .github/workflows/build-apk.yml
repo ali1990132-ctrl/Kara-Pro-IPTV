@@ -26,12 +26,12 @@ jobs:
         with:
           gradle-version: '8.6'
 
-      - name: Build debug APK
-        run: gradle assembleDebug --no-daemon
+      - name: Build release APK (R8 obfuscated)
+        run: gradle assembleRelease --no-daemon
 
       - name: Rename APK + version file
         run: |
-          cp app/build/outputs/apk/debug/app-debug.apk A-S-4K.apk
+          cp app/build/outputs/apk/release/app-release.apk A-S-4K.apk
           # نفس التطبيق بمكان رابط MT القديم
           cp A-S-4K.apk MT-LIVE.apk
           cp A-S-4K.apk "A&S_4K.apk"

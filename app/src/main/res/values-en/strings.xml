@@ -107,4 +107,6 @@
     <string name="clear_confirm">Clear all watch history?</string>
     <string name="current_account">Current account</string>
     <string name="long_press_delete">Long-press to delete</string>
+    <string name="tamper_title">Unofficial copy</string>
+    <string name="tamper_msg">This is a modified, unofficial copy. Please install the original app from its official source.</string>
 </resources>

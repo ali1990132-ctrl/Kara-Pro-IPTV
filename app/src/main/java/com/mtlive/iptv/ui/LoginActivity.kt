@@ -25,6 +25,8 @@ class LoginActivity : AppCompatActivity() {
         setContentView(b.root)
         fullscreen()
 
+        if (!guardTamper()) return
+
         b.etUser.setText(SessionStore.lastUser(this))
 
         b.btnLogin.setOnClickListener { doLogin() }
