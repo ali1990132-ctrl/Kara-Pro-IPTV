@@ -26,12 +26,12 @@ jobs:
           gradle-version: '8.6'
 
       - name: Build debug APK
-        run: gradle assembleDebug --no-daemon
+        run: gradle assembleRelease --no-daemon
 
       - name: Rename APK
         run: |
-          cp app/build/outputs/apk/debug/app-debug.apk A-S.apk
-          cp app/build/outputs/apk/debug/app-debug.apk "A&S_Tv.apk"
+          cp app/build/outputs/apk/release/app-release.apk A-S.apk
+          cp app/build/outputs/apk/release/app-release.apk "A&S_Tv.apk"
 
       - name: Generate version.json
         run: |

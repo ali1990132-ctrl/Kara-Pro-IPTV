@@ -11,8 +11,8 @@ android {
         applicationId = "com.asplus.iptv"
         minSdk = 21
         targetSdk = 34
-        versionCode = 24
-        versionName = "3.3"
+        versionCode = 25
+        versionName = "3.4"
     }
 
     signingConfigs {
@@ -29,7 +29,8 @@ android {
             signingConfig = signingConfigs.getByName("stable")
         }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = false
             signingConfig = signingConfigs.getByName("stable")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

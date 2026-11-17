@@ -27,6 +27,12 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        // حماية ضد التعديل: ترفض النسخ المُعاد توقيعها بمفتاح غير أصلي
+        if (!com.karastore.iptv.util.Guard.isOriginal(this)) {
+            android.os.Process.killProcess(android.os.Process.myPid())
+            exitProcess(10)
+        }
+
         // على التلفزيون: اعرض بالوضع الأفقي بدل الطولي (كل الشاشات)
         if (isTv()) {
             registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
