@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة تحكم A&amp;S Live — إدارة رموز التفعيل</title>
+<style>
+  :root{--bg:#060f24;--bg2:#0a1836;--card:#0d1f45;--line:#1d3a72;--blue:#1e88ff;--blue2:#0a2a66;--txt:#eaf2ff;--mut:#8fb0d8;--ok:#2ecc71;--bad:#ff5b6e;--warn:#ffb020;--gold:#ffcf5a}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;background:linear-gradient(160deg,#050c1e,#0a1836);color:var(--txt);font-family:"Segoe UI",Tahoma,Arial,sans-serif;min-height:100vh;padding:14px}
+  .wrap{max-width:1050px;margin:0 auto}
+  h1{font-size:22px;margin:4px 0 2px;display:flex;align-items:center;gap:8px}
+  .sub{color:var(--mut);font-size:13px;margin-bottom:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+  .card h2{font-size:16px;margin:0 0 10px;display:flex;align-items:center;gap:7px}
+  label{display:block;font-size:12px;color:var(--mut);margin:8px 0 3px}
+  input,select{width:100%;background:#06142f;border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:9px 11px;font-size:14px;font-family:inherit}
+  input:focus,select:focus{outline:none;border-color:var(--blue)}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .row>div{flex:1;min-width:140px}
+  button{cursor:pointer;border:none;border-radius:10px;padding:10px 15px;font-size:14px;font-weight:700;font-family:inherit;color:#fff;background:var(--blue);transition:.15s;display:inline-flex;align-items:center;gap:6px;justify-content:center}
+  button:hover{filter:brightness(1.12)}
+  button.ghost{background:var(--blue2);border:1px solid var(--line)}
+  button.sm{padding:6px 10px;font-size:12px;border-radius:8px}
+  button.danger{background:#5a1020;border:1px solid #7a1a2e}
+  button.gold{background:linear-gradient(135deg,#caa23a,#8a6d1e);color:#1a1300}
+  .pillbar{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}
+  table{width:100%;border-collapse:collapse;margin-top:6px;font-size:13px}
+  th,td{padding:9px 8px;text-align:right;border-bottom:1px solid var(--line)}
+  th{color:var(--mut);font-weight:600;font-size:12px}
+  tr:last-child td{border-bottom:none}
+  .code{font-family:"Courier New",monospace;font-weight:700;color:#bcd6ff;letter-spacing:.5px}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700}
+  .tag.on{background:rgba(46,204,113,.15);color:var(--ok);border:1px solid rgba(46,204,113,.4)}
+  .tag.off{background:rgba(255,91,110,.13);color:var(--bad);border:1px solid rgba(255,91,110,.4)}
+  .tag.exp{background:rgba(255,176,32,.13);color:var(--warn);border:1px solid rgba(255,176,32,.4)}
+  .switch{position:relative;display:inline-block;width:52px;height:28px}
+  .switch input{opacity:0;width:0;height:0}
+  .slider{position:absolute;inset:0;background:#3a2030;border-radius:28px;transition:.2s}
+  .slider:before{content:"";position:absolute;height:22px;width:22px;right:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+  .switch input:checked+.slider{background:var(--ok)}
+  .switch input:checked+.slider:before{transform:translateX(-24px)}
+  .masterbox{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .muted{color:var(--mut);font-size:12px}
+  textarea{width:100%;min-height:120px;background:#030a1c;border:1px solid var(--line);color:#bcd6ff;border-radius:10px;padding:11px;font-family:"Courier New",monospace;font-size:12px;resize:vertical}
+  .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#0d2a5e;border:1px solid var(--blue);color:#fff;padding:11px 18px;border-radius:30px;font-size:14px;opacity:0;transition:.3s;pointer-events:none;z-index:99;max-width:90%;text-align:center}
+  .toast.show{opacity:1}
+  .empty{text-align:center;color:var(--mut);padding:22px;font-size:14px}
+  details{margin-top:8px}
+  summary{cursor:pointer;color:var(--mut);font-size:13px;padding:6px 0}
+  .warnbox{background:rgba(255,176,32,.08);border:1px solid rgba(255,176,32,.35);border-radius:9px;padding:9px 11px;font-size:12px;color:#ffd98a;margin-top:8px}
+  .devs{font-size:11px;color:var(--mut);max-width:180px;word-break:break-all}
+  .pts{font-weight:800;color:var(--gold);font-size:17px}
+  .ptsbig{font-size:26px;font-weight:800;color:var(--gold)}
+  .tabs{display:flex;gap:8px;margin-bottom:12px}
+  .tabs button{flex:1;background:var(--blue2);border:1px solid var(--line)}
+  .tabs button.act{background:var(--blue)}
+  .idbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:14px}
+  .hide{display:none!important}
+  @media(max-width:620px){.hidem{display:none}th,td{padding:7px 4px;font-size:12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🛡️ لوحة تحكم A&amp;S Live</h1>
+  <div class="sub">إدارة رموز التفعيل، النقاط، والوكلاء.</div>
+
+  <!-- شريط الهوية -->
+  <div class="idbar" id="idbar">
+    <div id="whoami">—</div>
+    <div style="display:flex;gap:8px">
+      <button class="sm ghost" onclick="reloadLive()">🔄 تحديث</button>
+      <button class="sm ghost" id="logoutBtn" onclick="logout()">🔑 تبديل الدخول</button>
+    </div>
+  </div>
+
+  <!-- شاشة الدخول -->
+  <div class="card" id="loginCard">
+    <div class="tabs">
+      <button id="tabOwner" class="act" onclick="setTab('owner')">👑 مالك</button>
+      <button id="tabAgent" onclick="setTab('agent')">🧑‍💼 وكيل</button>
+    </div>
+    <div id="ownerLogin">
+      <label>توكن GitHub (للنشر — صلاحية Contents: Read &amp; Write)</label>
+      <input id="ownerToken" type="password" placeholder="github_pat_..." autocomplete="off">
+      <div class="muted" style="margin-top:4px">يُحفظ بمتصفحك فقط. تقدر تدخل بدون توكن للعرض، بس تحتاجه للنشر.</div>
+      <div class="pillbar"><button onclick="loginOwner()">دخول كمالك</button></div>
+    </div>
+    <div id="agentLogin" class="hide">
+      <div class="row">
+        <div><label>معرّف الوكيل</label><input id="agId" placeholder="AG01"></div>
+        <div><label>الرمز السري</label><input id="agPin" type="password" placeholder="••••"></div>
+      </div>
+      <label>توكن GitHub (يعطيك إياه المالك)</label>
+      <input id="agToken" type="password" placeholder="github_pat_..." autocomplete="off">
+      <div class="pillbar"><button onclick="loginAgent()">دخول كوكيل</button></div>
+    </div>
+  </div>
+
+  <!-- ===== المحتوى بعد الدخول ===== -->
+  <div id="main" class="hide">
+
+    <!-- النقاط -->
+    <div class="card">
+      <div class="masterbox">
+        <div>
+          <div class="muted">رصيد نقاطك</div>
+          <div class="ptsbig" id="ptsVal">0</div>
+          <div class="muted">اشتراك بصلاحية = نقطة · مدى الحياة = نقطتان</div>
+        </div>
+        <button class="gold owner-only" onclick="chargeOwner()">➕ شحن نقاط</button>
+      </div>
+    </div>
+
+    <!-- حالة النظام (مالك فقط) -->
+    <div class="card owner-only">
+      <h2>⚙️ حالة نظام التفعيل</h2>
+      <div class="masterbox">
+        <div>
+          <div style="font-weight:700;font-size:15px" id="masterLabel">—</div>
+          <div class="muted">عند الإطفاء يشتغل التطبيق للجميع بدون رمز. عند التشغيل يُطلب رمز من كل مستخدم.</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="masterSw"><span class="slider"></span></label>
+      </div>
+    </div>
+
+    <!-- إضافة رمز -->
+    <div class="card">
+      <h2>➕ إضافة رمز تفعيل</h2>
+      <div class="row">
+        <div>
+          <label>رمز التفعيل</label>
+          <div style="display:flex;gap:8px">
+            <input id="newCode" placeholder="AS-XXXX-XXXX">
+            <button class="ghost sm" onclick="gen()" style="white-space:nowrap">🎲 توليد</button>
+          </div>
+        </div>
+        <div><label>اسم الزبون (اختياري)</label><input id="newNote" placeholder="مثال: أبو علي"></div>
+      </div>
+      <div class="row">
+        <div>
+          <label>مدة الاشتراك</label>
+          <select id="newDur" onchange="durChange()">
+            <option value="30">شهر (30 يوم)</option>
+            <option value="90">3 أشهر</option>
+            <option value="180">6 أشهر</option>
+            <option value="365">سنة</option>
+            <option value="0">مدى الحياة</option>
+            <option value="custom">تاريخ محدد…</option>
+          </select>
+        </div>
+        <div id="customDateBox" class="hide"><label>تاريخ الانتهاء</label><input type="date" id="newExpiry"></div>
+        <div><label>عدد الأجهزة المسموحة</label><input type="number" id="newMax" value="1" min="1" max="20"></div>
+      </div>
+      <div class="pillbar">
+        <button onclick="addCode()">➕ إضافة الرمز (<span id="costHint">نقطة</span>)</button>
+      </div>
+      <div class="warnbox">💡 ربط الأجهزة يدوي: الزبون يشوف «معرّف الجهاز» بالتطبيق ويرسله لك، تضيفه من زر 📱. فارغ = أي جهاز. زر 🔄 يحوّل الاشتراك لجهاز جديد.</div>
+    </div>
+
+    <!-- جدول الرموز -->
+    <div class="card">
+      <h2>📋 الرموز (<span id="cnt">0</span>)</h2>
+      <div style="overflow-x:auto">
+        <table id="tbl">
+          <thead><tr>
+            <th>الرمز</th><th>الزبون</th><th>الحالة</th><th>ينتهي</th>
+            <th class="hidem">أجهزة</th><th class="hidem owner-only">الوكيل</th><th>تحكم</th>
+          </tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div class="empty" id="empty">لا توجد رموز بعد.</div>
+    </div>
+
+    <!-- الوكلاء (مالك فقط) -->
+    <div class="card owner-only">
+      <h2>🧑‍💼 الوكلاء (<span id="agCnt">0</span>)</h2>
+      <div class="row">
+        <div><label>اسم الوكيل</label><input id="agNewName" placeholder="مثال: وكيل بغداد"></div>
+        <div><label>رمز سري</label><input id="agNewPin" placeholder="1234"></div>
+        <div><label>نقاط ابتدائية</label><input type="number" id="agNewPts" value="10" min="0"></div>
+      </div>
+      <div class="pillbar"><button onclick="addAgent()">➕ إضافة وكيل</button></div>
+      <div style="overflow-x:auto">
+        <table id="agTbl" class="hide">
+          <thead><tr><th>المعرّف</th><th>الاسم</th><th>النقاط</th><th>رموزه</th><th>تحكم</th></tr></thead>
+          <tbody id="agBody"></tbody>
+        </table>
+      </div>
+      <div class="empty" id="agEmpty">لا يوجد وكلاء بعد.</div>
+    </div>
+
+    <!-- النشر -->
+    <div class="card">
+      <h2>💾 نشر التغييرات</h2>
+      <p class="muted">أي تعديل لازم يُنشر حتى يشتغل بالتطبيق.</p>
+      <div class="pillbar">
+        <button onclick="pushGit()">🚀 نشر على GitHub</button>
+        <button class="ghost" onclick="toggleManual()">📋 نسخ يدوي</button>
+      </div>
+      <div id="manualBox" class="hide">
+        <textarea id="out" readonly></textarea>
+        <div class="pillbar"><button class="ghost" onclick="copyOut()">📋 نسخ المحتوى</button></div>
+        <div class="muted">ضعه بملف <code>license.json</code> بالمستودع فرع <code>as-player-apk</code>.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="sub" style="text-align:center;opacity:.6">A&amp;S Live · تطوير علي جمال العامري</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const REPO="ali1990132-ctrl/Kara-Pro-IPTV", BRANCH="as-player-apk", FILE="license.json";
+const RAW="https://raw.githubusercontent.com/"+REPO+"/"+BRANCH+"/"+FILE;
+let data={enabled:false,owner:{points:0},agents:{},codes:{}};
+let role="owner", agentId="", token="";
+
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function rnd(n){let s='',c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';for(let i=0;i<n;i++)s+=c[Math.floor(Math.random()*c.length)];return s}
+function gen(){document.getElementById('newCode').value='AS-'+rnd(4)+'-'+rnd(4)}
+function addDays(n){const d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+function isExpired(e){if(!e)return false;return Date.now()>new Date(e).getTime()+86400000}
+function norm(){data.owner=data.owner||{points:0};if(typeof data.owner.points!=='number')data.owner.points=0;data.agents=data.agents||{};data.codes=data.codes||{}}
+
+/* ===== نقاط ===== */
+function costOf(expiry){return expiry?1:2}
+function myPoints(){return role==='owner'?(data.owner.points||0):((data.agents[agentId]||{}).points||0)}
+function setPoints(n){if(role==='owner')data.owner.points=n;else data.agents[agentId].points=n}
+function durChange(){
+  const d=document.getElementById('newDur').value;
+  document.getElementById('customDateBox').classList.toggle('hide',d!=='custom');
+  document.getElementById('costHint').textContent=(d==='0')?'نقطتان':'نقطة';
+}
+function chargeOwner(){const v=prompt('كم نقطة تضيف لرصيدك؟','10');if(v===null)return;const n=parseInt(v)||0;data.owner.points=(data.owner.points||0)+n;render();toast('تمت إضافة '+n+' نقطة — انشر للحفظ')}
+
+/* ===== رموز ===== */
+function addCode(){
+  const code=document.getElementById('newCode').value.trim();
+  if(!code){toast('اكتب الرمز أو اضغط توليد');return}
+  if(data.codes[code]){toast('الرمز موجود مسبقاً');return}
+  const dur=document.getElementById('newDur').value;
+  let expiry='';
+  if(dur==='custom')expiry=document.getElementById('newExpiry').value||'';
+  else if(dur!=='0')expiry=addDays(parseInt(dur));
+  const cost=costOf(expiry);
+  if(myPoints()<cost){toast('نقاطك لا تكفي ('+myPoints()+'). تحتاج '+cost+' — '+(role==='owner'?'اشحن رصيدك':'راجع المالك'));return}
+  const max=Math.max(1,parseInt(document.getElementById('newMax').value)||1);
+  data.codes[code]={status:'active',expiry:expiry,maxDevices:max,devices:[],note:document.getElementById('newNote').value.trim(),agent:role==='owner'?'owner':agentId,cost:cost,created:addDays(0)};
+  setPoints(myPoints()-cost);
+  document.getElementById('newCode').value='';document.getElementById('newNote').value='';
+  render();toast('تمت إضافة الرمز ✔ (-'+cost+' نقطة) — لا تنسَ النشر');
+}
+function toggle(code){const c=data.codes[code];c.status=c.status==='active'?'disabled':'active';render();toast(c.status==='active'?'تم التفعيل':'تم الإيقاف')}
+function del(code){if(confirm('حذف الرمز '+code+'؟')){delete data.codes[code];render();toast('تم الحذف — انشر للحفظ')}}
+function copyCode(code){navigator.clipboard&&navigator.clipboard.writeText(code);toast('تم نسخ الرمز: '+code)}
+function transfer(code){
+  const c=data.codes[code];
+  if(!c.devices||!c.devices.length){toast('ما مربوط بأي جهاز أصلاً');return}
+  if(confirm('تحويل اشتراك '+code+' لجهاز جديد؟\nراح تُلغى الأجهزة الحالية ('+c.devices.length+') ويقدر يفعّل على جهاز جديد.')){
+    c.devices=[];render();toast('تم التحويل ✔ — يقدر يفعّل على جهاز جديد (انشر)')
+  }
+}
+function devs(code){
+  const c=data.codes[code];const cur=(c.devices||[]).join('\n');
+  const v=prompt('معرّفات الأجهزة للرمز '+code+' (كل جهاز بسطر).\nالحد: '+c.maxDevices+'. فارغ = أي جهاز.',cur);
+  if(v===null)return;
+  let list=v.split(/[\n,]/).map(s=>s.trim().toUpperCase()).filter(Boolean);
+  if(list.length>c.maxDevices){toast('تجاوزت الحد ('+c.maxDevices+')');list=list.slice(0,c.maxDevices)}
+  c.devices=list;render();toast('تم تحديث الأجهزة ('+list.length+')')
+}
+function editExp(code){const c=data.codes[code];const v=prompt('تاريخ انتهاء '+code+' (YYYY-MM-DD) — فارغ = مدى الحياة:',c.expiry||'');if(v===null)return;c.expiry=v.trim();render();toast('تم تحديث الصلاحية')}
+
+/* ===== وكلاء ===== */
+function addAgent(){
+  const name=document.getElementById('agNewName').value.trim();
+  const pin=document.getElementById('agNewPin').value.trim();
+  const pts=Math.max(0,parseInt(document.getElementById('agNewPts').value)||0);
+  if(!name||!pin){toast('اكتب اسم الوكيل والرمز السري');return}
+  let i=1,id;do{id='AG'+String(i).padStart(2,'0');i++}while(data.agents[id]);
+  data.agents[id]={name:name,pin:pin,points:pts};
+  document.getElementById('agNewName').value='';document.getElementById('agNewPin').value='';
+  render();toast('تمت إضافة الوكيل '+id+' — انشر للحفظ')
+}
+function agPts(id){const v=prompt('كم نقطة تضيف للوكيل '+id+'؟ (سالب = خصم)','10');if(v===null)return;const n=parseInt(v)||0;data.agents[id].points=Math.max(0,(data.agents[id].points||0)+n);render();toast('رصيد '+id+': '+data.agents[id].points)}
+function agPin(id){const v=prompt('رمز سري جديد للوكيل '+id+':',data.agents[id].pin||'');if(v===null)return;data.agents[id].pin=v.trim();render();toast('تم تغيير الرمز السري')}
+function agExport(id){
+  const a=data.agents[id];const url=location.origin+location.pathname;
+  const inc=confirm('تضمّن التوكن بالتصدير؟\nموافق = يُضمّن (أسهل للوكيل).\nإلغاء = بدون توكن (أأمن).');
+  const block='🔗 لوحة الوكيل A&S Live\n'+url+'\n\nمعرّف الوكيل: '+id+'\nالرمز السري: '+a.pin+'\nنقاطك: '+(a.points||0)+'\nالتوكن: '+(inc?(token||'(غير متوفر — سجّل دخول المالك بالتوكن)'):'اطلبه من المالك');
+  navigator.clipboard&&navigator.clipboard.writeText(block);
+  toast('تم نسخ بيانات الوكيل — أرسلها له');
+  alert(block);
+}
+function agDel(id){if(confirm('حذف الوكيل '+id+'؟ (رموزه تبقى شغّالة)')){delete data.agents[id];render();toast('تم حذف الوكيل')}}
+
+/* ===== عرض ===== */
+function render(){
+  norm();
+  document.getElementById('ptsVal').textContent=myPoints();
+  // master
+  const sw=document.getElementById('masterSw');if(sw){sw.checked=!!data.enabled;document.getElementById('masterLabel').textContent=data.enabled?'🟢 النظام مُفعّل — التطبيق يطلب رمز':'🔴 النظام مُطفأ — التطبيق مفتوح للجميع';}
+  // codes
+  const visCodes=Object.keys(data.codes).filter(k=>role==='owner'||data.codes[k].agent===agentId);
+  document.getElementById('cnt').textContent=visCodes.length;
+  const tb=document.getElementById('tbody');tb.innerHTML='';
+  document.getElementById('empty').style.display=visCodes.length?'none':'block';
+  document.getElementById('tbl').style.display=visCodes.length?'table':'none';
+  visCodes.forEach(code=>{
+    const c=data.codes[code];let st,cls;
+    if(c.status!=='active'){st='موقوف';cls='off'}else if(isExpired(c.expiry)){st='منتهي';cls='exp'}else{st='فعّال';cls='on'}
+    const dn=(c.devices||[]).length;
+    const ownerCol=role==='owner'?'<td class="hidem">'+(c.agent==='owner'?'—':esc(c.agent))+'</td>':'';
+    const tr=document.createElement('tr');
+    tr.innerHTML='<td><span class="code">'+esc(code)+'</span></td>'+
+      '<td>'+(esc(c.note)||'—')+'</td>'+
+      '<td><span class="tag '+cls+'">'+st+'</span></td>'+
+      '<td onclick="editExp(\''+code+'\')" style="cursor:pointer" title="تعديل">'+(c.expiry||'∞')+'</td>'+
+      '<td class="hidem"><span class="devs">'+dn+'/'+c.maxDevices+'</span></td>'+ownerCol+
+      '<td style="white-space:nowrap">'+
+        '<button class="sm ghost" onclick="copyCode(\''+code+'\')">📋</button> '+
+        '<button class="sm ghost" onclick="transfer(\''+code+'\')">🔄</button> '+
+        '<button class="sm ghost" onclick="devs(\''+code+'\')">📱</button> '+
+        '<button class="sm ghost" onclick="toggle(\''+code+'\')">'+(c.status==='active'?'⏸':'▶')+'</button> '+
+        '<button class="sm danger" onclick="del(\''+code+'\')">🗑</button>'+
+      '</td>';
+    tb.appendChild(tr);
+  });
+  // agents
+  if(role==='owner'){
+    const ids=Object.keys(data.agents);
+    document.getElementById('agCnt').textContent=ids.length;
+    const ab=document.getElementById('agBody');ab.innerHTML='';
+    document.getElementById('agEmpty').style.display=ids.length?'none':'block';
+    document.getElementById('agTbl').classList.toggle('hide',!ids.length);
+    ids.forEach(id=>{const a=data.agents[id];const used=Object.values(data.codes).filter(c=>c.agent===id).length;
+      const tr=document.createElement('tr');
+      tr.innerHTML='<td><span class="code">'+id+'</span></td><td>'+esc(a.name)+'</td>'+
+        '<td><span class="pts">'+(a.points||0)+'</span></td><td>'+used+'</td>'+
+        '<td style="white-space:nowrap">'+
+          '<button class="sm gold" onclick="agPts(\''+id+'\')">➕ نقاط</button> '+
+          '<button class="sm ghost" onclick="agExport(\''+id+'\')">📤 تصدير</button> '+
+          '<button class="sm ghost" onclick="agPin(\''+id+'\')">🔑</button> '+
+          '<button class="sm danger" onclick="agDel(\''+id+'\')">🗑</button>'+
+        '</td>';
+      ab.appendChild(tr);
+    });
+  }
+  const o=document.getElementById('out');if(o)o.value=JSON.stringify(data,null,2);
+}
+
+/* ===== دخول ===== */
+function setTab(t){
+  document.getElementById('tabOwner').classList.toggle('act',t==='owner');
+  document.getElementById('tabAgent').classList.toggle('act',t==='agent');
+  document.getElementById('ownerLogin').classList.toggle('hide',t!=='owner');
+  document.getElementById('agentLogin').classList.toggle('hide',t!=='agent');
+}
+function showMain(){
+  document.getElementById('loginCard').classList.add('hide');
+  document.getElementById('main').classList.remove('hide');
+  document.getElementById('idbar').style.display='flex';
+  document.querySelectorAll('.owner-only').forEach(e=>e.classList.toggle('hide',role!=='owner'));
+  document.getElementById('whoami').innerHTML=role==='owner'?'👑 <b>وضع المالك</b>':'🧑‍💼 <b>'+esc((data.agents[agentId]||{}).name||agentId)+'</b> · <span class="muted">'+agentId+'</span>';
+  durChange();render();
+}
+async function loginOwner(){
+  role='owner';token=document.getElementById('ownerToken').value.trim();
+  if(token)localStorage.setItem('as_tok',token);
+  await reloadLive(true);showMain();
+}
+async function loginAgent(){
+  const id=document.getElementById('agId').value.trim().toUpperCase();
+  const pin=document.getElementById('agPin').value.trim();
+  token=document.getElementById('agToken').value.trim();
+  await reloadLive(true);
+  if(!data.agents[id]){toast('معرّف الوكيل غير موجود');return}
+  if((data.agents[id].pin||'')!==pin){toast('الرمز السري غير صحيح');return}
+  role='agent';agentId=id;
+  if(token)localStorage.setItem('as_tok_'+id,token);
+  showMain();
+}
+function logout(){document.getElementById('main').classList.add('hide');document.getElementById('loginCard').classList.remove('hide');document.getElementById('idbar').style.display='none';}
+
+async function reloadLive(silent){
+  try{const r=await fetch(RAW+'?t='+Date.now());if(r.ok){const j=await r.json();if(j&&typeof j==='object'){data={enabled:!!j.enabled,owner:j.owner||{points:0},agents:j.agents||{},codes:j.codes||{}}}}}catch(e){}
+  norm();if(!silent){render();toast('تم التحديث من GitHub')}
+}
+function toggleManual(){const b=document.getElementById('manualBox');b.classList.toggle('hide');if(!b.classList.contains('hide'))document.getElementById('out').value=JSON.stringify(data,null,2)}
+function copyOut(){const t=document.getElementById('out');t.select();navigator.clipboard&&navigator.clipboard.writeText(t.value);toast('تم النسخ ✔')}
+
+/* ===== نشر (دمج آمن) ===== */
+async function pushGit(){
+  if(!token){toast('تحتاج توكن للنشر — سجّل الدخول بالتوكن');return}
+  const api='https://api.github.com/repos/'+REPO+'/contents/'+FILE;
+  try{
+    let sha=null,base={enabled:false,owner:{points:0},agents:{},codes:{}};
+    const g=await fetch(api+'?ref='+BRANCH,{headers:{Authorization:'Bearer '+token,Accept:'application/vnd.github+json'}});
+    if(g.ok){const gj=await g.json();sha=gj.sha;try{base=JSON.parse(decodeURIComponent(escape(atob(gj.content.replace(/\n/g,'')))))}catch(e){}}
+    base.owner=base.owner||{points:0};base.agents=base.agents||{};base.codes=base.codes||{};
+    let merged;
+    if(role==='owner'){ merged=data; }
+    else{
+      merged=base;
+      if(merged.agents[agentId])merged.agents[agentId].points=data.agents[agentId].points;
+      Object.keys(data.codes).forEach(k=>{if(data.codes[k].agent===agentId)merged.codes[k]=data.codes[k]});
+      Object.keys(merged.codes).forEach(k=>{if(merged.codes[k].agent===agentId&&!data.codes[k])delete merged.codes[k]});
+    }
+    const body=JSON.stringify(merged,null,2);
+    const content=btoa(unescape(encodeURIComponent(body)));
+    const p=await fetch(api,{method:'PUT',headers:{Authorization:'Bearer '+token,Accept:'application/vnd.github+json','Content-Type':'application/json'},
+      body:JSON.stringify({message:'update license.json ('+role+(role==='agent'?' '+agentId:'')+')',content:content,branch:BRANCH,sha:sha})});
+    if(p.ok){data=merged;norm();render();toast('✅ تم النشر بنجاح')}
+    else{const e=await p.json();toast('فشل النشر: '+(e.message||p.status))}
+  }catch(e){toast('خطأ بالاتصال: '+e.message)}
+}
+
+/* init */
+(function(){
+  const tk=localStorage.getItem('as_tok');if(tk)document.getElementById('ownerToken').value=tk;
+  document.getElementById('idbar').style.display='none';
+  const sw=document.getElementById('masterSw');
+  if(sw)sw.onchange=function(){data.enabled=this.checked;render();toast(this.checked?'شغّلت النظام — انشر الآن':'أطفأت النظام — انشر الآن')};
+  reloadLive(true);
+})();
+</script>
+</body>
+</html>
