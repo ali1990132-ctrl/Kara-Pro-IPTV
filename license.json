@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "note": "enabled=false يعني التطبيق مفتوح للجميع بدون رمز. شغّله من اللوحة عند الجاهزية.",
   "owner": {
     "points": 0
