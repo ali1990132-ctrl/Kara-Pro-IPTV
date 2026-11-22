@@ -1,7 +1,20 @@
 {
   "enabled": false,
   "note": "enabled=false يعني التطبيق مفتوح للجميع بدون رمز. شغّله من اللوحة عند الجاهزية.",
-  "owner": { "points": 0 },
+  "owner": {
+    "points": 0
+  },
   "agents": {},
-  "codes": {}
+  "codes": {
+    "AS-25B8-N252": {
+      "status": "active",
+      "expiry": "2027-11-22",
+      "maxDevices": 1,
+      "devices": [],
+      "note": "كارة",
+      "agent": "owner",
+      "cost": 1,
+      "created": "2026-11-22"
+    }
+  }
 }
