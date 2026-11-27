@@ -112,6 +112,19 @@
       </div>
     </div>
 
+    <!-- واتساب وشعار المتجر -->
+    <div class="card">
+      <h2>📱 واتساب وشعار متجرك</h2>
+      <div class="muted" style="margin-bottom:6px">يظهران للزبون اللي يفعّل برمزك (بنافذة الأسعار وقسم الحساب).</div>
+      <div class="row">
+        <div><label>رقم واتساب</label><input id="brWa" placeholder="07901234567"></div>
+      </div>
+      <label>رابط شعار المتجر (صورة PNG/JPG)</label>
+      <input id="brLogo" placeholder="https://.../logo.png" oninput="brandPrev()">
+      <div id="brPrev" style="margin-top:8px"></div>
+      <div class="pillbar"><button onclick="saveBrand()">💾 حفظ العلامة</button></div>
+    </div>
+
     <!-- حالة النظام (مالك فقط) -->
     <div class="card owner-only">
       <h2>⚙️ حالة نظام التفعيل</h2>
@@ -191,6 +204,30 @@
       <div class="empty" id="agEmpty">لا يوجد وكلاء بعد.</div>
     </div>
 
+    <!-- طرق الدفع والأسعار -->
+    <div class="card">
+      <h2>💳 طرق الدفع والأسعار</h2>
+      <div class="muted" style="margin-bottom:8px">تظهر داخل التطبيق لكل الزبائن. (مشتركة للجميع)</div>
+
+      <div style="font-weight:700;margin:6px 0 2px">📦 باقات الاشتراك</div>
+      <div id="planBox"></div>
+      <div class="pillbar"><button class="ghost sm" onclick="addPlan()">➕ باقة</button></div>
+
+      <div style="font-weight:700;margin:14px 0 2px">💵 طرق الدفع وأرقامها</div>
+      <div id="payBox"></div>
+      <div class="pillbar"><button class="ghost sm" onclick="addPay()">➕ طريقة دفع</button></div>
+
+      <div class="pillbar" style="margin-top:14px">
+        <button onclick="pushPrices()">🚀 نشر الأسعار</button>
+        <button class="ghost" onclick="togglePManual()">📋 نسخ يدوي</button>
+      </div>
+      <div id="pManualBox" class="hide">
+        <textarea id="pOut" readonly></textarea>
+        <div class="pillbar"><button class="ghost" onclick="copyPOut()">📋 نسخ المحتوى</button></div>
+        <div class="muted">ضعه بملف <code>prices.json</code> بالمستودع فرع <code>as-player-apk</code>.</div>
+      </div>
+    </div>
+
     <!-- النشر -->
     <div class="card">
       <h2>💾 نشر التغييرات</h2>
@@ -215,7 +252,10 @@
 <script>
 const REPO="ali1990132-ctrl/Kara-Pro-IPTV", BRANCH="as-player-apk", FILE="license.json";
 const RAW="https://raw.githubusercontent.com/"+REPO+"/"+BRANCH+"/"+FILE;
+const PFILE="prices.json";
+const PRAW="https://raw.githubusercontent.com/"+REPO+"/"+BRANCH+"/"+PFILE;
 let data={enabled:false,owner:{points:0},agents:{},codes:{}};
+let prices={plans:[],payment:[]};
 let role="owner", agentId="", token="";
 
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
@@ -287,6 +327,12 @@ function addAgent(){
 }
 function agPts(id){const v=prompt('كم نقطة تضيف للوكيل '+id+'؟ (سالب = خصم)','10');if(v===null)return;const n=parseInt(v)||0;data.agents[id].points=Math.max(0,(data.agents[id].points||0)+n);render();toast('رصيد '+id+': '+data.agents[id].points)}
 function agPin(id){const v=prompt('رمز سري جديد للوكيل '+id+':',data.agents[id].pin||'');if(v===null)return;data.agents[id].pin=v.trim();render();toast('تم تغيير الرمز السري')}
+function agBrand(id){const a=data.agents[id];const w=prompt('رقم واتساب الوكيل '+id+':',a.whatsapp||'');if(w===null)return;const l=prompt('رابط شعار متجر الوكيل '+id+' (صورة):',a.logo||'');if(l===null)return;a.whatsapp=w.trim();a.logo=l.trim();render();toast('تم تحديث علامة '+id+' — انشر للحفظ')}
+/* علامة المالك/الوكيل الحالي */
+function brandObj(){if(role==='owner'){data.owner=data.owner||{points:0};return data.owner}data.agents[agentId]=data.agents[agentId]||{};return data.agents[agentId]}
+function fillBrand(){const o=brandObj();const w=document.getElementById('brWa'),l=document.getElementById('brLogo');if(w)w.value=o.whatsapp||'';if(l)l.value=o.logo||'';brandPrev()}
+function brandPrev(){const l=document.getElementById('brLogo'),p=document.getElementById('brPrev');if(!p||!l)return;const u=l.value.trim();p.innerHTML=u?('<img src="'+u.replace(/"/g,'&quot;')+'" style="max-height:70px;border-radius:8px;border:1px solid var(--line)" onerror="this.style.opacity=.3">'):''}
+function saveBrand(){const o=brandObj();o.whatsapp=document.getElementById('brWa').value.trim();o.logo=document.getElementById('brLogo').value.trim();brandPrev();if(o.logo||o.whatsapp)renderPrices&&0;toast('تم الحفظ محلياً — اضغط نشر')}
 function agExport(id){
   const a=data.agents[id];const url=location.origin+location.pathname;
   const inc=confirm('تضمّن التوكن بالتصدير؟\nموافق = يُضمّن (أسهل للوكيل).\nإلغاء = بدون توكن (أأمن).');
@@ -342,7 +388,7 @@ function render(){
         '<td><span class="pts">'+(a.points||0)+'</span></td><td>'+used+'</td>'+
         '<td style="white-space:nowrap">'+
           '<button class="sm gold" onclick="agPts(\''+id+'\')">➕ نقاط</button> '+
-          '<button class="sm ghost" onclick="agExport(\''+id+'\')">📤 تصدير</button> '+
+          '<button class="sm ghost" onclick="agBrand(\''+id+'\')">📱 علامة</button> '+'<button class="sm ghost" onclick="agExport(\''+id+'\')">📤 تصدير</button> '+
           '<button class="sm ghost" onclick="agPin(\''+id+'\')">🔑</button> '+
           '<button class="sm danger" onclick="agDel(\''+id+'\')">🗑</button>'+
         '</td>';
@@ -365,7 +411,7 @@ function showMain(){
   document.getElementById('idbar').style.display='flex';
   document.querySelectorAll('.owner-only').forEach(e=>e.classList.toggle('hide',role!=='owner'));
   document.getElementById('whoami').innerHTML=role==='owner'?'👑 <b>وضع المالك</b>':'🧑‍💼 <b>'+esc((data.agents[agentId]||{}).name||agentId)+'</b> · <span class="muted">'+agentId+'</span>';
-  durChange();render();
+  durChange();render();renderPrices();fillBrand();
 }
 async function loginOwner(){
   role='owner';token=document.getElementById('ownerToken').value.trim();
@@ -387,7 +433,54 @@ function logout(){document.getElementById('main').classList.add('hide');document
 
 async function reloadLive(silent){
   try{const r=await fetch(RAW+'?t='+Date.now());if(r.ok){const j=await r.json();if(j&&typeof j==='object'){data={enabled:!!j.enabled,owner:j.owner||{points:0},agents:j.agents||{},codes:j.codes||{}}}}}catch(e){}
+  try{const r2=await fetch(PRAW+'?t='+Date.now());if(r2.ok){const j2=await r2.json();if(j2&&typeof j2==='object'){prices={plans:Array.isArray(j2.plans)?j2.plans:[],payment:Array.isArray(j2.payment)?j2.payment:[]}}}}catch(e){}
   norm();if(!silent){render();toast('تم التحديث من GitHub')}
+}
+
+/* ===== طرق الدفع والأسعار ===== */
+function splitPay(s){const m=String(s||'').split(/\s[—:-]\s/);return {method:m[0]||'',number:m.slice(1).join(' - ')||''}}
+function joinPay(method,number){method=method.trim();number=number.trim();return number?(method+' — '+number):method}
+function renderPrices(){
+  const pb=document.getElementById('planBox');if(!pb)return;
+  prices.plans=prices.plans||[];prices.payment=prices.payment||[];
+  pb.innerHTML='';
+  prices.plans.forEach((p,i)=>{
+    const d=document.createElement('div');d.className='row';d.style.marginBottom='6px';
+    d.innerHTML='<div style="flex:2"><input placeholder="اسم الباقة" value="'+esc(p.name||'')+'" oninput="prices.plans['+i+'].name=this.value;syncPOut()"></div>'+
+      '<div style="flex:1"><input placeholder="السعر" value="'+esc(p.price||'')+'" oninput="prices.plans['+i+'].price=this.value;syncPOut()"></div>'+
+      '<div style="flex:0 0 auto"><button class="sm danger" onclick="prices.plans.splice('+i+',1);renderPrices()">🗑</button></div>';
+    pb.appendChild(d);
+  });
+  const yb=document.getElementById('payBox');yb.innerHTML='';
+  prices.payment.forEach((s,i)=>{
+    const sp=splitPay(s);
+    const d=document.createElement('div');d.className='row';d.style.marginBottom='6px';
+    d.innerHTML='<div style="flex:1"><input placeholder="الطريقة (زين كاش)" value="'+esc(sp.method)+'" oninput="prices.payment['+i+']=joinPay(this.value,this.parentNode.parentNode.querySelector(\'.paynum\').value);syncPOut()"></div>'+
+      '<div style="flex:1"><input class="paynum" placeholder="الرقم" value="'+esc(sp.number)+'" oninput="prices.payment['+i+']=joinPay(this.parentNode.parentNode.querySelector(\'input\').value,this.value);syncPOut()"></div>'+
+      '<div style="flex:0 0 auto"><button class="sm danger" onclick="prices.payment.splice('+i+',1);renderPrices()">🗑</button></div>';
+    yb.appendChild(d);
+  });
+  syncPOut();
+}
+function addPlan(){prices.plans=prices.plans||[];prices.plans.push({name:'',price:''});renderPrices()}
+function addPay(){prices.payment=prices.payment||[];prices.payment.push('');renderPrices()}
+function syncPOut(){const o=document.getElementById('pOut');if(o)o.value=JSON.stringify({plans:prices.plans,payment:prices.payment.filter(x=>x&&x.trim())},null,2)}
+function togglePManual(){const b=document.getElementById('pManualBox');b.classList.toggle('hide');syncPOut()}
+function copyPOut(){const t=document.getElementById('pOut');t.select();navigator.clipboard&&navigator.clipboard.writeText(t.value);toast('تم النسخ ✔')}
+async function pushPrices(){
+  if(!token){toast('تحتاج توكن للنشر — سجّل الدخول بالتوكن');return}
+  const out={plans:prices.plans.filter(p=>p.name&&p.name.trim()),payment:prices.payment.filter(x=>x&&x.trim())};
+  const api='https://api.github.com/repos/'+REPO+'/contents/'+PFILE;
+  try{
+    let sha=null;
+    const g=await fetch(api+'?ref='+BRANCH,{headers:{Authorization:'Bearer '+token,Accept:'application/vnd.github+json'}});
+    if(g.ok){const gj=await g.json();sha=gj.sha}
+    const content=btoa(unescape(encodeURIComponent(JSON.stringify(out,null,2))));
+    const p=await fetch(api,{method:'PUT',headers:{Authorization:'Bearer '+token,Accept:'application/vnd.github+json','Content-Type':'application/json'},
+      body:JSON.stringify({message:'update prices.json ('+role+')',content:content,branch:BRANCH,sha:sha})});
+    if(p.ok){toast('✅ تم نشر الأسعار بنجاح')}
+    else{const e=await p.json();toast('فشل النشر: '+(e.message||p.status))}
+  }catch(e){toast('خطأ بالاتصال: '+e.message)}
 }
 function toggleManual(){const b=document.getElementById('manualBox');b.classList.toggle('hide');if(!b.classList.contains('hide'))document.getElementById('out').value=JSON.stringify(data,null,2)}
 function copyOut(){const t=document.getElementById('out');t.select();navigator.clipboard&&navigator.clipboard.writeText(t.value);toast('تم النسخ ✔')}
@@ -405,7 +498,7 @@ async function pushGit(){
     if(role==='owner'){ merged=data; }
     else{
       merged=base;
-      if(merged.agents[agentId])merged.agents[agentId].points=data.agents[agentId].points;
+      if(data.agents[agentId])merged.agents[agentId]=data.agents[agentId];
       Object.keys(data.codes).forEach(k=>{if(data.codes[k].agent===agentId)merged.codes[k]=data.codes[k]});
       Object.keys(merged.codes).forEach(k=>{if(merged.codes[k].agent===agentId&&!data.codes[k])delete merged.codes[k]});
     }
