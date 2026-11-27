@@ -144,6 +144,7 @@
           <div style="display:flex;gap:8px">
             <input id="newCode" placeholder="AS-XXXX-XXXX">
             <button class="ghost sm" onclick="gen()" style="white-space:nowrap">🎲 توليد</button>
+            <button class="ghost sm" onclick="(function(){var v=document.getElementById('newCode').value.trim();if(!v){toast('ماكو رمز');return}navigator.clipboard&&navigator.clipboard.writeText(v);toast('تم نسخ الرمز: '+v)})()" style="white-space:nowrap">📋 نسخ</button>
           </div>
         </div>
         <div><label>اسم الزبون (اختياري)</label><input id="newNote" placeholder="مثال: أبو علي"></div>
@@ -287,7 +288,8 @@ function addCode(){
   data.codes[code]={status:'active',expiry:expiry,maxDevices:max,devices:[],note:document.getElementById('newNote').value.trim(),agent:role==='owner'?'owner':agentId,cost:cost,created:addDays(0)};
   setPoints(myPoints()-cost);
   document.getElementById('newCode').value='';document.getElementById('newNote').value='';
-  render();toast('تمت إضافة الرمز ✔ (-'+cost+' نقطة) — لا تنسَ النشر');
+  try{navigator.clipboard&&navigator.clipboard.writeText(code);}catch(e){}
+  render();toast('تمت الإضافة ونُسخ الرمز: '+code+' (-'+cost+' نقطة) — لا تنسَ النشر');
 }
 function toggle(code){const c=data.codes[code];c.status=c.status==='active'?'disabled':'active';render();toast(c.status==='active'?'تم التفعيل':'تم الإيقاف')}
 function del(code){if(confirm('حذف الرمز '+code+'؟')){delete data.codes[code];render();toast('تم الحذف — انشر للحفظ')}}
