@@ -117,9 +117,11 @@
       <div class="row">
         <div><label>رقم واتساب</label><input id="brWa" placeholder="07901234567"></div>
       </div>
-      <label>رابط شعار المتجر (صورة PNG/JPG)</label>
-      <input id="brLogo" placeholder="https://.../logo.png" oninput="brandPrev()">
+      <label>شعار المتجر (اختر صورة من المعرض)</label>
+      <input type="file" accept="image/*" id="brLogoFile" onchange="onLogoFile(this)">
+      <input type="hidden" id="brLogo">
       <div id="brPrev" style="margin-top:8px"></div>
+      <div class="muted" id="brClear" style="display:none;cursor:pointer;color:#ff8f9b" onclick="document.getElementById('brLogo').value='';brandPrev()">🗑 إزالة الشعار</div>
       <div class="pillbar"><button onclick="saveBrand()">💾 حفظ العلامة</button></div>
     </div>
 
@@ -324,12 +326,31 @@ function addAgent(){
 }
 function agPts(id){const v=prompt('كم نقطة تضيف للوكيل '+id+'؟ (سالب = خصم)','10');if(v===null)return;const n=parseInt(v)||0;data.agents[id].points=Math.max(0,(data.agents[id].points||0)+n);render();toast('رصيد '+id+': '+data.agents[id].points)}
 function agPin(id){const v=prompt('رمز سري جديد للوكيل '+id+':',data.agents[id].pin||'');if(v===null)return;data.agents[id].pin=v.trim();render();toast('تم تغيير الرمز السري')}
-function agBrand(id){const a=data.agents[id];const w=prompt('رقم واتساب الوكيل '+id+':',a.whatsapp||'');if(w===null)return;const l=prompt('رابط شعار متجر الوكيل '+id+' (صورة):',a.logo||'');if(l===null)return;a.whatsapp=w.trim();a.logo=l.trim();render();toast('تم تحديث علامة '+id+' — انشر للحفظ')}
+function agBrand(id){const a=data.agents[id];const w=prompt('رقم واتساب الوكيل '+id+':',a.whatsapp||'');if(w===null)return;a.whatsapp=w.trim();render();toast('تم تحديث واتساب '+id+' — انشر للحفظ. (الشعار يرفعه الوكيل من لوحته)')}
 /* علامة المالك/الوكيل الحالي */
 function brandObj(){if(role==='owner'){data.owner=data.owner||{points:0};return data.owner}data.agents[agentId]=data.agents[agentId]||{};return data.agents[agentId]}
 function fillBrand(){const o=brandObj();const w=document.getElementById('brWa'),l=document.getElementById('brLogo');if(w)w.value=o.whatsapp||'';if(l)l.value=o.logo||'';brandPrev()}
-function brandPrev(){const l=document.getElementById('brLogo'),p=document.getElementById('brPrev');if(!p||!l)return;const u=l.value.trim();p.innerHTML=u?('<img src="'+u.replace(/"/g,'&quot;')+'" style="max-height:70px;border-radius:8px;border:1px solid var(--line)" onerror="this.style.opacity=.3">'):''}
-function saveBrand(){const o=brandObj();o.whatsapp=document.getElementById('brWa').value.trim();o.logo=document.getElementById('brLogo').value.trim();brandPrev();if(o.logo||o.whatsapp)renderPrices&&0;toast('تم الحفظ محلياً — اضغط نشر')}
+function brandPrev(){const l=document.getElementById('brLogo'),p=document.getElementById('brPrev');if(!p||!l)return;const u=l.value.trim();p.innerHTML=u?('<img src="'+u.replace(/"/g,'&quot;')+'" style="max-height:80px;border-radius:8px;border:1px solid var(--line)">'):'';var c=document.getElementById('brClear');if(c)c.style.display=u?'block':'none'}
+function onLogoFile(input){
+  const f=input.files&&input.files[0];if(!f)return;
+  if(f.size>8*1024*1024){toast('الصورة كبيرة جداً');return}
+  const r=new FileReader();
+  r.onload=function(e){
+    const img=new Image();
+    img.onload=function(){
+      let w=img.width,h=img.height,max=320;
+      if(w>h){if(w>max){h=Math.round(h*max/w);w=max}}else{if(h>max){w=Math.round(w*max/h);h=max}}
+      const c=document.createElement('canvas');c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      let data;try{data=c.toDataURL('image/jpeg',0.82)}catch(err){data=e.target.result}
+      document.getElementById('brLogo').value=data;brandPrev();toast('تم اختيار الشعار — اضغط حفظ ثم نشر');
+    };
+    img.onerror=function(){toast('تعذّر قراءة الصورة')};
+    img.src=e.target.result;
+  };
+  r.readAsDataURL(f);
+}
+function saveBrand(){const o=brandObj();o.whatsapp=document.getElementById('brWa').value.trim();o.logo=document.getElementById('brLogo').value.trim();brandPrev();toast('تم الحفظ محلياً — اضغط نشر')}
 function agExport(id){
   const a=data.agents[id];const url=location.origin+location.pathname;
   const block='🔗 لوحة الوكيل A&S Live\n'+url+'\n\nمعرّف الوكيل: '+id+'\nالرمز السري: '+a.pin+'\nنقاطك: '+(a.points||0)+'';
