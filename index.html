@@ -81,9 +81,9 @@
       <button id="tabAgent" onclick="setTab('agent')">🧑‍💼 وكيل</button>
     </div>
     <div id="ownerLogin">
-      <label>توكن GitHub (للنشر — صلاحية Contents: Read &amp; Write)</label>
-      <input id="ownerToken" type="password" placeholder="github_pat_..." autocomplete="off">
-      <div class="muted" style="margin-top:4px">يُحفظ بمتصفحك فقط. تقدر تدخل بدون توكن للعرض، بس تحتاجه للنشر.</div>
+      <label>رمز المالك السري</label>
+      <input id="ownerPin" type="password" placeholder="••••" autocomplete="off">
+      <div class="muted" style="margin-top:4px">أول دخول: اكتب رمزاً جديداً ويُحفظ كرمز المالك. المرات الجاية: نفس الرمز.</div>
       <div class="pillbar"><button onclick="loginOwner()">دخول كمالك</button></div>
     </div>
     <div id="agentLogin" class="hide">
@@ -91,8 +91,6 @@
         <div><label>معرّف الوكيل</label><input id="agId" placeholder="AG01"></div>
         <div><label>الرمز السري</label><input id="agPin" type="password" placeholder="••••"></div>
       </div>
-      <label>توكن GitHub (يعطيك إياه المالك)</label>
-      <input id="agToken" type="password" placeholder="github_pat_..." autocomplete="off">
       <div class="pillbar"><button onclick="loginAgent()">دخول كوكيل</button></div>
     </div>
   </div>
@@ -224,22 +222,22 @@
       <div id="pManualBox" class="hide">
         <textarea id="pOut" readonly></textarea>
         <div class="pillbar"><button class="ghost" onclick="copyPOut()">📋 نسخ المحتوى</button></div>
-        <div class="muted">ضعه بملف <code>prices.json</code> بالمستودع فرع <code>as-player-apk</code>.</div>
+        <div class="muted">نسخة احتياطية من بيانات الأسعار (JSON).</div>
       </div>
     </div>
 
     <!-- النشر -->
     <div class="card">
       <h2>💾 نشر التغييرات</h2>
-      <p class="muted">أي تعديل لازم يُنشر حتى يشتغل بالتطبيق.</p>
+      <p class="muted">أي تعديل لازم تضغط نشر حتى يوصل للتطبيق.</p>
       <div class="pillbar">
-        <button onclick="pushGit()">🚀 نشر على GitHub</button>
+        <button onclick="pushGit()">🚀 نشر التغييرات</button>
         <button class="ghost" onclick="toggleManual()">📋 نسخ يدوي</button>
       </div>
       <div id="manualBox" class="hide">
         <textarea id="out" readonly></textarea>
         <div class="pillbar"><button class="ghost" onclick="copyOut()">📋 نسخ المحتوى</button></div>
-        <div class="muted">ضعه بملف <code>license.json</code> بالمستودع فرع <code>as-player-apk</code>.</div>
+        <div class="muted">نسخة احتياطية من بياناتك (JSON).</div>
       </div>
     </div>
 
@@ -250,13 +248,10 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const REPO="ali1990132-ctrl/Kara-Pro-IPTV", BRANCH="as-player-apk", FILE="license.json";
-const RAW="https://raw.githubusercontent.com/"+REPO+"/"+BRANCH+"/"+FILE;
-const PFILE="prices.json";
-const PRAW="https://raw.githubusercontent.com/"+REPO+"/"+BRANCH+"/"+PFILE;
+const FB="https://as-liverjgf-default-rtdb.europe-west1.firebasedatabase.app";
 let data={enabled:false,owner:{points:0},agents:{},codes:{}};
 let prices={plans:[],payment:[]};
-let role="owner", agentId="", token="";
+let role="owner", agentId="";
 
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
@@ -335,8 +330,7 @@ function brandPrev(){const l=document.getElementById('brLogo'),p=document.getEle
 function saveBrand(){const o=brandObj();o.whatsapp=document.getElementById('brWa').value.trim();o.logo=document.getElementById('brLogo').value.trim();brandPrev();if(o.logo||o.whatsapp)renderPrices&&0;toast('تم الحفظ محلياً — اضغط نشر')}
 function agExport(id){
   const a=data.agents[id];const url=location.origin+location.pathname;
-  const inc=confirm('تضمّن التوكن بالتصدير؟\nموافق = يُضمّن (أسهل للوكيل).\nإلغاء = بدون توكن (أأمن).');
-  const block='🔗 لوحة الوكيل A&S Live\n'+url+'\n\nمعرّف الوكيل: '+id+'\nالرمز السري: '+a.pin+'\nنقاطك: '+(a.points||0)+'\nالتوكن: '+(inc?(token||'(غير متوفر — سجّل دخول المالك بالتوكن)'):'اطلبه من المالك');
+  const block='🔗 لوحة الوكيل A&S Live\n'+url+'\n\nمعرّف الوكيل: '+id+'\nالرمز السري: '+a.pin+'\nنقاطك: '+(a.points||0)+'';
   navigator.clipboard&&navigator.clipboard.writeText(block);
   toast('تم نسخ بيانات الوكيل — أرسلها له');
   alert(block);
@@ -414,27 +408,28 @@ function showMain(){
   durChange();render();renderPrices();fillBrand();
 }
 async function loginOwner(){
-  role='owner';token=document.getElementById('ownerToken').value.trim();
-  if(token)localStorage.setItem('as_tok',token);
-  await reloadLive(true);showMain();
+  const pin=document.getElementById('ownerPin').value.trim();
+  if(!pin){toast('اكتب الرمز السري');return}
+  await reloadLive(true);
+  const stored=(data.owner&&data.owner.pin)||'';
+  if(!stored){ data.owner=data.owner||{points:0}; data.owner.pin=pin;
+    try{await fetch(FB+'/owner/pin.json',{method:'PUT',body:JSON.stringify(pin)});}catch(e){} toast('تم تعيين رمز المالك'); }
+  else if(stored!==pin){ toast('رمز المالك غير صحيح'); return; }
+  role='owner';showMain();
 }
 async function loginAgent(){
   const id=document.getElementById('agId').value.trim().toUpperCase();
   const pin=document.getElementById('agPin').value.trim();
-  token=document.getElementById('agToken').value.trim();
   await reloadLive(true);
   if(!data.agents[id]){toast('معرّف الوكيل غير موجود');return}
   if((data.agents[id].pin||'')!==pin){toast('الرمز السري غير صحيح');return}
-  role='agent';agentId=id;
-  if(token)localStorage.setItem('as_tok_'+id,token);
-  showMain();
+  role='agent';agentId=id;showMain();
 }
 function logout(){document.getElementById('main').classList.add('hide');document.getElementById('loginCard').classList.remove('hide');document.getElementById('idbar').style.display='none';}
 
 async function reloadLive(silent){
-  try{const r=await fetch(RAW+'?t='+Date.now());if(r.ok){const j=await r.json();if(j&&typeof j==='object'){data={enabled:!!j.enabled,owner:j.owner||{points:0},agents:j.agents||{},codes:j.codes||{}}}}}catch(e){}
-  try{const r2=await fetch(PRAW+'?t='+Date.now());if(r2.ok){const j2=await r2.json();if(j2&&typeof j2==='object'){prices={plans:Array.isArray(j2.plans)?j2.plans:[],payment:Array.isArray(j2.payment)?j2.payment:[]}}}}catch(e){}
-  norm();if(!silent){render();toast('تم التحديث من GitHub')}
+  try{const r=await fetch(FB+'/.json');if(r.ok){const j=(await r.json())||{};data={enabled:!!j.enabled,owner:j.owner||{points:0},agents:j.agents||{},codes:j.codes||{}};prices={plans:(j.prices&&Array.isArray(j.prices.plans))?j.prices.plans:[],payment:(j.prices&&Array.isArray(j.prices.payment))?j.prices.payment:[]}}}catch(e){}
+  norm();if(!silent){render();renderPrices();fillBrand();toast('تم التحديث')}
 }
 
 /* ===== طرق الدفع والأسعار ===== */
@@ -468,52 +463,36 @@ function syncPOut(){const o=document.getElementById('pOut');if(o)o.value=JSON.st
 function togglePManual(){const b=document.getElementById('pManualBox');b.classList.toggle('hide');syncPOut()}
 function copyPOut(){const t=document.getElementById('pOut');t.select();navigator.clipboard&&navigator.clipboard.writeText(t.value);toast('تم النسخ ✔')}
 async function pushPrices(){
-  if(!token){toast('تحتاج توكن للنشر — سجّل الدخول بالتوكن');return}
   const out={plans:prices.plans.filter(p=>p.name&&p.name.trim()),payment:prices.payment.filter(x=>x&&x.trim())};
-  const api='https://api.github.com/repos/'+REPO+'/contents/'+PFILE;
   try{
-    let sha=null;
-    const g=await fetch(api+'?ref='+BRANCH,{headers:{Authorization:'Bearer '+token,Accept:'application/vnd.github+json'}});
-    if(g.ok){const gj=await g.json();sha=gj.sha}
-    const content=btoa(unescape(encodeURIComponent(JSON.stringify(out,null,2))));
-    const p=await fetch(api,{method:'PUT',headers:{Authorization:'Bearer '+token,Accept:'application/vnd.github+json','Content-Type':'application/json'},
-      body:JSON.stringify({message:'update prices.json ('+role+')',content:content,branch:BRANCH,sha:sha})});
-    if(p.ok){toast('✅ تم نشر الأسعار بنجاح')}
-    else{const e=await p.json();toast('فشل النشر: '+(e.message||p.status))}
+    const p=await fetch(FB+'/prices.json',{method:'PUT',body:JSON.stringify(out)});
+    if(p.ok){toast('✅ تم نشر الأسعار بنجاح')}else{toast('فشل النشر: '+p.status)}
   }catch(e){toast('خطأ بالاتصال: '+e.message)}
 }
 function toggleManual(){const b=document.getElementById('manualBox');b.classList.toggle('hide');if(!b.classList.contains('hide'))document.getElementById('out').value=JSON.stringify(data,null,2)}
 function copyOut(){const t=document.getElementById('out');t.select();navigator.clipboard&&navigator.clipboard.writeText(t.value);toast('تم النسخ ✔')}
 
-/* ===== نشر (دمج آمن) ===== */
+/* ===== نشر على Firebase ===== */
 async function pushGit(){
-  if(!token){toast('تحتاج توكن للنشر — سجّل الدخول بالتوكن');return}
-  const api='https://api.github.com/repos/'+REPO+'/contents/'+FILE;
   try{
-    let sha=null,base={enabled:false,owner:{points:0},agents:{},codes:{}};
-    const g=await fetch(api+'?ref='+BRANCH,{headers:{Authorization:'Bearer '+token,Accept:'application/vnd.github+json'}});
-    if(g.ok){const gj=await g.json();sha=gj.sha;try{base=JSON.parse(decodeURIComponent(escape(atob(gj.content.replace(/\n/g,'')))))}catch(e){}}
-    base.owner=base.owner||{points:0};base.agents=base.agents||{};base.codes=base.codes||{};
-    let merged;
-    if(role==='owner'){ merged=data; }
-    else{
-      merged=base;
-      if(data.agents[agentId])merged.agents[agentId]=data.agents[agentId];
-      Object.keys(data.codes).forEach(k=>{if(data.codes[k].agent===agentId)merged.codes[k]=data.codes[k]});
-      Object.keys(merged.codes).forEach(k=>{if(merged.codes[k].agent===agentId&&!data.codes[k])delete merged.codes[k]});
+    if(role==='owner'){
+      const body={enabled:!!data.enabled,owner:data.owner,agents:data.agents||{},codes:data.codes||{}};
+      const p=await fetch(FB+'/.json',{method:'PATCH',body:JSON.stringify(body)});
+      if(p.ok){toast('✅ تم النشر بنجاح')}else{toast('فشل النشر: '+p.status)}
+    }else{
+      const upd={};
+      upd['agents/'+agentId]=data.agents[agentId];
+      let live={};try{const r=await fetch(FB+'/codes.json');if(r.ok)live=(await r.json())||{};}catch(e){}
+      Object.keys(data.codes).forEach(k=>{if(data.codes[k].agent===agentId)upd['codes/'+k]=data.codes[k]});
+      Object.keys(live).forEach(k=>{if(live[k]&&live[k].agent===agentId&&!data.codes[k])upd['codes/'+k]=null});
+      const p=await fetch(FB+'/.json',{method:'PATCH',body:JSON.stringify(upd)});
+      if(p.ok){toast('✅ تم النشر بنجاح')}else{toast('فشل النشر: '+p.status)}
     }
-    const body=JSON.stringify(merged,null,2);
-    const content=btoa(unescape(encodeURIComponent(body)));
-    const p=await fetch(api,{method:'PUT',headers:{Authorization:'Bearer '+token,Accept:'application/vnd.github+json','Content-Type':'application/json'},
-      body:JSON.stringify({message:'update license.json ('+role+(role==='agent'?' '+agentId:'')+')',content:content,branch:BRANCH,sha:sha})});
-    if(p.ok){data=merged;norm();render();toast('✅ تم النشر بنجاح')}
-    else{const e=await p.json();toast('فشل النشر: '+(e.message||p.status))}
   }catch(e){toast('خطأ بالاتصال: '+e.message)}
 }
 
 /* init */
 (function(){
-  const tk=localStorage.getItem('as_tok');if(tk)document.getElementById('ownerToken').value=tk;
   document.getElementById('idbar').style.display='none';
   const sw=document.getElementById('masterSw');
   if(sw)sw.onchange=function(){data.enabled=this.checked;render();toast(this.checked?'شغّلت النظام — انشر الآن':'أطفأت النظام — انشر الآن')};
