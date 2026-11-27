@@ -126,6 +126,20 @@
       <div class="pillbar"><button onclick="saveBrand()">💾 حفظ العلامة</button></div>
     </div>
 
+    <!-- شعار واسم التطبيق العام (مالك فقط) -->
+    <div class="card owner-only">
+      <h2>🎨 شعار واسم التطبيق (عام)</h2>
+      <div class="muted" style="margin-bottom:6px">يغيّر شعار واسم القائمة الجانبية لكل مستخدمي التطبيق مباشرة (بدون تفعيل). علامة الوكيل تطغى عليه بعد تفعيل الزبون برمز الوكيل.</div>
+      <label>اسم التطبيق (يظهر بالقائمة الجانبية)</label>
+      <input id="appName" placeholder="مثال: A&amp;S Live">
+      <label>شعار التطبيق (اختر صورة)</label>
+      <input type="file" accept="image/*" id="appLogoFile" onchange="onAppLogoFile(this)">
+      <input type="hidden" id="appLogo">
+      <div id="appPrev" style="margin-top:8px"></div>
+      <div class="muted" id="appClear" style="display:none;cursor:pointer;color:#ff8f9b" onclick="document.getElementById('appLogo').value='';appPrev()">🗑 إزالة الشعار</div>
+      <div class="pillbar"><button onclick="saveApp()">💾 حفظ شعار التطبيق</button></div>
+    </div>
+
     <!-- حالة النظام (مالك فقط) -->
     <div class="card owner-only">
       <h2>⚙️ حالة نظام التفعيل</h2>
@@ -247,7 +261,7 @@
 
 <script>
 const FB="https://as-liverjgf-default-rtdb.europe-west1.firebasedatabase.app";
-let data={enabled:false,owner:{points:0},agents:{},codes:{}};
+let data={enabled:false,owner:{points:0},agents:{},codes:{},app:{}};
 let prices={plans:[],payment:[]};
 let role="owner", agentId="";
 
@@ -346,6 +360,11 @@ function onLogoFile(input){
   r.readAsDataURL(f);
 }
 function saveBrand(){const o=brandObj();o.store=document.getElementById('brStore').value.trim();o.whatsapp=document.getElementById('brWa').value.trim();o.logo=document.getElementById('brLogo').value.trim();brandPrev();toast('تم الحفظ محلياً — اضغط نشر')}
+/* شعار واسم التطبيق العام */
+function fillApp(){data.app=data.app||{};var n=document.getElementById('appName'),l=document.getElementById('appLogo');if(n)n.value=data.app.name||'';if(l)l.value=data.app.logo||'';appPrev()}
+function appPrev(){var l=document.getElementById('appLogo'),p=document.getElementById('appPrev');if(!p||!l)return;var u=l.value.trim();p.innerHTML=u?('<img src="'+u.replace(/"/g,'&quot;')+'" style="max-height:80px;border-radius:8px;border:1px solid var(--line)">'):'';var c=document.getElementById('appClear');if(c)c.style.display=u?'block':'none'}
+function onAppLogoFile(input){var f=input.files&&input.files[0];if(!f)return;if(f.size>8*1024*1024){toast('الصورة كبيرة');return}var r=new FileReader();r.onload=function(e){var img=new Image();img.onload=function(){var w=img.width,h=img.height,mx=320;if(w>h){if(w>mx){h=Math.round(h*mx/w);w=mx}}else{if(h>mx){w=Math.round(w*mx/h);h=mx}}var c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);var data2;try{data2=c.toDataURL('image/jpeg',0.82)}catch(err){data2=e.target.result}document.getElementById('appLogo').value=data2;appPrev();toast('تم اختيار الشعار — احفظ ثم انشر')};img.onerror=function(){toast('تعذّر قراءة الصورة')};img.src=e.target.result};r.readAsDataURL(f)}
+function saveApp(){data.app=data.app||{};data.app.name=document.getElementById('appName').value.trim();data.app.logo=document.getElementById('appLogo').value.trim();appPrev();toast('تم الحفظ محلياً — اضغط نشر')}
 function agExport(id){
   const a=data.agents[id];const url=location.origin+location.pathname;
   const block='🔗 لوحة الوكيل A&S Live\n'+url+'\n\nمعرّف الوكيل: '+id+'\nالرمز السري: '+a.pin+'\nنقاطك: '+(a.points||0)+'';
@@ -423,7 +442,7 @@ function showMain(){
   document.getElementById('idbar').style.display='flex';
   document.querySelectorAll('.owner-only').forEach(e=>e.classList.toggle('hide',role!=='owner'));
   document.getElementById('whoami').innerHTML=role==='owner'?'👑 <b>وضع المالك</b>':'🧑‍💼 <b>'+esc((data.agents[agentId]||{}).name||agentId)+'</b> · <span class="muted">'+agentId+'</span>';
-  durChange();render();renderPrices();fillBrand();
+  durChange();render();renderPrices();fillBrand();fillApp();
 }
 async function loginOwner(){
   const pin=document.getElementById('ownerPin').value.trim();
@@ -446,7 +465,7 @@ async function loginAgent(){
 function logout(){document.getElementById('main').classList.add('hide');document.getElementById('loginCard').classList.remove('hide');document.getElementById('idbar').style.display='none';}
 
 async function reloadLive(silent){
-  try{const r=await fetch(FB+'/.json');if(r.ok){const j=(await r.json())||{};data={enabled:!!j.enabled,owner:j.owner||{points:0},agents:j.agents||{},codes:j.codes||{}};prices={plans:(j.prices&&Array.isArray(j.prices.plans))?j.prices.plans:[],payment:(j.prices&&Array.isArray(j.prices.payment))?j.prices.payment:[]}}}catch(e){}
+  try{const r=await fetch(FB+'/.json');if(r.ok){const j=(await r.json())||{};data={enabled:!!j.enabled,owner:j.owner||{points:0},agents:j.agents||{},codes:j.codes||{},app:j.app||{}};prices={plans:(j.prices&&Array.isArray(j.prices.plans))?j.prices.plans:[],payment:(j.prices&&Array.isArray(j.prices.payment))?j.prices.payment:[]}}}catch(e){}
   norm();if(!silent){render();renderPrices();fillBrand();toast('تم التحديث')}
 }
 
@@ -494,7 +513,7 @@ function copyOut(){const t=document.getElementById('out');t.select();navigator.c
 async function pushGit(){
   try{
     if(role==='owner'){
-      const body={enabled:!!data.enabled,owner:data.owner,agents:data.agents||{},codes:data.codes||{}};
+      const body={enabled:!!data.enabled,owner:data.owner,agents:data.agents||{},codes:data.codes||{},app:data.app||{}};
       const p=await fetch(FB+'/.json',{method:'PATCH',body:JSON.stringify(body)});
       if(p.ok){toast('✅ تم النشر بنجاح')}else{toast('فشل النشر: '+p.status)}
     }else{
