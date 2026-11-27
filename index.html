@@ -115,6 +115,7 @@
       <h2>📱 واتساب وشعار متجرك</h2>
       <div class="muted" style="margin-bottom:6px">يظهران للزبون اللي يفعّل برمزك (بنافذة الأسعار وقسم الحساب).</div>
       <div class="row">
+        <div><label>اسم المتجر (يظهر بالتطبيق)</label><input id="brStore" placeholder="مثال: متجر كارة"></div>
         <div><label>رقم واتساب</label><input id="brWa" placeholder="07901234567"></div>
       </div>
       <label>شعار المتجر (اختر صورة من المعرض)</label>
@@ -329,7 +330,7 @@ function agPin(id){const v=prompt('رمز سري جديد للوكيل '+id+':',
 function agBrand(id){const a=data.agents[id];const w=prompt('رقم واتساب الوكيل '+id+':',a.whatsapp||'');if(w===null)return;a.whatsapp=w.trim();render();toast('تم تحديث واتساب '+id+' — انشر للحفظ. (الشعار يرفعه الوكيل من لوحته)')}
 /* علامة المالك/الوكيل الحالي */
 function brandObj(){if(role==='owner'){data.owner=data.owner||{points:0};return data.owner}data.agents[agentId]=data.agents[agentId]||{};return data.agents[agentId]}
-function fillBrand(){const o=brandObj();const w=document.getElementById('brWa'),l=document.getElementById('brLogo');if(w)w.value=o.whatsapp||'';if(l)l.value=o.logo||'';brandPrev()}
+function fillBrand(){const o=brandObj();const w=document.getElementById('brWa'),l=document.getElementById('brLogo'),st=document.getElementById('brStore');if(w)w.value=o.whatsapp||'';if(l)l.value=o.logo||'';if(st)st.value=o.store||'';brandPrev()}
 function brandPrev(){const l=document.getElementById('brLogo'),p=document.getElementById('brPrev');if(!p||!l)return;const u=l.value.trim();p.innerHTML=u?('<img src="'+u.replace(/"/g,'&quot;')+'" style="max-height:80px;border-radius:8px;border:1px solid var(--line)">'):'';var c=document.getElementById('brClear');if(c)c.style.display=u?'block':'none'}
 function onLogoFile(input){
   const f=input.files&&input.files[0];if(!f)return;
@@ -350,7 +351,7 @@ function onLogoFile(input){
   };
   r.readAsDataURL(f);
 }
-function saveBrand(){const o=brandObj();o.whatsapp=document.getElementById('brWa').value.trim();o.logo=document.getElementById('brLogo').value.trim();brandPrev();toast('تم الحفظ محلياً — اضغط نشر')}
+function saveBrand(){const o=brandObj();o.store=document.getElementById('brStore').value.trim();o.whatsapp=document.getElementById('brWa').value.trim();o.logo=document.getElementById('brLogo').value.trim();brandPrev();toast('تم الحفظ محلياً — اضغط نشر')}
 function agExport(id){
   const a=data.agents[id];const url=location.origin+location.pathname;
   const block='🔗 لوحة الوكيل A&S Live\n'+url+'\n\nمعرّف الوكيل: '+id+'\nالرمز السري: '+a.pin+'\nنقاطك: '+(a.points||0)+'';
