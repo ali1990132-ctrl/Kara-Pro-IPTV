@@ -141,17 +141,15 @@
     <!-- إضافة رمز -->
     <div class="card">
       <h2>➕ إضافة رمز تفعيل</h2>
-      <div class="row">
-        <div>
-          <label>رمز التفعيل</label>
-          <div style="display:flex;gap:8px">
-            <input id="newCode" placeholder="AS-XXXX-XXXX">
-            <button class="ghost sm" onclick="gen()" style="white-space:nowrap">🎲 توليد</button>
-            <button class="ghost sm" onclick="(function(){var v=document.getElementById('newCode').value.trim();if(!v){toast('ماكو رمز');return}navigator.clipboard&&navigator.clipboard.writeText(v);toast('تم نسخ الرمز: '+v)})()" style="white-space:nowrap">📋 نسخ</button>
-          </div>
+      <div style="margin-bottom:10px">
+        <label>رمز التفعيل</label>
+        <input id="newCode" placeholder="AS-XXXX-XXXX" style="font-size:20px;font-weight:700;letter-spacing:2px;text-align:center;font-family:'Courier New',monospace;color:#bcd6ff">
+        <div class="pillbar" style="margin-top:6px">
+          <button class="ghost sm" onclick="gen()">🎲 توليد</button>
+          <button class="ghost sm" onclick="(function(){var v=document.getElementById('newCode').value.trim();if(!v){toast('ماكو رمز');return}navigator.clipboard&&navigator.clipboard.writeText(v);toast('تم نسخ الرمز: '+v)})()">📋 نسخ</button>
         </div>
-        <div><label>اسم الزبون (اختياري)</label><input id="newNote" placeholder="مثال: أبو علي"></div>
       </div>
+      <div style="margin-bottom:6px"><label>اسم الزبون (اختياري)</label><input id="newNote" placeholder="مثال: أبو علي"></div>
       <div class="row">
         <div>
           <label>مدة الاشتراك</label>
